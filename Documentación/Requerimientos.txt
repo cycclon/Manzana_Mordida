@@ -1,0 +1,40 @@
+Web para autogestión de clientes de Manzana Mordida
+
+/*LISTADO DE PRODUCTOS*/
+PENDING - Permitir cargar el equipo actual del cliente para ver los precios de canje
+PENDING - Ofrecer productos no disponible y traerlos solo con seña (MacBooks, iPads, iPhones, etc)
+PENDING - 	-No permitir canjes con productos que se traen a pedido
+PENDING - Mostrar fotos reales de cada equipo
+PENDING - Mostrar listado de detalles estéticos y/o funcionales de cada equipo
+PENDING - Mostrar los accesorios con los que viene el equipo
+PENDING - Mostrar los colores disponibles de cada producto
+PENDING - No mostrar la condición de batería para equipos sellados/OEM/ASIS
+PENDING - Mostrar la fecha de vencimiento de garantía (Puede ser aproximada, o relativa (1 año; 6 meses; etc))
+PENDING - 	-En caso de que la garantía oficial haya caducado, mostrar los días de garantía propia
+PENDING - Mostrar la ubicación de cada equipo
+
+/*AGENDA*/
+PENDING - Definir horarios potenciales de atención
+PENDING - Permitir que el administrador indique si un día y/o horarios no puede asistir
+PENDING - Permitir que el cliente agende su propia cita
+PENDING - 	-Requerir teléfono de contacto para confirmar
+PENDING - 	-Requerir Email de contacto
+PENDING - 	-Enviar recordatorios por Email y/o Whatsapp
+PENDING - En caso de que la cita se de en un lugar sin oficina, permitir definir la ubicación (sugerida, a confirmar)
+
+/*RESERVAS*/
+PENDING - Permitir que el cliente reserve un producto del inventario
+PENDING - 	-Requerir seña con comprobante
+
+
+FRONTEND
+REACT TAILWIND
+
+BACKEND
+NODE EXPRESS
+
+BD
+MONGO
+
+ORCHESTRATION
+DOCKER COMPOSE
