@@ -1,0 +1,15 @@
+{
+  "name": "msproductos",
+  "version": "1.0.0",
+  "description": "Microservicio de gestion de productos y stock",
+  "license": "MIT",
+  "author": "Pedro R. Spidalieri",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node ./src/index.js"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
