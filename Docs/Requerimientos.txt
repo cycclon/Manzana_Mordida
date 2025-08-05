@@ -1,5 +1,6 @@
 Web para autogestión de clientes de Manzana Mordida
 
+//// REQUERIMIENTOS ////
 /*LISTADO DE PRODUCTOS*/
 PENDING - Permitir cargar el equipo actual del cliente para ver los precios de canje
 PENDING - Ofrecer productos no disponible y traerlos solo con seña (MacBooks, iPads, iPhones, etc)
@@ -26,12 +27,16 @@ PENDING - En caso de que la cita se de en un lugar sin oficina, permitir definir
 PENDING - Permitir que el cliente reserve un producto del inventario
 PENDING - 	-Requerir seña con comprobante
 
-
+//// ARQUITECTURA ////
 FRONTEND
 REACT TAILWIND
 
 BACKEND
 NODE EXPRESS
+// MICROSERVICIOS
+	- Productos/Stock
+	- Agenda
+	- Reservas
 
 BD
 MONGO
