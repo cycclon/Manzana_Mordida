@@ -40,6 +40,8 @@ NODE EXPRESS
 
 BD
 MONGO
+	usuario: Manzana
+	contraseña: Mordida445
 
 ORCHESTRATION
 DOCKER COMPOSE

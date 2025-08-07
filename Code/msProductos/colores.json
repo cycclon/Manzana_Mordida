@@ -1,0 +1,22 @@
+[
+    {
+        "nombre": "Black Titanium",
+        "hex": "#4f4f4d"
+    },
+    {
+        "nombre": "White Titanium",
+        "hex": "#e8e6e2"
+    },
+    {
+        "nombre": "Blue Titanium",
+        "hex": "#565d6a"
+    },
+    {
+        "nombre": "Natural Titanium",
+        "hex": "#b7b5aa"
+    },
+    {
+        "nombre": "Desert Titanium",
+        "hex": "#c3ab9e"
+    }
+]
