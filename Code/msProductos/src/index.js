@@ -1,39 +1,26 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-const Producto = require('./schemas/ProductoSchema');
-const Color = require('./schemas/ColorSchema');
+const errorHandler = require('./middleware/errorHandler');
+const ProductoRoute = require('./routes/ProductoRoute');
 
 // Configurar .env
 dotenv.config({ path: '.env'});
 // Conectar a base de datos
 mongoose.connect(process.env.MONGO_URL);
 
+// CONFIG
 const app = express();
 const port = process.env.PORT;
+app.use(express.json());
 
-app.get('/', async (req, res) => {
-    const productos = await Producto.find({}).populate('colores', 'nombre');
-    // console.log(productos);
-    res.send(productos);
-});
+// ROUTES
+app.use('/api/productos', ProductoRoute)
 
-app.post('/crear-producto', async (req, res) => {
-    try {
-        const graphite = await Color.findOne({ nombre: 'Graphite'});
-        const white = await Color.findOne({ nombre: 'White' });
+// MIDDLEWARE
+app.use(errorHandler);
 
-        const producto = new Producto({ marca: 'Apple', linea: 'iPhone', modelo: '16 Pro Max 1TB', colores: [graphite._id, white._id]});
-
-        await producto.save();
-        console.log('Producto creado');
-    } catch (error) {
-        console.log(error);
-    }
-
-    res.send('Productos');
-})
-
+// SERVER INIT
 app.listen(port, () => {
     console.log(`Microservicio Productos escuchando en puerto ${port} `);
 });
