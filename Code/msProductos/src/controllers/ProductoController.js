@@ -1,6 +1,7 @@
 const Producto = require('../schemas/ProductoSchema');
 const colorCache = require('../utils/ColorCache');
 
+// DEVUELVE TODOS LOS PRODUCTOS
 exports.getProductos = async (req, res, next) => {
     try {
         const productos = await Producto.find({}).populate('colores', 'nombre');
@@ -11,6 +12,7 @@ exports.getProductos = async (req, res, next) => {
     }    
 };
 
+// REGISTRA UN NUEVO PRODUCTO
 exports.addProducto = async (req, res, next) => {
     try {
         const { marca, linea, modelo, colores } = req.body;
