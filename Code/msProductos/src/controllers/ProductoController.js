@@ -20,7 +20,7 @@ exports.addProducto = async (req, res, next) => {
         const colorIds = [];
         const notFound = [];
 
-        // Recorrer mapa de colores en caché y agregar las ids de los cololores que existen. Guardar los nombres de los colores queno existen en un array
+        // Recorrer mapa de colores en caché y agregar las ids de los colores que existen. Guardar los nombres de los colores queno existen en un array
         for(const name of colores) {
             if(cachedColors.has(name)) {
                 colorIds.push(cachedColors.get(name));
@@ -40,7 +40,7 @@ exports.addProducto = async (req, res, next) => {
         producto.colores = colorIds;
 
         await producto.save();
-        res.status(201).json({ message: 'Producto received' });
+        res.status(201).json({ message: 'Producto registrado' });
     } catch (error) {
         next(error);
     }
