@@ -1,16 +1,20 @@
 const Color = require('../schemas/ColorSchema');
 
-let cachedColorIds = null;
+let cachedColorMap = null;
 
-async function getCachedColorIds() {
-    if(!cachedColorIds) {
-        const colors = await Color.find({}, '_id');
-        cachedColorIds = new Set(colors.map(color => color._id.toString()));
+async function getCachedColorMap() {
+    if(!cachedColorMap) {
+        const colors = await Color.find({}, '_id nombre');
+
+        cachedColorMap = new Map();
+        for(const color of colors) {
+            cachedColorMap.set(color.nombre, color._id.toString());
+        }
     }
-    return cachedColorIds;
+    return cachedColorMap;
 }
 
 // Llamar este método cuando cambie la colección de colores (CRUD)
-function invalidateColorCache() { cachedColorIds = null;}
+function invalidateColorCache() { cachedColorMap = null;}
 
-module.exports = { getCachedColorIds, invalidateColorCache };
+module.exports = { getCachedColorMap, invalidateColorCache };

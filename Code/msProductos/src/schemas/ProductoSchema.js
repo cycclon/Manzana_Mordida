@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { getCachedColorIds } = require("../utils/ColorCache");
+const { getCachedColorIds, getCachedColorMap } = require("../utils/ColorCache");
 
 const ProductoSchema = new mongoose.Schema({
     marca: {
@@ -22,7 +22,8 @@ const ProductoSchema = new mongoose.Schema({
         ref: 'colores',
         validate: {
             validator: async function(value) {
-                const validColorIds = await getCachedColorIds();
+                const colorMap = await getCachedColorMap();
+                const validColorIds = new Set(Array.from(colorMap.values()));
                 return value.every(id => validColorIds.has(id.toString()));
             },
             message: 'Uno o más colores seleccionados son inválidos.'
