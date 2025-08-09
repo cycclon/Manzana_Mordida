@@ -1,14 +1,39 @@
 const Equipo = require('../schemas/EquipoSchema');
 const { getCachedColorMap } = require('../utils/ColorCache');
 const { getProductoByName } = require('../utils/ProductoUtils');
+const mongoose = require('mongoose');
 
 exports.getEquipos = async (req, res, next) => {
     try {
-        
+        const equipos = await Equipo.find({});
+
+        res.status(201).json(equipos);
     } catch (error) {
         next(error);
     }
 };
+
+exports.getEquipoID = async (req, res, next) => {
+    try {
+        
+        const idEquipo = req.params.id;
+        if(!mongoose.isValidObjectId(idEquipo)) {
+            res.status(404).json({message: 'Equipo no encontrado'});
+            return
+        }
+        const equipo = await Equipo.findOne({_id: idEquipo});
+
+        if(!equipo) {
+            res.status(404).json({message: 'Equipo no encontrado'});
+            return
+        } else {
+            res.status(201).json(equipo);
+            return
+        }
+    } catch (error) {
+       next(error);
+    }
+}
 
 exports.addEquipo = async (req, res, next) => {
     try {
@@ -43,6 +68,28 @@ exports.addEquipo = async (req, res, next) => {
         // console.log(nuevoEquipo);
         await nuevoEquipo.save();
         res.status(201).json({message: 'Equipo registrado'});
+    } catch (error) {
+        next(error);
+    }
+};
+
+exports.editEquipo = async (req, res, next) => {
+    try {
+        const idEquipo = req.params.id;
+        console.log(idEquipo);
+
+        res.status(201).json({message: "Equipo editado."})
+    } catch (error) {
+        next(error);
+    }
+};
+
+exports.deleteEquipo = async (req, res, next) => {
+    try {
+        const idEquipo = req.params.id;
+        console.log(idEquipo);
+
+        res.status(201).json({message: "Equipo eliminado."})
     } catch (error) {
         next(error);
     }
