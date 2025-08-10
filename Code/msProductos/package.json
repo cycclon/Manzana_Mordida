@@ -1,7 +1,7 @@
 {
   "name": "msproductos",
   "version": "1.0.0",
-  "description": "Microservicio de gestion de productos y stock",
+  "description": "Microservicio de gestion de productos y stock para app AppleSales",
   "license": "MIT",
   "author": "Pedro R. Spidalieri",
   "type": "commonjs",

@@ -1,0 +1,22 @@
+{
+  "name": "msseguridad",
+  "version": "1.0.0",
+  "description": "Microservicios de gestion de seguridad para app AppleSales",
+  "license": "MIT",
+  "author": "Pedro R. Spidalieri",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon ./src/server.js"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.17.1"
+  }
+}
