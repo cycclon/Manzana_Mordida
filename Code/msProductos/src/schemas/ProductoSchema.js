@@ -2,22 +2,22 @@ const mongoose = require("mongoose");
 const { getCachedColorIds, getCachedColorMap } = require("../utils/ColorCache");
 
 const ProductoSchema = new mongoose.Schema({
-    marca: {
+    marca: { // NO EDITABLE
         type: String,
         required: true,
         default: "Apple"
     },
-    linea: {
+    linea: { // NO EDITABLE
         type: String,
         required: true,
-        enum: ["iPhone", "MacBook", "iPad", "Watch", "AirPod"]
+        enum: ["iPhone", "MacBook", "iPad", "Watch", "AirPods"]
     },
-    modelo: {
+    modelo: { // NO EDITABLE
         type: String,
         required: true,
         unique: true
     },
-    colores: {
+    colores: { // EDITABLE
         type: [mongoose.Schema.Types.ObjectId],
         ref: 'colores',
         validate: {
@@ -29,6 +29,10 @@ const ProductoSchema = new mongoose.Schema({
             message: 'Uno o más colores seleccionados son inválidos.'
         }
     },
+    canjeable: { // EDITABLE
+        type: Boolean,
+        required: true
+    }
 }); 
 
 module.exports = mongoose.model("productos", ProductoSchema);

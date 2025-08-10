@@ -2,52 +2,52 @@ const mongoose = require('mongoose');
 const { getCachedColorMap } = require('../utils/ColorCache');
 
 const EquipoSchema = new mongoose.Schema({
-    producto: {
+    producto: { // NO EDITABLE
         type: mongoose.Schema.Types.ObjectId,
         ref: 'productos',
         required: true
     },
-    condicionBateria: {
+    condicionBateria: { // EDITABLE
         type: Number,
         required: false,
         min: [0, 'El porcentaje de batería debe ser igual o mayor a cero'],
         max: [1, 'El porcentaje de batería debe ser iual o menor a 100']
     },
-    condicion: {
+    condicion: { // NO EDITABLE
         type: String,        
         enum: ['Sellado', 'Usado', 'ASIS', 'OEM', 'CPO'],
         required: true
     },
-    grado: {
+    grado: { // EDITABLE
         type: String,
         enum: ['A+', 'A', 'A-'],
         required: false
     },
-    estado: {
+    estado: { //EDITABLE
         type: String,
         enum: ['En Stock', 'Pedido', 'Reservado', 'Vendido', 'Baja', "A pedido"],
         required: true
     },
-    costo: {
+    costo: { // EDITABLE
         type: Number,
         min: [0, 'El costo debe ser igual o mayor a cero'],
         required: true
     },
-    precio: {
+    precio: { // EDITABLE
         type: Number,
         min: [0, 'El precio debe ser mayor a cero'],
         required: true
     },
-    detalles: {
+    detalles: { // EDITABLE
         type: [String],
         required: false
     },
-    accesorios: {
+    accesorios: { // EDITABLE
         type: [String],
         enum: ['Caja', 'Cable', 'Templado', 'Funda', 'Cargador'],
         required: false
     },
-    color: {
+    color: { // NO EDITABLE
         type: mongoose.Schema.Types.ObjectId,
         ref: 'colores',
         required: true,
@@ -61,14 +61,18 @@ const EquipoSchema = new mongoose.Schema({
             message: 'El color seleccionado es inválido.'
         }
     },
-    garantiaApple: {
+    garantiaApple: { // EDITABLE
         type: Date,
         required: false
     },
-    garantiaPropia: {
+    garantiaPropia: { // EDITABLE
         type: String,
         enum: ['30 días', '60 días', '90 días'],
         required: false
+    },
+    ubicacion: { // EDITABLE
+        type: String,
+        required: true,        
     }
     
 });

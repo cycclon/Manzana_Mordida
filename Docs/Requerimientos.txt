@@ -3,16 +3,16 @@ Web para autogestión de clientes de Manzana Mordida
 //// REQUERIMIENTOS ////
 /*LISTADO DE PRODUCTOS*/
 PENDING - Permitir cargar el equipo actual del cliente para ver los precios de canje
-PENDING - Ofrecer productos no disponible y traerlos solo con seña (MacBooks, iPads, iPhones, etc)
+PENDING - Ofrecer productos no disponibles y traerlos solo con seña (MacBooks, iPads, iPhones, etc)
 PENDING - 	-No permitir canjes con productos que se traen a pedido
 PENDING - Mostrar fotos reales de cada equipo
-PENDING - Mostrar listado de detalles estéticos y/o funcionales de cada equipo
-PENDING - Mostrar los accesorios con los que viene el equipo
-PENDING - Mostrar los colores disponibles de cada producto
+DONE - Mostrar listado de detalles estéticos y/o funcionales de cada equipo
+DONE - Mostrar los accesorios con los que viene el equipo
+DONE - Mostrar los colores disponibles de cada producto
 PENDING - No mostrar la condición de batería para equipos sellados/OEM/ASIS
-PENDING - Mostrar la fecha de vencimiento de garantía (Puede ser aproximada, o relativa (1 año; 6 meses; etc))
-PENDING - 	-En caso de que la garantía oficial haya caducado, mostrar los días de garantía propia
-PENDING - Mostrar la ubicación de cada equipo
+DONE - Mostrar la fecha de vencimiento de garantía (Puede ser aproximada, o relativa (1 año; 6 meses; etc))
+DONE - 	-En caso de que la garantía oficial haya caducado, mostrar los días de garantía propia
+DONE - Mostrar la ubicación de cada equipo
 
 /*AGENDA*/
 PENDING - Definir horarios potenciales de atención
@@ -26,6 +26,7 @@ PENDING - En caso de que la cita se de en un lugar sin oficina, permitir definir
 /*RESERVAS*/
 PENDING - Permitir que el cliente reserve un producto del inventario
 PENDING - 	-Requerir seña con comprobante
+PENDING - 	-Definir una cantidad de días en al cual la seña caduca
 
 //// ARQUITECTURA ////
 FRONTEND
@@ -37,6 +38,7 @@ NODE EXPRESS
 	- Productos/Stock
 	- Agenda
 	- Reservas
+	- Sucursales
 
 BD
 MONGO
@@ -45,3 +47,7 @@ MONGO
 
 ORCHESTRATION
 DOCKER COMPOSE
+
+//// DESARROLLO ////
+PENDING - Middleware para validar que el usuario esté logueado y posea JWT token válido
+DONE - Put Producto
