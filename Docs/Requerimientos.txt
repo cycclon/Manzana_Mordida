@@ -51,3 +51,7 @@ DOCKER COMPOSE
 //// DESARROLLO ////
 PENDING - Middleware para validar que el usuario esté logueado y posea JWT token válido
 DONE - Put Producto
+PENDING - Requerir token para registrar un nuevo usuario admin o sales
+PENDING - Requerir validación para campos usuario y contraseña.
+PENDING - 	-Usuario: minimo 4 caracteres letras o números sin símbolos más que ., - y _
+PENDING - 	-Contraseña: mínimo 8 caracteres con al menos un símbolo y un número

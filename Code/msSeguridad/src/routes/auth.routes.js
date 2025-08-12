@@ -1,8 +1,14 @@
 const express = require('express');
-const { registerViewer, registerStaff, firstAdmin, login, validateToken } = require('../controllers/auth.controller');
+const { 
+    registerViewer,
+    registerStaff,
+    firstAdmin,
+    login, 
+    validateToken, 
+    refreshToken, 
+    logout } = require('../controllers/auth.controller');
 const authMiddleware = require('../middleware/auth.middleware');
 const roleMiddleware = require('../middleware/role.middleware');
-
 
 const router = express.Router();
 
@@ -21,5 +27,9 @@ router.post(
 
 // Token validation endpoint (can be called by other microservices)
 router.get("/validate", validateToken);
+
+// Refresh and logout endpoints
+router.post("/refresh", refreshToken);
+router.post("/logout", logout);
 
 module.exports = router;
