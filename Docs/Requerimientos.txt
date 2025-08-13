@@ -49,9 +49,14 @@ ORCHESTRATION
 DOCKER COMPOSE
 
 //// DESARROLLO ////
-PENDING - Middleware para validar que el usuario esté logueado y posea JWT token válido
+DONE - Middleware para validar que el usuario esté logueado y posea JWT token válido
 DONE - Put Producto
-PENDING - Requerir token para registrar un nuevo usuario admin o sales
-PENDING - Requerir validación para campos usuario y contraseña.
-PENDING - 	-Usuario: minimo 4 caracteres letras o números sin símbolos más que ., - y _
-PENDING - 	-Contraseña: mínimo 8 caracteres con al menos un símbolo y un número
+DONE - Requerir token para registrar un nuevo usuario admin o sales
+DONE - Requerir validación para campos usuario y contraseña.
+DONE - 		-Usuario: minimo 4 caracteres letras o números sin símbolos más que ., - y _
+DONE -		-Contraseña: mínimo 8 caracteres con al menos un símbolo y un número
+DONE - Preguntar por signo de interrogacion antes de propiedad o metodo: req.cookies?.refreshToken
+DONE - Preguntar cómo funcionan las http only cookies
+PENDING - Documentar
+PENDING - 	- Swagger tags
+			- Aclarar caracteres requeridos en usuario y contrasena

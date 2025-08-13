@@ -1,3 +1,9 @@
+/**
+ * @swagger
+ * tags:
+ *  name: auth.routes
+ *  description: Authentication endpoints
+ */
 const express = require('express');
 const { 
     registerViewer,
@@ -15,6 +21,27 @@ const router = express.Router();
 // Public
 router.post("/register", registerViewer);
 router.post("/register-admin", firstAdmin); // Only to be used when creating the database/server
+
+/**
+ * @swagger
+ * /auth/login:
+ *   post:
+ *     summary: Login with username and password
+ *     tags: [Auth, Login]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/LoginRequest'
+ *     responses:
+ *       200:
+ *         description: Login successful
+ *       400:
+ *         description: Invalid input
+ *       401:
+ *         description: Unauthorized
+ */
 router.post("/login", login);
 
 // Protected: only admin can register staff
