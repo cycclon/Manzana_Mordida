@@ -57,6 +57,6 @@ DONE - 		-Usuario: minimo 4 caracteres letras o números sin símbolos más que 
 DONE -		-Contraseña: mínimo 8 caracteres con al menos un símbolo y un número
 DONE - Preguntar por signo de interrogacion antes de propiedad o metodo: req.cookies?.refreshToken
 DONE - Preguntar cómo funcionan las http only cookies
-PENDING - Documentar
-PENDING - 	- Swagger tags
+DONE - Documentar msSeguridad
+DONE - 	- Swagger tags
 			- Aclarar caracteres requeridos en usuario y contrasena
