@@ -59,4 +59,5 @@ DONE - Preguntar por signo de interrogacion antes de propiedad o metodo: req.coo
 DONE - Preguntar cómo funcionan las http only cookies
 DONE - Documentar msSeguridad
 DONE - 	- Swagger tags
-			- Aclarar caracteres requeridos en usuario y contrasena
+DONE -			- Aclarar caracteres requeridos en usuario y contrasena
+DONE - Implementar JWT en Microservicio de Productos

@@ -81,6 +81,7 @@ exports.addEquipo = async (req, res, next) => {
 };
 
 exports.editEquipo = async (req, res, next) => {
+    //console.log('edit equipo');
     try {
         const equipoEditado = await Equipo.findOne({_id: req.params.id});
         const { condicionBateria, grado, estado, costo, precio, detalles, accesorios, garantiaApple, garantiaPropia, ubicacion} = req.body;
