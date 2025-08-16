@@ -32,6 +32,7 @@ app.get('/swagger.json', (req, res) => {
 
 // Routes
 app.use("/auth", require('./routes/auth.routes'));
+app.use("/users", require('./routes/user.routes'));
 
 app.get("/", (req, res) => res.send("Security service is running"));
 

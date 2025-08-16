@@ -1,77 +1,7 @@
 const User = require("../models/user.model");
 const RefreshToken = require('../models/refreshToken.model');
-const { hashPassword, comparePassword } = require('../utils/password');
+const { comparePassword } = require('../utils/password');
 const { generateToken, verifyToken, createAndSaveRefreshToken } = require('../utils/token');
-
-// Public registration (viewer only)
-async function registerViewer(req, res, next) {
-    try {
-        const { username, password } = req.body;
-
-        // Hash password
-        const hashed = await hashPassword(password);
-
-         // Save user
-        const newUser = new User({
-            username,
-            password: hashed,
-            role: 'viewer'
-        });
-
-        await newUser.save();
-
-        res.status(201).json({ message: 'Usuario registrado correctamente' });
-    } catch (error) {
-        next(error);
-    }
-}
-
-// Admin creates staff (admin or sales)
-async function registerStaff(req, res, next) {
-    try {
-        const { username, password, role } = req.body;
-
-        if(!['admin', 'sales'].includes(role)){
-            return res.status(400).json({ message: "Invalid role for staff registration."});
-        }
-
-        // Hash password
-        const hashed = await hashPassword(password);
-
-        const newUser = new User({
-            username,
-            password: hashed,
-            role
-        });
-
-        await newUser.save();
-        res.status(201).json({ message: "Staff registrado correctamente" });
-    } catch (error) {
-        next(error);
-    }
-}
-
-async function firstAdmin(req, res, next) {
-    try {
-        const { username, password } = req.body;
-
-        // Hash password
-        const hashed = await hashPassword(password);
-
-        const newAdmin = new User({
-            username,
-            password: hashed,
-            role: 'admin'
-        });
-
-        newAdmin.save();
-
-        res.status(201).json({ message: "Administrador registrado correctamente" });
-    } catch (error) {
-        next(error);
-    }
-}
-
 
 // Login
 async function login(req, res, next) {
@@ -213,4 +143,4 @@ async function logout(req, res, next) {
     }
 }
 
-module.exports = { registerViewer, registerStaff, firstAdmin, login, validateToken, refreshToken, logout };
+module.exports = { login, validateToken, refreshToken, logout };
