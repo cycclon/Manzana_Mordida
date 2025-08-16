@@ -20,7 +20,7 @@ async function registerViewer(req, res, next) {
 
         await newUser.save();
 
-        res.status(201).json({message: 'Usuario registrado correctamente'});
+        res.status(201).json({ message: 'Usuario registrado correctamente' });
     } catch (error) {
         next(error);
     }
@@ -77,11 +77,6 @@ async function firstAdmin(req, res, next) {
 async function login(req, res, next) {
     try {
         const { username, password } = req.body;
-
-        // Basic Validation
-        // if(!username || !password ) {
-        //     return res.status(400).json({ message: "Se requiere nombre de usuario y contraseña."});
-        // }
 
         // Find user
         const user = await User.findOne({ username });

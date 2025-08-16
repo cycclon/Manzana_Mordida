@@ -16,7 +16,7 @@ const swaggerOptions = {
     info: {
       title: 'Auth Microservice API',
       version: '1.0.0',
-      description: 'API documentation for authentication service',
+      description: 'API documentation for the authentication microservice, for AppleSales app',
     },
     servers: [
       { url: 'http://localhost:3002' },
@@ -77,7 +77,7 @@ swaggerSpec.components.schemas.StaffRequest = {
     },
     role: {
       type: 'string',
-      example: 'Sales',      
+      example: 'sales',      
       enum: roleEnum,
       description: roleDescription,
     }
@@ -88,8 +88,25 @@ swaggerSpec.components.schemas.StaffRequest = {
 swaggerSpec.components.securitySchemes = {
   bearerAuth: {
     type: 'http',
+    in: 'header',
     scheme: 'bearer',
     bearerFormat: 'JWT',
+  }
+};
+
+// Responses
+swaggerSpec.components.responses = {
+  400: {
+    description: 'Missing token.',
+    contents: 'application/json'
+  },
+  401: {
+    description: 'Unauthorized. Invalid or expired token.',
+    contents: 'application/json'
+  },
+  404: {
+    description: 'Not Found',
+    contents: 'application/json'
   }
 };
 

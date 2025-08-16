@@ -19,6 +19,7 @@
     "express": "*",
     "jsonwebtoken": "*",
     "mongoose": "*",
+    "redoc-express": "^2.1.0",
     "swagger-jsdoc": "*",
     "swagger-ui-express": "*"
   }

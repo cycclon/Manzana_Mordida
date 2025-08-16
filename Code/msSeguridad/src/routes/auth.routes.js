@@ -1,7 +1,7 @@
 /**
  * @swagger
  * tags:
- *  name: auth.routes
+ *  name: Auth
  *  description: Authentication endpoints
  */
 const express = require('express');
@@ -18,7 +18,7 @@ const roleMiddleware = require('../middleware/role.middleware');
 
 const router = express.Router();
 
-// Public
+// PUBLIC
 /**
  * @swagger
  * /auth/register:
@@ -68,12 +68,19 @@ router.post("/register-admin", firstAdmin); // Only to be used when creating the
  *           schema:
  *             $ref: '#/components/schemas/LoginRequest'
  *     responses:
- *       200:
- *         description: Login successful
- *       400:
- *         description: Invalid input
+ *       "200":
+ *         description: Login successful. Returns validation token
+ *         content:
+ *           application/json:
+ *             schema:               
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ *                   description: Validattion token.
+ *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2ODk4ZWY5ZDZlNWYwM2E3ZjQ0OTdjN2IiLCJ1c2VybmFtZSI6ImFkbWluIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzU1MzUzNTc1LCJleHAiOjE3NTUzNTQ0NzV9.DjraMhOtSJJcVkwtDyWqMhb6lB5W5emVL3lgYuTJcKg
  *       401:
- *         description: Unauthorized
+ *         description: Invalid credentials
  */
 router.post("/login", login);
 
@@ -83,6 +90,8 @@ router.post("/login", login);
  *   post:
  *     summary: Register a new user of type admin or sales
  *     tags: [Auth]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -90,12 +99,12 @@ router.post("/login", login);
  *           schema:
  *             $ref: '#/components/schemas/StaffRequest'
  *     responses:
- *       200:
+ *       201:
  *         description: Staff successful registration
  *       400:
- *         description: Invalid input
+ *         description: Invalid input. Wrong format, or duplicate key (username)
  *       401:
- *         description: Unauthorized
+ *         description: Unauthorized. Missing or invalid token
  */
 router.post(
     "/register-staff",
@@ -106,7 +115,7 @@ router.post(
 
 /**
  * @swagger
- * /auth/validate-token:
+ * /auth/validate:
  *   get:
  *     summary: Validate an access token
  *     description: Checks if the provided Bearer token is valid and not expired.
@@ -146,6 +155,7 @@ router.post(
  *               properties:
  *                 valid:
  *                   type: boolean
+ *                   enum: [false]
  *                   example: false
  *                 message:
  *                   type: string
@@ -157,7 +167,7 @@ router.get("/validate", validateToken);
 /**
  * @swagger
  * /auth/refresh:
- *   get:
+ *   post:
  *     summary: Refreshes the JWT
  *     description: Uses a previously created refresh token to refresh the user JWT. It also revokes the old refresh token and creates a new one.
  *     tags:
