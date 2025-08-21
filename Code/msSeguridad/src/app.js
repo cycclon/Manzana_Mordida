@@ -1,15 +1,18 @@
 const express = require('express');
-const swaggerUi = require("swagger-ui-express");
-const swaggerDocs = require("./config/swagger");
-const redoc = require('redoc-express');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const errorHandler = require('./middleware/errorHandler');
 const cookieParser = require('cookie-parser');
+// DOCUMENTATION IMPORTS
+const swaggerUi = require("swagger-ui-express");
+const swaggerDocs = require("./config/swagger");
+const redoc = require('redoc-express');
+
 
 dotenv.config(),
 connectDB();
 
+// CONFIG
 const app = express();
 app.use(express.json());
 app.use(cookieParser());

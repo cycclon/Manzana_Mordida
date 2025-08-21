@@ -72,9 +72,13 @@ const EquipoSchema = new mongoose.Schema({
     },
     ubicacion: { // EDITABLE
         type: String,
-        required: true,        
+        required: true,
+        enum: ['La Rioja', 'CABA']
+    },
+    canjeable: { // EDITABLE
+        type: Boolean,
+        required: true
     }
-    
 });
 
 // Validar que el equipo tenga al menos una garantía pero no ambas

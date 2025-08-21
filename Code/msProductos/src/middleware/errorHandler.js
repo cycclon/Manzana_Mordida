@@ -1,11 +1,34 @@
 module.exports = (err, req, res, next) => {
-    console.error(err);
+    //console.error(err);
 
-    const statusCode = err.statusCode || 500;
+    let statusCode = err.statusCode || 500;
+    let message = err.message || "Error interno del servidor";
+    let errors = undefined;    
+
+    // Handle Mongoose validation errors
+    if(err.name === 'ValidationError') {
+        statusCode = 400
+        message = 'Error de validacion';
+        errors = Object.values(err.errors).map(e => ({
+            field: e.path,
+            message: e.message
+        }));
+    }
+
+    // Handle duplicate key error (e.g. unique username/email)
+    if(err.code && err.code === 11000) {
+        statusCode = 400;
+        message = 'El valor ingresado ya existe';
+        errors = Object.keys(err.keyValue).map(field => ({
+            field,
+            message: `${field} ya existet`
+        }));
+    }
 
     res.status(statusCode).json({
         success: false,
-        message: err.message || 'Internal Server Error',
+        message,
+        ...(errors && { errors }), // only include if validation errors exist
         ...(process.env.NODE_ENV === 'development' && { stack: err.stack }),
     });
 };

@@ -61,3 +61,6 @@ DONE - Documentar msSeguridad
 DONE - 	- Swagger tags
 DONE -			- Aclarar caracteres requeridos en usuario y contrasena
 DONE - Implementar JWT en Microservicio de Productos
+DONE - msSeguridad: usernameRegex y passwordRegex no funcionan correctamente: undefined
+PENDING - Documentación para microservicio de equipos y productos
+DONE - Pasar propiedade "canjeable" de product a equipo

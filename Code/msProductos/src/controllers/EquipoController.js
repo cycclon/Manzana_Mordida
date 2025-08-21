@@ -15,7 +15,7 @@ exports.getEquipos = async (req, res, next) => {
         // Obtener equipos y completar campo producto y campo color (referencias)
         const equipos = await Equipo.find({}).populate(prodPopulate);        
 
-        res.status(201).json(equipos);
+        res.status(200).json(equipos);
     } catch (error) {
         next(error);
     }
@@ -32,7 +32,7 @@ exports.getEquipoID = async (req, res, next) => {
             res.status(404).json({message: 'Equipo no encontrado'});
             return
         } else {
-            res.status(201).json(equipo);
+            res.status(200).json(equipo);
             return
         }
     } catch (error) {
@@ -43,7 +43,7 @@ exports.getEquipoID = async (req, res, next) => {
 // Registrar nuevo equipo
 exports.addEquipo = async (req, res, next) => {
     try {
-        const {producto, condicionBateria, condicion, grado, estado, costo, precio, detalles, accesorios, color, garantiaApple, garantiaPropia, ubicacion} = req.body;
+        const {producto, condicionBateria, condicion, grado, estado, costo, precio, detalles, accesorios, color, garantiaApple, garantiaPropia, ubicacion, canjeable} = req.body;
 
         // Obtener producto por nombre
         const p = await getProductoByName(producto);
@@ -69,7 +69,8 @@ exports.addEquipo = async (req, res, next) => {
             color: idColor,
             garantiaApple,
             garantiaPropia,
-            ubicacion
+            ubicacion,
+            canjeable
         });        
 
         // console.log(nuevoEquipo);
@@ -84,7 +85,7 @@ exports.editEquipo = async (req, res, next) => {
     //console.log('edit equipo');
     try {
         const equipoEditado = await Equipo.findOne({_id: req.params.id});
-        const { condicionBateria, grado, estado, costo, precio, detalles, accesorios, garantiaApple, garantiaPropia, ubicacion} = req.body;
+        const { condicionBateria, grado, estado, costo, precio, detalles, accesorios, garantiaApple, garantiaPropia, ubicacion, canjeable} = req.body;
 
         // Verificar si cada variable del cuerpo tiene algun valor, si lo tiene, establecerla
         equipoEditado.condicionBateria = condicionBateria || equipoEditado.condicionBateria;
@@ -97,6 +98,7 @@ exports.editEquipo = async (req, res, next) => {
         equipoEditado.garantiaApple = garantiaApple || equipoEditado.garantiaApple;
         equipoEditado.garantiaPropia = garantiaPropia || equipoEditado.garantiaPropia;
         equipoEditado.ubicacion = ubicacion || equipoEditado.ubicacion;
+        equipoEditado.canjeable = canjeable || equipoEditado.canjeable;
 
         await equipoEditado.save();
 

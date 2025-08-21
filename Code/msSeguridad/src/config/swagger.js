@@ -3,8 +3,10 @@ const swaggerJsdoc = require('swagger-jsdoc');
 const User = require('../models/user.model');
 
 // Extract regex from schema
-const usernameRegex = User.schema.path('username').options.match.source;
-const passwordRegex = User.schema.path('password').options.match.source;
+const usernameMatch = User.schema.path('username').options.match;
+const passwordMatch = User.schema.path('password').options.match;
+const usernameRegex = usernameMatch instanceof RegExp ? usernameMatch.source : usernameMatch[0].source;
+const passwordRegex = passwordMatch instanceof RegExp ? passwordMatch.source : passwordMatch[0].source;
 const roleEnum = ['admin', 'sales'];
 const usernameDescription = `Must be at least 4 characters, letters/numbers, and may include '.', '_' or '-'. Pattern: ${usernameRegex}`;
 const passwordDescription = `Must be at least 8 characters, include 1 uppercase letter and 1 number. Pattern: ${passwordRegex}`;

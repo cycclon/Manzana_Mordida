@@ -28,10 +28,6 @@ const ProductoSchema = new mongoose.Schema({
             },
             message: 'Uno o más colores seleccionados son inválidos.'
         }
-    },
-    canjeable: { // EDITABLE
-        type: Boolean,
-        required: true
     }
 }); 
 
