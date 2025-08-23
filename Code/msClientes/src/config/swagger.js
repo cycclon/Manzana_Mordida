@@ -43,6 +43,10 @@ const clienteProperties = {
     whatsapp: {
       type: 'string',
       example: '3804280591'
+    },
+    usuario: {
+      type: 'string',
+      example: 'cycclon'
     }
 }
 
@@ -60,7 +64,7 @@ swaggerSpec.components.schemas.cliente = {
 
 swaggerSpec.components.schemas.nuevoCliente = {
   type: 'object',
-  required: ['nombres', 'apellidos', 'email'],
+  required: ['nombres', 'apellidos', 'email', 'usuario'],
   properties: clienteProperties
 }
 

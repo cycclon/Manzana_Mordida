@@ -71,4 +71,17 @@ async function firstAdmin(req, res, next) {
     }
 }
 
-module.exports = { registerViewer, registerStaff, firstAdmin };
+async function viewerExists(req, res, next) {
+    try {
+        const { username } = req.body;
+        const usuario = await User.findOne({ username: username });
+        //console.log(req.body, usuario);
+        const flag = usuario && usuario.role === 'viewer';
+
+        return res.status(200).json({ exists: flag });
+    } catch (error) {
+        next(error);
+    }
+}
+
+module.exports = { registerViewer, registerStaff, firstAdmin, viewerExists };

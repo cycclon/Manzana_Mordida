@@ -52,4 +52,7 @@ router.post('/nuevo-cliente', addCliente);
  */
 router.get('/', authMiddleware, roleMiddleware(['admin', 'sales']), getClientes);
 
+// OWN DATA
+// router.get('/cliente/:id', getCliente);
+
 module.exports = router;

@@ -5,7 +5,7 @@
  *  description: Authentication endpoints
  */
 const express = require('express');
-const { registerViewer, registerStaff, firstAdmin } = require('../controllers/user.controller');
+const { registerViewer, registerStaff, firstAdmin, viewerExists } = require('../controllers/user.controller');
 const authMiddleware = require('../middleware/auth.middleware');
 const roleMiddleware = require('../middleware/role.middleware');
 const router = express.Router();
@@ -45,6 +45,28 @@ router.post("/register", registerViewer);
  *         description: Admin successfully created
  */
 router.post("/register-admin", firstAdmin); // Only to be used when creating the database/server
+/**
+ * @swagger
+ * /users/viewer-exists:
+ *   post:
+ *     summary: Checks if a username exsists in the DataBase and if it's of role 'viewer'
+ *     tags: [Users]
+ *     requestBody:
+ *       description: Username to check
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                  type: string
+ *                  example: johndoe
+ *     responses:
+ *       201:
+ *         description: '{ exists: true/false }'
+ */
+router.post("/viewer-exists", viewerExists);
 
 // TOKEN REQUIRED
 /**

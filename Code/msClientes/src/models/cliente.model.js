@@ -16,6 +16,10 @@ const clienteSchema = new mongoose.Schema({
    whatsapp: {
     type: String,
     required: false
+   },
+   usuario: {
+      type: String,
+      required: true
    }
 });
 
