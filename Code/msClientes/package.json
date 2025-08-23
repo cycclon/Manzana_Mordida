@@ -1,0 +1,24 @@
+{
+  "name": "msclientes",
+  "version": "1.0.0",
+  "description": "Microservicio de gestion de clientes para app AppleSales",
+  "license": "MIT",
+  "author": "Pedro R. Spidalieri",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon ./src/server.js"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.17.2",
+    "redoc-express": "^2.1.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
