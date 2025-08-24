@@ -39,13 +39,13 @@ async function addCliente(req, res, next) {
                     await nuevoCliente.save();
                     res.status(201).json({ message: 'Cliente registrado' });
                 } else {
-                    res.status(400).json({ message: 'El usuario ya está asociado a otro cliente'})
+                    res.status(400).json({ message: 'El usuario ya está asociado a otro cliente' })
                 }                
             } else { 
-                res.status(404).json({ message: 'Usuario no encontrado'});
+                res.status(404).json({ message: 'Usuario no encontrado' });
             }            
         } else {
-            res.status(404).json({ message: 'Usuario no encontrado'});
+            res.status(404).json({ message: 'Usuario no encontrado' });
         }        
     } catch (error) {
         next(error)
@@ -53,35 +53,30 @@ async function addCliente(req, res, next) {
 }
 
 // Devuelve un cliente según su ID. Sólo puede acceder el propio cliente
+// El cliente debe venir el el objeto res desde el middleware
 async function getCliente(req, res, next) {
     try {
-        const { id } = req.params || ""; // id de cliente
-
-        // Comprobar que el ID de cliente corresponda al cliente logueado
-        // Obtener usuario segun token
-        const response = await fetch(process.env.SEGURIDADMS_URL + 'auth/validate', {
-            method: 'GET',
-            headers: {
-                'Content-Type': "application/json",
-                'Authorization': req.headers.authorization
-            }
-        });
-
-        if(response.ok) {
-            const data = await response.json();
-            const cliente = await Cliente.findById({ _id: id });
-
-            if(cliente && data.user.username === cliente.usuario) {
-                res.status(200).json({ message: 'ok' });
-            } else {
-                res.status(404).json({ message: 'Forbidden' });
-            }                
-        } else {
-            res.stauts(404).json({ message: 'Not Found' });
-        }        
+        res.status(200).json(res.cliente);    
     } catch (error) {
         next(error);
     }
 }
 
-module.exports = { getClientes, addCliente, getCliente};
+// Edita los datos de contacto de un cliente
+// El cliente debe venir el el objeto res desde el middleware
+async function editCliente(req, res, next) {
+    try {
+        const { email, whatsapp } = req.body;
+
+        if(email) res.cliente.email = email;
+        if(whatsapp) res.cliente.whatsapp = whatsapp;
+
+        res.cliente.save();
+
+        res.status(201).json({ message: 'Cliente editado' });
+    } catch (error) {
+        next(error);
+    }
+}
+
+module.exports = { getClientes, addCliente, getCliente, editCliente };

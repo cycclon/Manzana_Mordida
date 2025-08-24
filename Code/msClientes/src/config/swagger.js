@@ -27,6 +27,20 @@ swaggerSpec.openapi = swaggerSpec.openapi || '3.0.0';
 swaggerSpec.components = swaggerSpec.components || {};
 swaggerSpec.components.schemas = swaggerSpec.components.schemas || {};
 swaggerSpec.components.parameters = swaggerSpec.components.parameters || {};
+
+// Propiedades editables
+const clienteEditable = {
+    email: {
+      type: 'string',
+      example: 'pedro.spidalieri@gmail.com'
+    },
+    whatsapp: {
+      type: 'string',
+      example: '3804280591'
+    },
+};
+
+// Propiedades de cliente
 const clienteProperties = {
     nombres: {
         type: 'string',
@@ -36,20 +50,14 @@ const clienteProperties = {
       type: 'string',
       example: 'Spidalieri'
     },
-    email: {
-      type: 'string',
-      example: 'pedro.spidalieri@gmail.com'
-    },
-    whatsapp: {
-      type: 'string',
-      example: '3804280591'
-    },
+    ...clienteEditable,
     usuario: {
       type: 'string',
       example: 'cycclon'
     }
-}
+};
 
+// Cliente completo
 swaggerSpec.components.schemas.cliente = {
   type: 'object',
   required: [],
@@ -60,13 +68,21 @@ swaggerSpec.components.schemas.cliente = {
     },
     ...clienteProperties,
   },  
-}
+};
 
+// Nuevo cliente
 swaggerSpec.components.schemas.nuevoCliente = {
   type: 'object',
   required: ['nombres', 'apellidos', 'email', 'usuario'],
   properties: clienteProperties
-}
+};
+
+// Cliente editable
+swaggerSpec.components.schemas.clienteEditado = {
+  type: 'object',
+  required: [],
+  properties: clienteEditable
+};
 
 // JWT Bearer security Schema
 swaggerSpec.components.securitySchemes = {

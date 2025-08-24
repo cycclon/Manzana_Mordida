@@ -50,7 +50,7 @@ async function login(req, res, next) {
 // Validate token from other microservices or the front end
 async function validateToken(req, res, next) {
     try {
-        console.log('Validate');
+        
         const authHeader = req.headers.authorization;
         if(!authHeader || !authHeader.startsWith("Bearer ")) {
             return res.status(401).json({ valid: false, message: "No token provided."})

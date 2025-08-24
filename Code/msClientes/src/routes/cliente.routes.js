@@ -4,8 +4,15 @@
  *  name: Clientes
  *  description: Endpoints de gestión de clientes
  */
-const { getClientes, addCliente, getCliente } = require('../controllers/cliente.controller');
+const { 
+    getClientes, 
+    addCliente, 
+    getCliente, 
+    editCliente 
+} = require('../controllers/cliente.controller');
+// MIDDLEWARE IMPORTS
 const { authMiddleware, roleMiddleware } = require('../middleware/securityHandler');
+const { checkSelfRequest } = require('../middleware/ownData');
 
 const express = require('express');
 const router = express.Router();
@@ -77,6 +84,33 @@ router.get('/', authMiddleware, roleMiddleware(['admin', 'sales']), getClientes)
  *        "404":
  *          description: 'Cliente no encontrado'
  */
-router.get('/:id', authMiddleware, roleMiddleware(['viewer']), getCliente);
+router.get('/:id', authMiddleware, roleMiddleware(['viewer']), checkSelfRequest, getCliente);
+/**
+ * @swagger
+ * /api/v1/clientes/{idCliente}:
+ *   patch:
+ *      summary: Edita datos de un cliente como su email o teléfono.
+ *      description: Sólo puede editar los datos de un cliente, el propio cliente, y debe estar logueado.
+ *      tags: [Clientes]
+ *      security:
+ *       - bearerAuth: []
+ *      requestBody:
+ *        description: Datos editados del cliente.
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/clienteEditado'
+ *      parameters:
+ *        - $ref: '#/components/parameters/ClienteIdParam'
+ *      responses:
+ *        "200":
+ *          description: 'Datos editados'
+ *        "401":
+ *          description: 'Acceso prohibido'
+ *        "404":
+ *          description: 'Cliente no encontrado'
+ */
+router.patch('/:id', authMiddleware, roleMiddleware(['viewer']), checkSelfRequest, editCliente);
 
 module.exports = router;

@@ -9,11 +9,11 @@ const clienteSchema = new mongoose.Schema({
     type: String,
     required: true,
    },
-   email: {
+   email: { // EDITABLE
     type: String,
     required: true
    },
-   whatsapp: {
+   whatsapp: { // EDITABLE
     type: String,
     required: false
    },
