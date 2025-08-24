@@ -1,5 +1,6 @@
 const Cliente = require("../models/cliente.model");
 
+// Devuelve el listado de clientes registrados
 async function getClientes(req, res, next) {
     try {
         // Obtener todos los clientes registrados
@@ -11,6 +12,7 @@ async function getClientes(req, res, next) {
     }
 }
 
+// Agrega un nuevo cliente
 async function addCliente(req, res, next) {
     try {        
         const { nombres, apellidos, email, whatsapp, usuario } = req.body;
@@ -50,4 +52,36 @@ async function addCliente(req, res, next) {
     }
 }
 
-module.exports = { getClientes, addCliente };
+// Devuelve un cliente según su ID. Sólo puede acceder el propio cliente
+async function getCliente(req, res, next) {
+    try {
+        const { id } = req.params || ""; // id de cliente
+
+        // Comprobar que el ID de cliente corresponda al cliente logueado
+        // Obtener usuario segun token
+        const response = await fetch(process.env.SEGURIDADMS_URL + 'auth/validate', {
+            method: 'GET',
+            headers: {
+                'Content-Type': "application/json",
+                'Authorization': req.headers.authorization
+            }
+        });
+
+        if(response.ok) {
+            const data = await response.json();
+            const cliente = await Cliente.findById({ _id: id });
+
+            if(cliente && data.user.username === cliente.usuario) {
+                res.status(200).json({ message: 'ok' });
+            } else {
+                res.status(404).json({ message: 'Forbidden' });
+            }                
+        } else {
+            res.stauts(404).json({ message: 'Not Found' });
+        }        
+    } catch (error) {
+        next(error);
+    }
+}
+
+module.exports = { getClientes, addCliente, getCliente};

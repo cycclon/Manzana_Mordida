@@ -344,8 +344,8 @@ swaggerSpec.components.parameters.EquipoIdParam = {
     type: 'string',
     example: '68978a6e530cf7c9ef53ebd6'
   }
-
 };
+
 // ID de producto
 swaggerSpec.components.parameters.ProductoIdParam = {
   name: 'id',

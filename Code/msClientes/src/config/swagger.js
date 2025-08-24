@@ -26,7 +26,7 @@ swaggerSpec.openapi = swaggerSpec.openapi || '3.0.0';
 // Add schema definitions
 swaggerSpec.components = swaggerSpec.components || {};
 swaggerSpec.components.schemas = swaggerSpec.components.schemas || {};
-
+swaggerSpec.components.parameters = swaggerSpec.components.parameters || {};
 const clienteProperties = {
     nombres: {
         type: 'string',
@@ -78,7 +78,20 @@ swaggerSpec.components.securitySchemes = {
   }
 };
 
-// Responses
+// PARAMETROS
+// ID de equipo
+swaggerSpec.components.parameters.ClienteIdParam = {
+  name: 'id',
+  in: 'path',
+  required: true,
+  description: 'ID del cliente',
+  schema: {
+    type: 'string',
+    example: '68978a6e530cf7c9ef53ebd6'
+  }
+};
+
+// RESPUESTAS
 swaggerSpec.components.responses = {
   400: {
     description: 'Missing token.',

@@ -76,7 +76,7 @@ async function viewerExists(req, res, next) {
         const { username } = req.body;
         const usuario = await User.findOne({ username: username });
         //console.log(req.body, usuario);
-        const flag = usuario && usuario.role === 'viewer';
+        const flag = usuario !== null && usuario.role === 'viewer';
 
         return res.status(200).json({ exists: flag });
     } catch (error) {
