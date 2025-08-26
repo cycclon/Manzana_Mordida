@@ -3,7 +3,13 @@ module.exports = (err, req, res, next) => {
 
     let statusCode = err.statusCode || 500;
     let message = err.message || "Internal Server Error";
-    let errors = undefined;    
+    let errors = undefined;
+
+    // Handle invalid ObjectId (CastError)
+    if (err.name === 'CastError' && err.kind === 'ObjectId') {
+        statusCode = 400;
+        message = 'ID inválida';
+    }
 
     // Handle Mongoose validation errors
     if(err.name === 'ValidationError') {

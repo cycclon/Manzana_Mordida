@@ -2,19 +2,19 @@ module.exports = (err, req, res, next) => {
     //console.error(err);
 
     let statusCode = err.statusCode || 500;
-    let message = err.message || "Internal Server Error";
+    let message = err.message || "Error interno del servidor";
     let errors = undefined;
-
+    
     // Handle invalid ObjectId (CastError)
     if (err.name === 'CastError' && err.kind === 'ObjectId') {
         statusCode = 400;
-        message = 'Invalid ID';
+        message = 'ID inválida';
     }
 
     // Handle Mongoose validation errors
     if(err.name === 'ValidationError') {
         statusCode = 400
-        message = 'Validation Failed';
+        message = 'Error de validacion';
         errors = Object.values(err.errors).map(e => ({
             field: e.path,
             message: e.message
@@ -24,10 +24,10 @@ module.exports = (err, req, res, next) => {
     // Handle duplicate key error (e.g. unique username/email)
     if(err.code && err.code === 11000) {
         statusCode = 400;
-        message = 'Duplicate field value entered';
+        message = 'El valor ingresado ya existe';
         errors = Object.keys(err.keyValue).map(field => ({
             field,
-            message: `${field} alredy exists`
+            message: `${field} ya existe`
         }));
     }
 

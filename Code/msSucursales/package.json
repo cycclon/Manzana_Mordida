@@ -1,0 +1,24 @@
+{
+  "name": "mssucursales",
+  "version": "1.0.0",
+  "description": "Microservicio de gestión de sucursales para app AppleSales",
+  "license": "MIT",
+  "author": "Pedro R. Spidalieri",
+  "type": "commonjs",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon ./src/server.js"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.18.0",
+    "redoc-express": "^2.1.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
+  }
+}

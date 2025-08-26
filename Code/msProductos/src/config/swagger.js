@@ -2,7 +2,6 @@ const path = require('path');
 const swaggerJsdoc = require('swagger-jsdoc');
 const Equipo = require('../schemas/EquipoSchema');
 const Producto = require('../schemas/ProductoSchema');
-const { profileEnd } = require('console');
 
 const enumCondicion = Equipo.schema.path('condicion').enumValues;
 const enumGrado = Equipo.schema.path('grado').enumValues;
