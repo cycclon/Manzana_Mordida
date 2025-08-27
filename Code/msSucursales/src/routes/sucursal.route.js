@@ -82,7 +82,7 @@ router.get('/test', (req, res) => res.send('Test OK'));
 // ADMIN OR SALES
 /**
  * @swagger
- * /api/v1/sucursales/nuevaSucursal:
+ * /api/v1/sucursales/nueva-sucursal:
  *   post:
  *      summary: Registra una nueva sucursal
  *      tags: [Sucursales]

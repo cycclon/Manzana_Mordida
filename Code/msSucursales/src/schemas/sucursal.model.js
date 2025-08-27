@@ -17,11 +17,11 @@ const direccionSchema = new mongoose.Schema({
         type: String,
         required: false
     },
-    entreCalles: {
+    entreCalles: { // EDITABLE
         type: [String],
         required: false
     },
-    referencias: {
+    referencias: { // EDITABLE
         type: [String],
         required: false
     }
@@ -41,10 +41,10 @@ const sucursalSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    googleMaps: {
+    googleMaps: { // EDITABLE
         type: String,
         required: false
     }
-});
+}, { collection: 'sucursales' });
 
 module.exports = new mongoose.model('sucursal', sucursalSchema);

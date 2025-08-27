@@ -63,6 +63,10 @@ const propiedadesSucursal = {
     type: 'string',
     example: 'Capital'
   },
+  barrio: {
+    type: 'string',
+    example: 'Centro'
+  },
   direccion: {
     type: 'object',
     properties: propiedadesDireccion    
