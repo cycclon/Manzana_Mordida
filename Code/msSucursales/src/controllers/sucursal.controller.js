@@ -11,9 +11,7 @@ async function getSucursales(req, res, next) {
 }
 
 async function getSucursalID(req, res, next) {
-    try {
-        console.log('getSucursalId');
-        
+    try {        
         const { id } = req.params;
         if(!id) res.status(400).json({message: 'Debe especificar un ID de sucursal'});
         const sucursal = await Sucursal.findById({ _id: id });
@@ -45,7 +43,6 @@ async function getSucursalesLocalidad(req, res, next) {
 
 async function addSucursal(req, res, next) {
     try {
-        console.log('Registrar Sucursal');
         const { provincia, localidad, barrio, direccion, googleMaps } = req.body;
 
         const nuevaSucursal = new Sucursal({
@@ -90,10 +87,7 @@ async function editSucursal(req, res, next) {
         sucursal.direccion.referencias = direccion. referencias || sucursal.direccion.referencias;
         sucursal.googleMaps = googleMaps || sucursal.googleMaps;
         
-        console.log(sucursal);
-        
-        await sucursal.save();
-        
+        await sucursal.save();        
         
         res.status(200).json({ message: 'Sucursal editada.' });
     } catch (error) {
@@ -105,7 +99,6 @@ async function deleteSucursal(req, res, next) {
     try {
         const { id } = req.params;
         const result = await Sucursal.deleteOne({ _id: id });
-        console.log(result);
 
         if( result.deletedCount===0 ) return res.status(404).json({ message: 'Sucursal inexistente '});
 

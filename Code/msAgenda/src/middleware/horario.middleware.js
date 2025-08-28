@@ -2,9 +2,9 @@ const Horario = require('../schemas/horario.model');
 
 async function detectarSuperposicionSimple(req, res, next) {
     try {
-        const { diaSemana, horaInicio, horaFinal } = req.body;
+        const { diaSemana, horaInicio, horaFinal, vendedor, sucursal } = req.body;
         
-        const resultado = await detectarSuperposicion(diaSemana, horaInicio, horaFinal);
+        const resultado = await detectarSuperposicion(diaSemana, horaInicio, horaFinal, vendedor, sucursal);
         if(!resultado) next(new Error('Horario superpuesto. Intente con otro día/horario.'));
 
         next();
@@ -13,12 +13,10 @@ async function detectarSuperposicionSimple(req, res, next) {
     }
 }
 
-async function detectarSuperposicion(diaSemana, horaInicio, horaFinal) {
+async function detectarSuperposicion(diaSemana, horaInicio, horaFinal, vendedor, sucursal) {
     try {
-        const horarios = await Horario.find({ diaSemana: diaSemana });
+        const horarios = await Horario.find({ diaSemana, vendedor, sucursal });
         let flag = true;
-
-        console.log(diaSemana);
 
         horarios.map(h => {
             if(
@@ -36,18 +34,17 @@ async function detectarSuperposicion(diaSemana, horaInicio, horaFinal) {
 
 async function detectarSuperposicionMultiple(req, res, next) {
     try {
-        const { diasSemana, horaInicio, horaFinal } = req.body;
+        const { diasSemana, horaInicio, horaFinal, vendedor, sucursal } = req.body;
         let flag = true;
         
         for (const ds of diasSemana) {
-            const resultado = await detectarSuperposicion(ds, horaInicio, horaFinal);
+            const resultado = await detectarSuperposicion(ds, horaInicio, horaFinal, vendedor, sucursal);
             if (!resultado) {
                 flag = false;
                 break; // optional optimization
             }
         }
 
-        console.log(flag);
         if(!flag) next(new Error('Horario superpuesto. Intente con otro día/horario.'));
 
         next();
