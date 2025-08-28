@@ -68,3 +68,4 @@ DONE - Pasar propiedade "canjeable" de product a equipo
 PENDING - Revisar cada schema mongoose y definer validación para cada campo
 DONE - Microservicio sucursales
 DONE - msAgenda: middleware para detector superposición de horarios y disparar error
+PENDING - Documentación de api Agenda

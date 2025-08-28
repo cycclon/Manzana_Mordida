@@ -1,6 +1,6 @@
 const app = require('./app');
 
-const PORT = process.env.PORT || 3003;
+const PORT = process.env.PORT || 3004;
 
 app.listen(PORT,()=> {
     console.log(`Microservicio Agenda corriendo en puerto ${PORT}`)
