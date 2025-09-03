@@ -1,10 +1,43 @@
 const mongoose = require('mongoose');
 
-const citaSchema = new mongoose.Schema({
-    cliente: {
+const canjeSchema = new mongoose.Schema({
+    linea: {
         type: String,
         required: true
     },
+    modelo: {
+        type: String,
+        required: true
+    },
+    bateria: {
+        type: Number,
+        required: true,
+        min: 0,
+        max: 1
+    }
+});
+
+const clienteSchema = new mongoose.Schema({
+    nombre: {
+        type: String,
+        required: true
+    },
+    email: {
+        type: String,
+        required: false
+    },
+    telefono: {
+        type: String,
+        required: false
+    },
+    canje: {
+        type: canjeSchema,
+        required: false
+    }
+});
+
+const citaSchema = new mongoose.Schema({
+    cliente: clienteSchema,
     fecha: {
         type: Date,
         required: true
@@ -20,6 +53,10 @@ const citaSchema = new mongoose.Schema({
     reprogramada: {
         type: mongoose.SchemaTypes.ObjectId,
         required: false
+    },
+    horaInicio: {
+        type: Number,
+        required: true
     },
     duracion: { // Horas
         type: Number,

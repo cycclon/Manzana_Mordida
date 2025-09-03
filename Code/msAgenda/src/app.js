@@ -8,6 +8,7 @@ const swaggerDocs = require("./config/swagger");
 const redoc = require('redoc-express');
 // ROUTES
 const horarioRouter = require('./routes/horario.route');
+const citasRouter = require('./routes/cita.route');
 
 dotenv.config(),
 connectDB();
@@ -34,6 +35,7 @@ app.get('/swagger.json', (req, res) => {
 
 // Routes
 app.use('/api/v1/horarios/', horarioRouter);
+app.use('/api/v1/citas/', citasRouter);
 
 app.get("/", (req, res) => res.send("AppleSales - Servicio agenda corriendo"));
 
