@@ -44,21 +44,14 @@ async function getCitasAnonimasRango(req, res, next) {
 
 async function cancelarCita(req, res, next) {
     try {
-        const { id } = req.params;
-        const { motivo } = req.body || 'No especificado';
-        const cita = await Cita.findById(id);
-
-        if(!cita) return res.status(404).json({message: 'Cita inexistente'});
-
-        cita.estado = 'Cancelada';
-
-        // Cambiar estado
-        await cita.save();
+        const { idCita } = req.params;
+        const { motivo } = req.body || 'No especificado';        
 
         // Registrar cancelacion con motivo y fecha
         const cancelacion = new Cancelacion({
             motivo,
-            fecha: Date.now()
+            fecha: Date.now(),
+            idCita
         });
 
         await cancelacion.save();
@@ -90,7 +83,7 @@ async function solicitarCita(req, res, next) {
 
 async function confirmarCita(req, res, next) {
     try {
-        
+        res.status(201).json({ message: 'Cita confirmada.'});
     } catch (error) {
         next(error);
     }
@@ -98,7 +91,7 @@ async function confirmarCita(req, res, next) {
 
 async function reprogramarCita(req, res, next) {
     try {
-        
+        res.status(201).json({ message: 'Cita confirmada.'});
     } catch (error) {
         next(error);
     }

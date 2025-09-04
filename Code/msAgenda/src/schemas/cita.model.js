@@ -62,7 +62,11 @@ const citaSchema = new mongoose.Schema({
         type: Number,
         required: true,
         default: 1.5
-    }    
+    },
+    vendedor: {
+        type: String,
+        required: false
+    }
 });
 
 module.exports = mongoose.model('cita', citaSchema);
