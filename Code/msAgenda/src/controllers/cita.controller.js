@@ -91,7 +91,7 @@ async function confirmarCita(req, res, next) {
 
 async function reprogramarCita(req, res, next) {
     try {
-        res.status(201).json({ message: 'Cita confirmada.'});
+        res.status(201).json({ message: 'Cita reprogramada.'});
     } catch (error) {
         next(error);
     }

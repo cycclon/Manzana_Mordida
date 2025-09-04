@@ -31,6 +31,22 @@ function cambiarEstado(nuevoEstado) {
                 case "Reprogramada":
                     if(req.cita.estado === 'Reprogramada') {
                         return res.status(400).json({ message: `La cita ya fue reprogramada` });
+                    } else {
+                        console.log(req.cita);
+                        const { nuevaFecha, nuevaHora } = req.body;
+                        const citaReprogramada = new Cita({
+                            cliente: req.cita.cliente,
+                            fecha: nuevaFecha,
+                            horaInicio: nuevaHora,
+                            sucursal: req.cita.sucursal,
+                            estado: "Solicitada",
+                            duracion: req.cita.cliente.canje ? 2 : 0.5,
+                            vendedor: req.cita.vendedor
+                        });
+                        console.log('ok');
+                        const result = await citaReprogramada.save();
+
+                        req.cita.reprogramada = result._id;
                     }
                     break;
                 default:
@@ -45,9 +61,4 @@ function cambiarEstado(nuevoEstado) {
     };
 }
 
-function citaPropia(req, res, next) {
-    if(req.user.username === req.cita.vendedor) { next(); }
-    else { return res.status(400).json({ message: 'Un vendedor sólo puede modificar sus propias citas.'})}
-}
-
-module.exports = { cambiarEstado, establecerCita, citaPropia };
+module.exports = { cambiarEstado, establecerCita };

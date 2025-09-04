@@ -32,7 +32,8 @@ router.post('/cancelar/:id', establecerCita, cambiarEstado('Cancelada'), cancela
 
 router.post('/solicitar', solicitarCita);
 
-router.post('/reprogramar/:id',    
+router.post('/reprogramar/:id',
+    establecerCita,
     cambiarEstado('Reprogramada'), 
     reprogramarCita
 );
