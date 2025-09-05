@@ -25,6 +25,7 @@ swaggerSpec.components.responses = swaggerSpec.components.responses || {};
 swaggerSpec.components.parameters = swaggerSpec.components.parameters || {};
 
 // PROPIEDADES Y ESQUEMAS
+// Propiedades horario
 const propiedadesHorario = {
   vendedor: {
     type: 'string',
@@ -49,6 +50,110 @@ const propiedadesHorario = {
   }
 };
 
+// Propiedades cita
+const propiedadesCita = {
+  cliente: {
+    type: 'object',    
+    description: 'Objeto cliente',
+    required: ['nombre'],
+    properties: {
+      nombre: {
+        type: 'string',
+        description: 'Nombre completo del cliente',
+        example: 'Pedro Spidalieri',
+      },
+      email: {
+        type: 'string',
+        description: 'Dirección de correo electrónico del cliente',
+        example: 'pedro.spidalieri@gmail.com',
+      },
+      telefono: {
+        type: 'string',
+        description: 'Número de teléfono del cliente',
+        example: '3804123456'
+      },
+      canje: {
+        type: 'object',
+        required: 'false',
+        required: ['linea', 'modelo', 'bateria'],
+        properties: {
+          linea: {
+            type: 'string',
+            description: 'Líena de productos. Por defecto: iPhone',
+            example: 'iPhone',
+            default: 'iPhone',
+            enum: ['iPhone', 'MacBook', 'iPad', 'AirPods', 'Watch']
+          },
+          modelo: {
+             type: 'string',
+            description: 'Modelo del producto',
+            example: '13 Pro 128GB',
+          },
+          bateria: {
+            type: 'number',
+            description: 'Porcentaje de batería. Número entre 0 y 1',
+            example: 0.9,
+          }
+        }
+      }
+    }
+  },
+  fecha: {
+    type: 'date',
+    description: 'Fecha de la cita',
+    example: '15/09/2025',
+  },
+  horaInicio: {
+    type: 'number',
+    description: 'Hora de inicio de la cita (Reloj de 24h)',
+    example: 15,
+  },
+  sucursal: {
+    type: 'string',
+    description: 'Dirección de la sucursal donde se lleva a cabo la cita.',
+    example: 'Rivadavia 967',
+  },  
+};
+
+// Esquemea solicitar cita
+swaggerSpec.components.schemas.solicitarCita = {
+  type: 'object',
+  required: ['cliente', 'fecha', 'horaInicio', 'sucursal'],
+  properties: propiedadesCita
+};
+
+// Esquema reprogramar cita
+swaggerSpec.components.schemas.reprogramarCita = {
+  type: 'object',
+  required: ['nuevaFecha', 'nuevaHora'],
+  properties: {
+    nuevaFecha: {
+      type: 'date',
+      description: 'Nueva fecha para la cita',
+      example: '20/09/2025',
+    },
+    nuevaHora: {
+      type: 'number',
+      description: 'Nueva hora para la cita (reloj de 24h).',
+      example: 17,
+    }
+  }
+};
+
+// Esquema cancelar cita
+swaggerSpec.components.schemas.cancelarCita = {
+  type: 'object',
+  required: [],
+  properties: {
+    motivo: {
+      type: 'string',
+      description: 'Motivo de cancelación de la cita.',
+      example: 'No podré asistir.'
+    }
+  }
+};
+
+// Esquema nuevo horario
 swaggerSpec.components.schemas.nuevoHorario = {
   type: 'object',
   required: ['vendedor', 'sucursal', 'diaSemana', 'horaInicio', 'horaFinal'],
@@ -83,6 +188,18 @@ swaggerSpec.components.parameters.HorarioIdParam = {
   in: 'path',
   required: true,
   description: 'ID del horario',
+  schema: {
+    type: 'string',
+    example: '68978a6e530cf7c9ef53ebd6'
+  }
+};
+
+// id Cita
+swaggerSpec.components.parameters.CitaIdParam = {
+  name: 'id',
+  in: 'path',
+  required: true,
+  description: 'ID de la cita',
   schema: {
     type: 'string',
     example: '68978a6e530cf7c9ef53ebd6'

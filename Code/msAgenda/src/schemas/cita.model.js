@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const canjeSchema = new mongoose.Schema({
     linea: {
         type: String,
-        required: true
+        required: true,
+        enum: ['iPhone', 'MacBook', 'iPad', 'AirPods', 'Watch'],
     },
     modelo: {
         type: String,

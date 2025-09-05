@@ -16,7 +16,7 @@ async function establecerCita(req, res, next) {
 function cambiarEstado(nuevoEstado) {
     return async (req, res, next) => {
         try {
-            //console.log(req.cita);
+            
             switch(nuevoEstado) {
                 case "Confirmada":
                     if(req.cita.estado !== "Solicitada") {

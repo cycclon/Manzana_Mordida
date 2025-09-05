@@ -44,14 +44,14 @@ async function getCitasAnonimasRango(req, res, next) {
 
 async function cancelarCita(req, res, next) {
     try {
-        const { idCita } = req.params;
+        const { id } = req.params;
         const { motivo } = req.body || 'No especificado';        
 
         // Registrar cancelacion con motivo y fecha
         const cancelacion = new Cancelacion({
             motivo,
             fecha: Date.now(),
-            idCita
+            id
         });
 
         await cancelacion.save();
