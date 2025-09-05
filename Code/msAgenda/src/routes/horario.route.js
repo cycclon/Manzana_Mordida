@@ -12,7 +12,7 @@ const { addHorario,
 const { authMiddleware, roleMiddleware } = require('../middleware/securityHandler');
 const { detectarSuperposicionSimple, detectarSuperposicionMultiple } = require('../middleware/horario.middleware');
 
-// ADMIN OR SALES
+// ADMIN OR SALES 
 /**
  * @swagger
  * /api/v1/horarios/nuevo-horario:

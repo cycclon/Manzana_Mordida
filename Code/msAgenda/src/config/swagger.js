@@ -50,6 +50,35 @@ const propiedadesHorario = {
   }
 };
 
+// Propiedades cita anónima
+const propiedadesCitaAnonima = {
+  sucursal: {
+    type: 'string',
+    description: 'Dirección de la sucursal donde se llevará a cabo la cita.',
+    example: "Rivadavia 967"
+  },
+  estado: {
+    type: 'string',
+    enum: ['Solicitada', 'Confirmada', 'Cancelada', 'Reprogramada'],
+    example: "Confirmada"
+  },
+  fecha: {
+    type: 'date',
+    description: 'Fecha de la cita',
+    example: '15/09/2025'
+  },
+  horaInicio: {
+    type: 'number',
+    description: 'Hora de inicio de la cita. (Reloj de 24h)',
+    example: 15
+  },
+  duracion: {
+    type: 'number',
+    description: 'Cantidad de horas de duración de la cita',
+    example: 2
+  }
+};
+
 // Propiedades cita
 const propiedadesCita = {
   cliente: {
@@ -113,6 +142,30 @@ const propiedadesCita = {
     description: 'Dirección de la sucursal donde se lleva a cabo la cita.',
     example: 'Rivadavia 967',
   },  
+};
+
+swaggerSpec.components.schemas.citaAnonima = {
+  type: 'object',
+  required: [],
+  properties: {
+    _id: {
+        type: 'string',
+        example: '6895693be32485870f904cf5'
+    },
+    ...propiedadesCitaAnonima
+  }
+};
+
+swaggerSpec.components.schemas.cita = {
+  type: 'object',
+  required: [],
+  properties: {
+    _id: {
+        type: 'string',
+        example: '6895693be32485870f904cf5'
+    },
+    ...propiedadesCita
+  }
 };
 
 // Esquemea solicitar cita
@@ -203,6 +256,52 @@ swaggerSpec.components.parameters.CitaIdParam = {
   schema: {
     type: 'string',
     example: '68978a6e530cf7c9ef53ebd6'
+  }
+};
+
+// fecha cita
+swaggerSpec.components.parameters.citaDia = {
+  name: 'fecha',
+  in: 'path',
+  required: true,
+  description: 'día de la cita',
+  schema: {
+    type: 'date',
+    example: '15/09/2025'
+  }
+};
+
+swaggerSpec.components.parameters.citaFechaDesde = {
+  name: 'fechaDesde',
+  in: 'path',
+  required: true,
+  description: 'Fecha inicial para en rango',
+  schema: {
+    type: 'date',
+    example: '15/09/2025'
+  }
+};
+
+swaggerSpec.components.parameters.citaFechaHasta = {
+  name: 'fechaHasta',
+  in: 'path',
+  required: true,
+  description: 'Fecha final para en rango',
+  schema: {
+    type: 'date',
+    example: '25/09/2025'
+  }
+};
+
+// sucursal cita
+swaggerSpec.components.parameters.sucursalCita = {
+  name: 'sucursal',
+  in: 'path',
+  required: true,
+  description: 'Dirección de la sucursal para la cita',
+  schema: {
+    type: 'string',
+    example: 'Rivadavia 967'
   }
 };
 
