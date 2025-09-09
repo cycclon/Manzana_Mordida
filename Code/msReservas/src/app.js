@@ -7,6 +7,7 @@ const swaggerUi = require("swagger-ui-express");
 const swaggerDocs = require("./config/swagger");
 const redoc = require('redoc-express');
 // ROUTES
+const ReservasRouter = require('./routes/reservas.routes');
 
 dotenv.config(),
 connectDB();
@@ -32,6 +33,7 @@ app.get('/swagger.json', (req, res) => {
 });
 
 // Routes
+app.use('/api/v1/reservas/', ReservasRouter);
 
 app.get("/", (req, res) => res.send("AppleSales - Servicio reservas corriendo"));
 
