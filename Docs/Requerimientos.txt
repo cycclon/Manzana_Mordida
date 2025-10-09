@@ -52,6 +52,12 @@ MONGO
 	usuario: Manzana
 	contraseña: Mordida445
 
+SCRIPT
+docker run -d --name mongodb -p 27017:27017 \
+-e MONGO_INITDB_ROOT_USERNAME=Manzana \
+-e MONGO_INITDB_ROOT_PASSWORD=Mordida445 \
+mongo:latest
+
 ORCHESTRATION
 DOCKER COMPOSE
 
