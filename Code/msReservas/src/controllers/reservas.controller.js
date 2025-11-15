@@ -54,5 +54,6 @@ module.exports = {
     getReserva,
     confirmarReserva,
     completarReserva,
-    getReservas
+    getReservas,
+    pagarSena
 };

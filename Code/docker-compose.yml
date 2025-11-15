@@ -1,0 +1,144 @@
+name: applesales
+
+services:
+  msAgenda:
+    build: ./msAgenda
+    image: msagenda:latest
+    ports: 
+      - "3004:3004"
+    environment:
+      - MONGO_URL=mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@${MONGODB_HOST}:${MONGODB_PORT}/agenda?authSource=${MONGODB_AUTH_SOURCE}
+      - PORT=3004
+      - JWT_SECRET=${JWT_SECRET}
+      - NODE_ENV=production
+    depends_on:
+      - mongodb
+    networks:
+      - applesales-network
+  msCanjes:
+    build: ./msCanjes
+    image: mscanjes:latest
+    ports: 
+      - "3006:3006"
+    environment:
+      - MONGO_URL=mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@${MONGODB_HOST}:${MONGODB_PORT}/canjes?authSource=${MONGODB_AUTH_SOURCE}
+      - PORT=3006
+      - JWT_SECRET=${JWT_SECRET}
+      - NODE_ENV=production
+    depends_on:
+      - mongodb
+    networks:
+      - applesales-network
+  msClientes:
+    build: ./msClientes
+    image: msclientes:latest
+    ports: 
+      - "3003:3003"
+    environment:
+      - MONGO_URL=mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@${MONGODB_HOST}:${MONGODB_PORT}/clientes?authSource=${MONGODB_AUTH_SOURCE}
+      - PORT=3003
+      - JWT_SECRET=${JWT_SECRET}
+      - NODE_ENV=production
+    depends_on:
+      - mongodb
+    networks:
+      - applesales-network
+  msCuentasBancarias:
+    build: ./msCuentasBancarias
+    image: mscuentasbancarias:latest
+    ports: 
+      - "3009:3009"
+    environment:
+      - MONGO_URL=mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@${MONGODB_HOST}:${MONGODB_PORT}/cuentas_bancarias?authSource=${MONGODB_AUTH_SOURCE}
+      - PORT=3009
+      - JWT_SECRET=${JWT_SECRET}
+      - NODE_ENV=production
+    depends_on:
+      - mongodb
+    networks:
+      - applesales-network
+  msProductos:
+    build: ./msProductos
+    image: msproductos:latest
+    ports: 
+      - "3001:3001"
+    environment:
+      - MONGO_URL=mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@${MONGODB_HOST}:${MONGODB_PORT}/productos?authSource=${MONGODB_AUTH_SOURCE}
+      - PORT=3001
+      - JWT_SECRET=${JWT_SECRET}
+      - NODE_ENV=production
+    depends_on:
+      - mongodb
+    networks:
+      - applesales-network
+  # msReservas:
+  #   build: ./msReservas
+  #   image: msreservas:latest
+  #   ports: 
+  #     - "3007:3007"
+  #   environment:
+  #     - MONGO_URL=mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@${MONGODB_HOST}:${MONGODB_PORT}/reservas?authSource=${MONGODB_AUTH_SOURCE}
+  #     - JWT_SECRET=${JWT_SECRET}
+  #     - PORT=3007
+  #     - PORCENTAJE_RESERVA=.2
+  #     - VIGENCIA_RESERVA=7
+  #     - NODE_ENV=production
+  #   depends_on:
+  #     - mongodb
+  #   networks:
+  #     - applesales-network
+  msSeguridad:
+    build: ./msSeguridad
+    image: msseguridad:latest
+    ports: 
+      - "3002:3002"
+    environment:
+      - MONGO_URI=mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@${MONGODB_HOST}:${MONGODB_PORT}/seguridad?authSource=${MONGODB_AUTH_SOURCE}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRY=15m
+      - REFRESH_TOKEN_EXPIRY_DAYS=7
+      - REFRESH_TOKEN_BYTES=64
+      - COOKIE_SECURE=false
+      - PORT=3002
+      - NODE_ENV=production
+    depends_on:
+      - mongodb
+    networks:
+      - applesales-network
+  msSucursales:
+    build: ./msSucursales
+    image: mssucursales:latest    
+    ports: 
+      - "3005:3005"
+    environment:
+      - MONGO_URL=mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@${MONGODB_HOST}:${MONGODB_PORT}/sucursales?authSource=${MONGODB_AUTH_SOURCE}
+      - JWT_SECRET=${JWT_SECRET}
+      - PORT=3005
+      - NODE_ENV=production
+    depends_on:
+      - mongodb
+    networks:
+      - applesales-network
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    restart: unless-stopped
+    ports:
+      - "27018:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGODB_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGODB_PASSWORD}
+    volumes:
+      - mongodb-data:/data/db
+    networks:
+      - applesales-network
+
+networks:
+  applesales-network:
+    driver: bridge
+
+volumes:
+  mongodb-data:  # Simplified name
+    external: true
+    name: 5af6606ccfdf143578bdc5a852a59daa81c51693df0cb9b661d5232a8e332a9e

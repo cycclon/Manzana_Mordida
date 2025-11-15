@@ -5,9 +5,9 @@ const {
     getReserva,
     confirmarReserva,
     completarReserva,
-    getReservas  } = require('../controllers/reservas.controller');
+    getReservas } = require('../controllers/reservas.controller');
 const { authMiddleware, roleMiddleware} = require('../middleware/securityHandler');
-const { reservaPropia } = require('../middleware/reservasHandler');
+const { reservaPropia, cambiarEstadoReserva, cambiarEstadoSena } = require('../middleware/reservasHandler');
 
 const router = new express.Router();
 
@@ -18,29 +18,33 @@ router.post('/solicitar',
     solicitarReserva
 );
 
-router.post('/pagarsena/:idReserva', 
-    authMiddleware,
-    roleMiddleware(['viewer']),
-    reservaPropia,
-    pagarSena
-);
-
 router.get('/:id',
     authMiddleware,
     roleMiddleware(['viewer']),
     getReserva
 );
 
+router.post('/pagarsena/:idReserva',
+    authMiddleware,
+    roleMiddleware(['viewer']),
+    reservaPropia,
+    cambiarEstadoSena('Pagada'),
+    pagarSena
+);
+
 // ADMIN OR SALES
 router.post('/confirmar/:id', 
     authMiddleware,
     roleMiddleware(['admin', 'sales']),
+    cambiarEstadoSena('Confirmada'),
+    cambiarEstadoReserva('Confirmada'),
     confirmarReserva
 );
 
-router.post('/completar',
+router.post('/completar/:id',
     authMiddleware,
     roleMiddleware(['admin', 'sales']),
+    cambiarEstadoReserva('Completada'),
     completarReserva
 );
 

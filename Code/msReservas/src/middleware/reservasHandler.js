@@ -2,5 +2,17 @@ function reservaPropia(req, res, next) {
 
 };
 
-module.exports = { reservaPropia }
+function cambiarEstadoReserva(nuevoEstado) {
+    return async (req, res, next) => {
+
+    };
+};
+
+function cambiarEstadoSena(nuevoEstado) {
+    return async (req, res, next) => {
+
+    };
+};
+
+module.exports = { reservaPropia, cambiarEstadoReserva, cambiarEstadoSena };
 
