@@ -43,7 +43,7 @@ router.post('/registrar',
 );
 /**
  * @swagger
- * /api/v1/cuentas/{idCuenta}:
+ * /api/v1/cuentas/{id}:
  *   patch:
  *      summary: Editar cuenta
  *      description: Edita el alias o las monedas permitidas por la cuenta

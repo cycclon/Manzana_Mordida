@@ -305,30 +305,93 @@ swaggerSpec.components.parameters.sucursalCita = {
   }
 };
 
-// RESPUESTAS
+// ============================================
+// RESPONSES
+// ============================================
+
 swaggerSpec.components.responses = {
-  400: {
-    description: 'Datos incorrectos o faltantes',
-    contents: 'application/json'
-  },
-  401: {
-    description: 'No autorizado. Token inválido o caducado.',
-    contents: 'application/json'
-  },
-  404: {
-    description: 'No encontrado',
-    contents: 'application/json'
-  }
+    400: {
+        description: 'Datos incorrectos o faltantes',
+        content: {
+            'application/json': {
+                schema: {
+                    type: 'object',
+                    properties: {
+                        success: {
+                            type: 'boolean',
+                            example: false
+                        },
+                        message: {
+                            type: 'string',
+                            example: 'Datos incorrectos o faltantes'
+                        }
+                    }
+                }
+            }
+        }
+    },
+    401: {
+        description: 'No autorizado. Token inválido o caducado.',
+        content: {
+            'application/json': {
+                schema: {
+                    type: 'object',
+                    properties: {
+                        message: {
+                            type: 'string',
+                            example: 'Token inválido o caducado'
+                        }
+                    }
+                }
+            }
+        }
+    },
+    403: {
+        description: 'Prohibido',
+        content: {
+            'application/json': {
+                schema: {
+                    type: 'object',
+                    properties: {
+                        message: {
+                            type: 'string',
+                            example: 'Prohibido'
+                        }
+                    }
+                }
+            }
+        }
+    },
+    404: {
+        description: 'No encontrado',
+        content: {
+            'application/json': {
+                schema: {
+                    type: 'object',
+                    properties: {
+                        message: {
+                            type: 'string',
+                            example: 'Recurso no encontrado'
+                        }
+                    }
+                }
+            }
+        }
+    }
 };
 
-// JWT Bearer security Schema
+// ============================================
+// SECURITY SCHEMES
+// ============================================
+
 swaggerSpec.components.securitySchemes = {
-  bearerAuth: {
-    type: 'http',
-    in: 'header',
-    scheme: 'bearer',
-    bearerFormat: 'JWT',
-  }
+    bearerAuth: {
+        type: 'http',
+        in: 'header',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        description: 'Token JWT obtenido del endpoint /auth/login'
+    }
 };
 
 module.exports = swaggerSpec;

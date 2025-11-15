@@ -52,7 +52,7 @@ router.post('/precio-canje',
 );
 /**
  * @swagger
- * /api/v1/canjes/{idCanje}:
+ * /api/v1/canjes/{id}:
  *   delete:
  *      summary: Eliminar precio de canje
  *      description: Elimina un precio de canje registrado
@@ -76,7 +76,7 @@ router.delete('/:id',
 );
 /**
  * @swagger
- * /api/v1/canjes/{idCanje}:
+ * /api/v1/canjes/{id}:
  *   patch:
  *      summary: Editar precio de canje
  *      description: Edita sólo el precio de un objeto precioCanje registrado
@@ -132,6 +132,7 @@ router.patch('/:id',
  *                        - "16 Pro 256GB"
  */
 router.get('/modelos/:linea', getModelos);
+
 /**
  * @swagger
  * /api/v1/canjes/lineas/:
@@ -153,6 +154,7 @@ router.get('/modelos/:linea', getModelos);
  *                        - "iPad"
  */
 router.get('/lineas/', getLineas);
+
 /**
  * @swagger
  * /api/v1/canjes/:

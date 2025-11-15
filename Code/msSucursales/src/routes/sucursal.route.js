@@ -39,6 +39,7 @@ const router = express.Router();
  *                      items: [$ref: '#/components/schemas/sucursal']
  */
 router.get('/provincia/:provloc', getSucursalesLocalidad);
+
 /**
  * @swagger
  * /api/v1/sucursales/{id}:
@@ -60,6 +61,7 @@ router.get('/provincia/:provloc', getSucursalesLocalidad);
  *          $ref: '#/components/responses/404'     
  */
 router.get('/:id', getSucursalID);
+
 /**
  * @swagger
  * /api/v1/sucursales/:
@@ -77,7 +79,7 @@ router.get('/:id', getSucursalID);
  */
 router.get('/', getSucursales);
 
-router.get('/test', (req, res) => res.send('Test OK'));
+//router.get('/test', (req, res) => res.send('Test OK'));
 
 // ADMIN OR SALES
 /**
