@@ -15,7 +15,7 @@ const router = express.Router();
  * @swagger
  * /users/register:
  *   post:
- *     summary: Register a new user of type viewer
+ *     summary: Create viewer (user)
  *     tags: [Users]
  *     requestBody:
  *       required: true
@@ -32,7 +32,8 @@ router.post("/register", registerViewer);
  * @swagger
  * /users/register-admin:
  *   post:
- *     summary: Register the first admin. Only use when setup MS
+ *     summary: Create first admin (user)
+ *     description: Only use when setting up the database.
  *     tags: [Users]
  *     requestBody:
  *       required: true
@@ -49,7 +50,7 @@ router.post("/register-admin", firstAdmin); // Only to be used when creating the
  * @swagger
  * /users/viewer-exists:
  *   post:
- *     summary: Checks if a username exsists in the DataBase and if it's of role 'viewer'
+ *     summary: Check username existence (viewer)'
  *     tags: [Users]
  *     requestBody:
  *       description: Username to check
@@ -73,7 +74,7 @@ router.post("/viewer-exists", viewerExists);
  * @swagger
  * /users/register-staff:
  *   post:
- *     summary: Register a new user of type admin or sales
+ *     summary: Create user (admin or sales)
  *     tags: [Users]
  *     security:
  *       - bearerAuth: []

@@ -22,7 +22,7 @@ const router = express.Router();
  * @swagger
  * /api/v1/clientes/nuevo-cliente:
  *   post:
- *      summary: Registra un nuevo cliente en la base de datos.
+ *      summary: Registrar cliente
  *      description: Primero se debe registrar el usuario asociado en el microservicio de seguridad (msSeguridad). Comprueba que el usuario no esté vinculado a otro cliente.
  *      tags: [Clientes]
  *      requestBody:
@@ -45,7 +45,7 @@ router.post('/nuevo-cliente', addCliente);
  * @swagger
  * /api/v1/clientes/:
  *   get:
- *      summary: Devuelve el listado de clientes registrados
+ *      summary: Listado de clientes
  *      tags: [Clientes]
  *      security:
  *       - bearerAuth: []
@@ -63,9 +63,9 @@ router.get('/', authMiddleware, roleMiddleware(['admin', 'sales']), getClientes)
 // OWN DATA
 /**
  * @swagger
- * /api/v1/clientes/{idCliente}:
+ * /api/v1/clientes/{id}:
  *   get:
- *      summary: Devuelve un cliente según su ID.
+ *      summary: Cliente por ID.
  *      description: Sólo puede acceder a los datos de un cliente, el propio cliente, y debe estar logueado.
  *      tags: [Clientes]
  *      security:
@@ -89,7 +89,7 @@ router.get('/:id', authMiddleware, roleMiddleware(['viewer']), checkSelfRequest,
  * @swagger
  * /api/v1/clientes/{idCliente}:
  *   patch:
- *      summary: Edita datos de un cliente como su email o teléfono.
+ *      summary: Editar cliente.
  *      description: Sólo puede editar los datos de un cliente, el propio cliente, y debe estar logueado.
  *      tags: [Clientes]
  *      security:

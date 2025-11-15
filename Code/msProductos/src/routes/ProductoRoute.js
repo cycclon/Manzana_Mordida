@@ -15,7 +15,7 @@ const { authMiddleware, roleMiddleware } = require('../middleware/securityHandle
  * @swagger
  * /api/productos/:
  *   get:
- *      summary: Devuelve el listado de productos registrados
+ *      summary: Listado de productos
  *      tags: [Productos]
  *      responses:
  *        "200":
@@ -29,9 +29,9 @@ const { authMiddleware, roleMiddleware } = require('../middleware/securityHandle
 router.get('/', ProductoController.getProductos);
 /**
  * @swagger
- * /api/productos/producto/{idProducto}:
+ * /api/productos/producto/{id}:
  *   get:
- *      summary: Devuelve un producto según su ID (BD)
+ *      summary: Producto por ID
  *      tags: [Productos]
  *      responses:
  *        "200":
@@ -50,7 +50,7 @@ router.get('/producto/:id', ProductoIdValidator, ProductoController.getProductoI
  * @swagger
  * /api/productos/crear-producto:
  *   post:
- *      summary: Crea un nuevo producto en la base de datos
+ *      summary: Registrar producto
  *      tags: [Productos]
  *      security:
  *       - bearerAuth: []
@@ -80,7 +80,7 @@ router.post(
  * @swagger
  * /api/productos/producto/{idProducto}:
  *   put:
- *      summary: Edita un producto existente (sólo colores)
+ *      summary: Editar producto
  *      tags: [Productos]
  *      parameters:
  *        - $ref: '#/components/parameters/ProductoIdParam'

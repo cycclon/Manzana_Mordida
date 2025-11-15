@@ -71,22 +71,22 @@ services:
       - mongodb
     networks:
       - applesales-network
-  # msReservas:
-  #   build: ./msReservas
-  #   image: msreservas:latest
-  #   ports: 
-  #     - "3007:3007"
-  #   environment:
-  #     - MONGO_URL=mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@${MONGODB_HOST}:${MONGODB_PORT}/reservas?authSource=${MONGODB_AUTH_SOURCE}
-  #     - JWT_SECRET=${JWT_SECRET}
-  #     - PORT=3007
-  #     - PORCENTAJE_RESERVA=.2
-  #     - VIGENCIA_RESERVA=7
-  #     - NODE_ENV=production
-  #   depends_on:
-  #     - mongodb
-  #   networks:
-  #     - applesales-network
+  msReservas:
+    build: ./msReservas
+    image: msreservas:latest
+    ports: 
+      - "3007:3007"
+    environment:
+      - MONGO_URL=mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@${MONGODB_HOST}:${MONGODB_PORT}/reservas?authSource=${MONGODB_AUTH_SOURCE}
+      - JWT_SECRET=${JWT_SECRET}
+      - PORT=3007
+      - PORCENTAJE_RESERVA=.2
+      - VIGENCIA_RESERVA=7
+      - NODE_ENV=production
+    depends_on:
+      - mongodb
+    networks:
+      - applesales-network
   msSeguridad:
     build: ./msSeguridad
     image: msseguridad:latest

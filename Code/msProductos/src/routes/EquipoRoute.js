@@ -15,7 +15,7 @@ const {authMiddleware, roleMiddleware} = require('../middleware/securityHandler'
  * @swagger
  * /api/equipos/:
  *   get:
- *      summary: Devuelve el listado de equipos registrados
+ *      summary: Listado de equipos
  *      tags: [Equipos]
  *      responses:
  *        "200":
@@ -29,9 +29,9 @@ const {authMiddleware, roleMiddleware} = require('../middleware/securityHandler'
 router.get('/', EquipoController.getEquipos);
 /**
  * @swagger
- * /api/equipos/{idEquipo}:
+ * /api/equipos/{id}:
  *   get:
- *      summary: Devuelve un equipo según su ID
+ *      summary: Equipo por ID
  *      tags: [Equipos]
  *      parameters:
  *        - $ref: '#/components/parameters/EquipoIdParam'
@@ -52,7 +52,8 @@ router.get('/equipo/:id', idValidator, EquipoController.getEquipoID);
  * @swagger
  * /api/equipos/crear-equipo:
  *   post:
- *      summary: Crea un nuevo equipo a partir de un producto base
+ *      summary: Registrar equipo
+ *      description: Registra un nuevo equipo a partir de un producto base previamente registrado
  *      tags: [Equipos]
  *      security:
  *       - bearerAuth: []
@@ -76,7 +77,7 @@ router.post('/crear-equipo', authMiddleware, roleMiddleware(['admin', 'sales']),
  * @swagger
  * /api/equipos/equipo/{idEquipo}:
  *   put:
- *      summary: Edita un equipo existente
+ *      summary: Editar equipo
  *      tags: [Equipos]
  *      parameters:
  *        - $ref: '#/components/parameters/EquipoIdParam'
@@ -102,7 +103,7 @@ router.put('/equipo/:id', authMiddleware, roleMiddleware(['admin', 'sales']), id
  * @swagger
  * /api/equipos/equipo/{idEquipo}:
  *   delete:
- *      summary: Elimina un equipo existente
+ *      summary: Eliminar equipo
  *      tags: [Equipos]
  *      parameters:
  *        - $ref: '#/components/parameters/EquipoIdParam'

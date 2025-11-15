@@ -25,7 +25,7 @@ const router = express.Router();
  * @swagger
  * /api/v1/sucursales/{ProvinciaLocalidad}:
  *   get:
- *      summary: Devuelve el listado de sucursales por nombre de provincia-localidad
+ *      summary: Sucursales por provincia y localidad
  *      tags: [Sucursales]
  *      parameters:
  *        - $ref: '#/components/parameters/ProvinciaLocalidadParam'
@@ -44,7 +44,7 @@ router.get('/provincia/:provloc', getSucursalesLocalidad);
  * @swagger
  * /api/v1/sucursales/{id}:
  *   get:
- *      summary: Devuelve una sucursal según su ID
+ *      summary: Sucursal por ID
  *      tags: [Sucursales]
  *      parameters:
  *        - $ref: '#/components/parameters/SucursalIdParam'
@@ -66,7 +66,7 @@ router.get('/:id', getSucursalID);
  * @swagger
  * /api/v1/sucursales/:
  *   get:
- *      summary: Devuelve el listado de sucursales registradas
+ *      summary: Listado de sucursales
  *      tags: [Sucursales]
  *      responses:
  *        "200":
@@ -86,7 +86,7 @@ router.get('/', getSucursales);
  * @swagger
  * /api/v1/sucursales/nueva-sucursal:
  *   post:
- *      summary: Registra una nueva sucursal
+ *      summary: Registrar sucursal
  *      tags: [Sucursales]
  *      security:
  *       - bearerAuth: []
@@ -110,7 +110,7 @@ router.post('/nueva-sucursal', authMiddleware, roleMiddleware(['admin']), addSuc
  * @swagger
  * /api/v1/sucursales/{idSucursal}:
  *   patch:
- *      summary: Edita los datos de una sucursal registrada
+ *      summary: Editar sucursal
  *      tags: [Sucursales]
  *      security:
  *       - bearerAuth: []
@@ -138,7 +138,7 @@ router.patch('/:id', authMiddleware, roleMiddleware(['admin']), editSucursal);
  * @swagger
  * /api/v1/sucursales/{idSucursal}:
  *   delete:
- *      summary: Elimina una sucursal registrada
+ *      summary: Eliminar sucursal
  *      tags: [Sucursales]
  *      security:
  *       - bearerAuth: []

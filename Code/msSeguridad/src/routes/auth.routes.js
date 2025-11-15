@@ -18,7 +18,7 @@ const {
  * @swagger
  * /auth/login:
  *   post:
- *     summary: Login with username and password
+ *     summary: Login
  *     tags: [Auth]
  *     requestBody:
  *       required: true
@@ -48,7 +48,7 @@ router.post("/login", login);
  * @swagger
  * /auth/validate:
  *   get:
- *     summary: Validate an access token
+ *     summary: Validate access token
  *     description: Checks if the provided Bearer token is valid and not expired.
  *     tags:
  *       - Auth
@@ -97,7 +97,7 @@ router.get("/validate", validateToken);
  * @swagger
  * /auth/refresh:
  *   post:
- *     summary: Refreshes the JWT
+ *     summary: Refreshes JWT
  *     description: Uses a previously created refresh token to refresh the user JWT. It also revokes the old refresh token and creates a new one.
  *     tags:
  *       - Auth
@@ -133,7 +133,7 @@ router.post("/refresh", refreshToken);
  * @swagger
  * /auth/logout:
  *   post:
- *     summary: End the user active session
+ *     summary: Logout
  *     description: Clears the token and revoke the refresh token for a logged in user.
  *     tags:
  *       - Auth
