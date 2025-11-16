@@ -76,7 +76,7 @@ router.patch('/:id',
  * @swagger
  * /api/v1/cuentas/{idCuenta}:
  *   delete:
- *      summary: Elimina una cuenta registrada
+ *      summary: Eliminar cuenta
  *      tags: [Cuentas]
  *      parameters:
  *        - $ref: '#/components/parameters/CuentaIdParam'
