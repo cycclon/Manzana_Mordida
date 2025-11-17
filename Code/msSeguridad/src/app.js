@@ -23,7 +23,7 @@ app.get(
   '/redoc',
   redoc({
     title: 'Auth Microservice API Docs',
-    specUrl: '/swagger.json', // must match the route above
+    specUrl: '/docs/auth/swagger.json', // must match the route above
   })
 );
 
