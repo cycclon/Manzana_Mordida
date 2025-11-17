@@ -20,7 +20,7 @@ const swaggerOptions = {
             description: 'Documentación de API para gestión de productos y equipos del sistema AppleSales.'
         },
         servers: [
-            {url: `http://localhost:${ process.env.PORT || 3001 }`},
+            {url: `http://applesales.duckdns.org`},
         ],
     },
     apis: [path.join(__dirname, '../routes/*.js')],

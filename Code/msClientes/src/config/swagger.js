@@ -12,7 +12,7 @@ const swaggerOptions = {
       description: 'Documentación de API del microservicio para gestión de clientes de la aplicación AppleSales.',
     },
     servers: [
-      { url: `http://localhost:${process.env.PORT || 3003}` },
+      { url: `http://applesales.duckdns.org` },
     ],
   },
   apis: [path.join(__dirname, '../routes/*.js')],
