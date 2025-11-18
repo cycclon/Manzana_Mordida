@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AppleSales API - Documentación</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 60px 20px;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #a0a0a0;
+            font-weight: 300;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #a0a0a0;
+            margin-top: 5px;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .service-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 28px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(102, 126, 234, 0.5);
+            box-shadow: 0 10px 40px rgba(102, 126, 234, 0.2);
+        }
+
+        .service-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .service-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 16px;
+        }
+
+        .service-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+
+        .service-description {
+            font-size: 0.95rem;
+            color: #a0a0a0;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .service-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .service-link:hover {
+            color: #764ba2;
+            gap: 12px;
+        }
+
+        .service-link::after {
+            content: '→';
+            font-size: 1.2rem;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 60px;
+        }
+
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            background: rgba(34, 197, 94, 0.1);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: #22c55e;
+            margin-top: 20px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #22c55e;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .tech-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(102, 126, 234, 0.1);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 12px;
+            font-size: 0.8rem;
+            color: #667eea;
+            margin: 4px;
+        }
+
+        .info-section {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+
+        .info-section h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
+
+        .info-section p {
+            color: #a0a0a0;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 2rem;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">🍎 AppleSales API</div>
+            <p class="subtitle">Sistema de Gestión de Ventas - Arquitectura de Microservicios</p>
+            <div class="status-indicator">
+                <span class="status-dot"></span>
+                Todos los servicios operativos
+            </div>
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-number">8</div>
+                    <div class="stat-label">Microservicios</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">60+</div>
+                    <div class="stat-label">Endpoints</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">2</div>
+                    <div class="stat-label">Servidores VPS</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="info-section">
+            <h2>📚 Acerca de esta API</h2>
+            <p>
+                AppleSales es un sistema completo de gestión para la compra-venta de dispositivos Apple, 
+                construido con una arquitectura de microservicios distribuida. Cada servicio maneja un dominio 
+                específico del negocio y puede escalarse independientemente.
+            </p>
+            <div>
+                <span class="tech-badge">Node.js</span>
+                <span class="tech-badge">Express</span>
+                <span class="tech-badge">MongoDB</span>
+                <span class="tech-badge">Docker</span>
+                <span class="tech-badge">NGINX</span>
+                <span class="tech-badge">Oracle Cloud</span>
+            </div>
+        </div>
+
+        <h2 style="color: #ffffff; margin-bottom: 30px; font-size: 1.8rem;">🔧 Microservicios Disponibles</h2>
+
+        <div class="services-grid">
+            <div class="service-card" onclick="window.open('http://applesales.duckdns.org/docs/auth/redoc', '_blank')">
+                <div class="service-icon">🔐</div>
+                <h3 class="service-title">Seguridad</h3>
+                <p class="service-description">
+                    Gestión de autenticación, autorización y control de acceso. Maneja usuarios, roles y tokens JWT.
+                </p>
+                <a href="http://applesales.duckdns.org/docs/auth/redoc" class="service-link" target="_blank">
+                    Ver documentación
+                </a>
+            </div>
+
+            <div class="service-card" onclick="window.open('http://applesales.duckdns.org/docs/clientes/redoc', '_blank')">
+                <div class="service-icon">👥</div>
+                <h3 class="service-title">Clientes</h3>
+                <p class="service-description">
+                    Gestión completa de clientes del negocio, incluyendo datos de contacto y perfiles de usuario.
+                </p>
+                <a href="http://applesales.duckdns.org/docs/clientes/redoc" class="service-link" target="_blank">
+                    Ver documentación
+                </a>
+            </div>
+
+            <div class="service-card" onclick="window.open('http://applesales.duckdns.org/docs/productos/redoc', '_blank')">
+                <div class="service-icon">📱</div>
+                <h3 class="service-title">Productos</h3>
+                <p class="service-description">
+                    Catálogo de productos base y gestión de equipos individuales disponibles para la venta.
+                </p>
+                <a href="http://applesales.duckdns.org/docs/productos/redoc" class="service-link" target="_blank">
+                    Ver documentación
+                </a>
+            </div>
+
+            <div class="service-card" onclick="window.open('http://applesales.duckdns.org/docs/reservas/redoc', '_blank')">
+                <div class="service-icon">📋</div>
+                <h3 class="service-title">Reservas</h3>
+                <p class="service-description">
+                    Sistema de reservas de equipos con gestión de señas (20% del valor) y ciclo completo de reserva.
+                </p>
+                <a href="http://applesales.duckdns.org/docs/reservas/redoc" class="service-link" target="_blank">
+                    Ver documentación
+                </a>
+            </div>
+
+            <div class="service-card" onclick="window.open('http://applesales.duckdns.org/docs/agenda/redoc', '_blank')">
+                <div class="service-icon">📅</div>
+                <h3 class="service-title">Agenda</h3>
+                <p class="service-description">
+                    Gestión de horarios de atención de vendedores y sistema de citas con clientes.
+                </p>
+                <a href="http://applesales.duckdns.org/docs/agenda/redoc" class="service-link" target="_blank">
+                    Ver documentación
+                </a>
+            </div>
+
+            <div class="service-card" onclick="window.open('http://applesales.duckdns.org/docs/sucursales/redoc', '_blank')">
+                <div class="service-icon">🏢</div>
+                <h3 class="service-title">Sucursales</h3>
+                <p class="service-description">
+                    Administración de sucursales del negocio, incluyendo ubicaciones y datos de contacto.
+                </p>
+                <a href="http://applesales.duckdns.org/docs/sucursales/redoc" class="service-link" target="_blank">
+                    Ver documentación
+                </a>
+            </div>
+
+            <div class="service-card" onclick="window.open('http://applesales.duckdns.org/docs/canjes/redoc', '_blank')">
+                <div class="service-icon">🔄</div>
+                <h3 class="service-title">Canjes</h3>
+                <p class="service-description">
+                    Gestión de tabla de precios de canje para equipos usados según condición y modelo.
+                </p>
+                <a href="http://applesales.duckdns.org/docs/canjes/redoc" class="service-link" target="_blank">
+                    Ver documentación
+                </a>
+            </div>
+
+            <div class="service-card" onclick="window.open('http://applesales.duckdns.org/docs/cuentas/redoc', '_blank')">
+                <div class="service-icon">💳</div>
+                <h3 class="service-title">Cuentas Bancarias</h3>
+                <p class="service-description">
+                    Administración de cuentas bancarias propias para gestión de pagos y transferencias.
+                </p>
+                <a href="http://applesales.duckdns.org/docs/cuentas/redoc" class="service-link" target="_blank">
+                    Ver documentación
+                </a>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h2>🚀 Arquitectura del Sistema</h2>
+            <p>
+                <strong>Servidor Principal (applesales-vps):</strong> Aloja los microservicios de Seguridad, 
+                Clientes y Productos, además de la instancia de MongoDB compartida y el gateway NGINX.
+            </p>
+            <p>
+                <strong>Servidor Secundario (applesales2-vps):</strong> Ejecuta los microservicios de Reservas, 
+                Agenda, Sucursales, Canjes y Cuentas Bancarias, conectándose a la base de datos central.
+            </p>
+            <p>
+                <strong>Comunicación:</strong> Todos los microservicios se comunican a través de red privada (VCN) 
+                de Oracle Cloud, con NGINX actuando como API Gateway único para el tráfico externo.
+            </p>
+        </div>
+
+        <footer class="footer">
+            <p>AppleSales API v1.0 - Sistema de Gestión de Ventas</p>
+            <p style="margin-top: 10px; font-size: 0.9rem;">
+                Construido con arquitectura de microservicios | Desplegado en Oracle Cloud Free Tier
+            </p>
+        </footer>
+    </div>
+</body>
+</html>
