@@ -21,7 +21,7 @@ const swaggerOptions = {
       description: 'API documentation for the authentication microservice, for AppleSales app',
     },
     servers: [
-      { url: 'http://applesales.duckdns.org' },
+      { url: process.env.NODE_ENV === 'production' ? 'http://applesales.duckdns.org' : 'http://localhost:3002' },
     ],
   },
   apis: [path.join(__dirname, '../routes/*.js')],

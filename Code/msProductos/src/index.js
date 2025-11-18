@@ -30,7 +30,7 @@ app.get(
   '/redoc',
   redoc({
     title: 'Microservicio de gestión de productos y equipos',
-    specUrl: '/docs/productos/swagger.json', // must match the route above
+    specUrl: process.env.NODE_ENV === 'production' ? '/docs/productos/swagger.json' : '/swagger.json', // must match the route above
   })
 );
 

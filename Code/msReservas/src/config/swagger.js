@@ -10,7 +10,7 @@ const swaggerOptions = {
             description: 'Documentación de API para gestión de reservas del sistema AppleSales. Permite a los clientes reservar equipos con una seña del 20% y gestionar el ciclo completo de la reserva hasta la entrega del producto.'
         },
         servers: [
-            {url: `http://localhost:${ process.env.PORT || 3007 }`},
+            {url: process.env.NODE_ENV === 'production' ? 'http://applesales.duckdns.org' : 'http://localhost:3007'},
         ],
     },
     apis: [path.join(__dirname, '../routes/*.js')],

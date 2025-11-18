@@ -22,7 +22,7 @@ app.get(
   '/redoc',
   redoc({
     title: 'Documentación de API para microservicio reservas - app AppleSales',
-    specUrl: '/swagger.json', // must match the route above
+    specUrl: process.env.NODE_ENV === 'production' ? '/docs/reservas/swagger.json' : '/swagger.json', // must match the route above
   })
 );
 
