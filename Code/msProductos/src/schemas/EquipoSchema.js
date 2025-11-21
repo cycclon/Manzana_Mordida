@@ -7,6 +7,16 @@ const EquipoSchema = new mongoose.Schema({
         ref: 'productos',
         required: true
     },
+    imagenes: {
+        type: [String], // Array of URLs
+        required: false,
+        validate: {
+            validator: function(v) {
+                return !v || v.length <= 5;
+            },
+            message: 'Máximo 5 imágenes por equipo'
+        }
+    },
     condicionBateria: { // EDITABLE
         type: Number,
         required: false,

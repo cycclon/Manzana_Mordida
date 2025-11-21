@@ -2,6 +2,7 @@ const Equipo = require('../schemas/EquipoSchema');
 const { getCachedColorMap } = require('../utils/ColorCache');
 const { getProductoByName } = require('../utils/ProductoUtils');
 const mongoose = require('mongoose');
+const { uploadImage, deleteImage } = require('../utils/R2Client');
 
 // Producto populate
 const prodPopulate = [
@@ -112,6 +113,69 @@ exports.deleteEquipo = async (req, res, next) => {
     try {
         await Equipo.deleteOne({ _id: req.params.id });
         res.status(201).json({message: "Equipo eliminado."})
+    } catch (error) {
+        next(error);
+    }
+};
+
+exports.uploadImagenes = async (req, res, next) => {
+    try {
+        const equipo = await Equipo.findById(req.params.id);
+        
+        if(!equipo) {
+            return res.status(404).json({ message: 'Equipo no encontrado'});
+        }
+
+        // Check total images (existing + new)
+        const currentCount = equipo.imagenes?.length || 0;
+        const newCount = req.files.length;
+
+        if(currentCount + newCount > 5) {
+            return res.status(400).json({
+                message: `Máximo 5 imágenes permitidas. Actualmente: ${currentCount}, intentando agregar ${newCount}`
+            });
+        }
+
+        // Upload images to R2
+        const uploadPromises = req.files.map(file => uploadImage(file));
+        const imageUrls = await Promise.all(uploadPromises);
+
+        // Add URLs to equipo
+        equipo.imagenes = [...(equipo.imagenes || []), ...imageUrls];
+        await equipo.save();
+
+        res.json({
+            message: 'Imágenes subidas exitosamente'
+        });        
+    } catch (error) {
+        next(error);
+    }
+};
+
+exports.deleteImagen = async (req, res, next) => {
+    try {
+        const { imageUrl } = req.body;
+
+        if(!imageUrl) {
+            return res.status(400).json({message: 'imageUrl requerido'});
+        }
+
+        const equipo = await Equipo.findById(req.params.id);
+        
+        if(!equipo) {
+            return res.status(404).json({message: 'Equipo no encontrado'});            
+        }
+
+        // remove from R2
+        await deleteImage(imageUrl);
+
+        // Remove from database
+        equipo.imagenes = equipo.imagenes.filter(img => img !== imageUrl);
+        await equipo.save();
+
+        return res.json({
+            message: 'Imagen eliminada exitosamente'
+        });
     } catch (error) {
         next(error);
     }

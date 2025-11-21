@@ -11,10 +11,12 @@
     "start": "node ./src/index.js"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.937.0",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.17.0",
+    "multer": "^2.0.2",
     "redoc-express": "^2.1.0",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"

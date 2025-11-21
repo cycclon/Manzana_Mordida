@@ -1,3 +1,5 @@
 nginx/conf.d/api.conf
 nginx/nginx.conf
 Docs/
+.vscode
+.env

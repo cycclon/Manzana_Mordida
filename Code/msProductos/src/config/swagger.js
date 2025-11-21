@@ -99,6 +99,15 @@ swaggerSpec.components.schemas.equipo = {
     type: 'object',
     required: ['producto', 'condicion', 'estado', 'costo', 'precio', 'color', 'ubicacion'],
     properties: {
+        imagenes: {
+            type: 'array',
+            items: {
+                type: 'string',
+                example: 'https://pub-2dc9df6be3c54556aed1201a84ed4bb.r2.dev/equipos/uuid.jpg'
+            },
+            maxItems: 5,
+            description: 'URLs de imágenes del equipo almacenadas en Cloudflare R2'
+        },
         _id: {
             type: 'string',
             example: '68978a6e530cf7c9ef53ebd6'

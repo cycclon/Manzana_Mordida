@@ -2,6 +2,15 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+// CONFIG
+// Configurar .env
+//dotenv.config({ path: '../.env' });
+const path = require('path');
+
+// Try to load .env
+const envPath = path.join(__dirname, '..', '.env');
+const result = dotenv.config({ path: envPath });
+
 // DOCUMENTATION IMPORTS
 const swaggerUi = require("swagger-ui-express");
 const swaggerDocs = require("./config/swagger");
@@ -14,9 +23,6 @@ const errorHandler = require('./middleware/errorHandler');
 const ProductoRoute = require('./routes/ProductoRoute');
 const EquipoRoute = require('./routes/EquipoRoute');
 
-// CONFIG
-// Configurar .env
-dotenv.config({ path: '.env'});
 // Conectar a base de datos
 mongoose.connect(process.env.MONGO_URL);
 
