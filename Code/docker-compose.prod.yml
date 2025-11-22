@@ -83,6 +83,7 @@ services:
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - /opt/applesales/docs:/usr/share/nginx/docs:ro
     depends_on:
       - msSeguridad
       - msClientes

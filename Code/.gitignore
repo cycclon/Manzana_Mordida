@@ -1,5 +1,7 @@
-nginx/conf.d/api.conf
-nginx/nginx.conf
 Docs/
 .vscode
+.env
+Code/nginx/conf.d/api.conf
+Code/nginx/nginx.conf
+docker-compose.prod.yml
 .env
