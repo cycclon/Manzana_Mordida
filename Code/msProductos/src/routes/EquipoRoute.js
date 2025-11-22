@@ -182,7 +182,7 @@ const upload = multer({
  *        "404":
  *          $ref: '#/components/responses/404'
  */
-router.post('/equipo/:id/imagenes', idValidator, upload.array('imagenes', 5), EquipoController.uploadImagenes);
+router.post('/equipo/:id/imagenes', authMiddleware, roleMiddleware(['admin', 'sales']), idValidator, upload.array('imagenes', 5), EquipoController.uploadImagenes);
 
 /**
  * @swagger
@@ -228,6 +228,6 @@ router.post('/equipo/:id/imagenes', idValidator, upload.array('imagenes', 5), Eq
  *        "404":
  *          $ref: '#/components/responses/404'
  */
-router.delete('/equipo/:id/imagenes', idValidator, EquipoController.deleteImagen);
+router.delete('/equipo/:id/imagenes', authMiddleware, roleMiddleware(['admin', 'sales']), idValidator, EquipoController.deleteImagen);
 
 module.exports = router;

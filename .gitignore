@@ -1,3 +1,4 @@
 .env
 Code/docker-compose.prod.yml
 Code/nginx
+Docs/
