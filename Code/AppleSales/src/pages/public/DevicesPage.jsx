@@ -12,6 +12,7 @@ import {
   ViewList as ListViewIcon,
 } from '@mui/icons-material';
 import { productsAPI } from '../../api/products';
+import { reservationsAPI } from '../../api/reservations';
 import { handleApiError } from '../../api/client';
 import DeviceFilters from '../../components/devices/DeviceFilters';
 import DeviceGrid from '../../components/devices/DeviceGrid';
@@ -29,6 +30,7 @@ export const DevicesPage = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [viewMode, setViewMode] = useState('grid');
+  const [reservedDeviceIds, setReservedDeviceIds] = useState(new Set());
 
   // Initialize filters from URL params
   const initialSearch = searchParams.get('search') || '';
@@ -45,6 +47,21 @@ export const DevicesPage = () => {
 
   // Debounce search to avoid excessive API calls
   const debouncedSearch = useDebounce(filters.search, 500);
+
+  // Fetch reserved device IDs on mount
+  useEffect(() => {
+    const fetchReservedDevices = async () => {
+      try {
+        const reservedIds = await reservationsAPI.getReservedDeviceIds();
+        setReservedDeviceIds(new Set(reservedIds));
+      } catch (error) {
+        console.error('Error fetching reserved devices:', error);
+        // Continue without reservation data
+      }
+    };
+
+    fetchReservedDevices();
+  }, []);
 
   // Fetch devices
   const fetchDevices = async () => {
@@ -78,17 +95,30 @@ export const DevicesPage = () => {
 
       const response = await productsAPI.getAllDevices(params);
 
-      // Handle different response structures
+      // Handle different response structures and filter out sold devices
+      let deviceList = [];
       if (response.data) {
-        setDevices(response.data);
+        deviceList = response.data;
         setTotalPages(response.totalPages || 1);
       } else if (Array.isArray(response)) {
-        setDevices(response);
-        setTotalPages(1);
-      } else {
-        setDevices([]);
+        deviceList = response;
         setTotalPages(1);
       }
+
+      // Filter out devices with estado "Vendido"
+      const availableDevices = deviceList.filter(
+        device => device.estado !== 'Vendido' && device.status !== 'Vendido'
+      );
+
+      // Mark devices that have active reservations
+      const devicesWithReservationStatus = availableDevices.map(device => ({
+        ...device,
+        isReserved: reservedDeviceIds.has(device._id),
+        // Override estado to show "Reservado" if there's an active reservation
+        displayEstado: reservedDeviceIds.has(device._id) ? 'Reservado' : device.estado,
+      }));
+
+      setDevices(devicesWithReservationStatus);
     } catch (error) {
       console.error('Error fetching devices:', error);
       const errorMessage = handleApiError(error);
@@ -102,7 +132,7 @@ export const DevicesPage = () => {
   // Fetch on mount and when filters/page change
   useEffect(() => {
     fetchDevices();
-  }, [page, debouncedSearch, filters.condition, filters.storage, filters.minPrice, filters.maxPrice, filters.minBattery]);
+  }, [page, debouncedSearch, filters.condition, filters.storage, filters.minPrice, filters.maxPrice, filters.minBattery, reservedDeviceIds]);
 
   // Reset to page 1 when filters change
   useEffect(() => {

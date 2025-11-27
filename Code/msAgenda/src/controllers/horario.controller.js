@@ -47,7 +47,7 @@ async function deleteHorario(req, res, next) {
     try {
         const { id } = req.params;
         const result = await Horario.deleteOne({_id: id});
-        
+
         if(result.deletedCount === 0) return res.status(404).json({ message: 'Horario inexistente' });
 
         res.status(200).json({ message: 'Horario eliminado' });
@@ -56,4 +56,16 @@ async function deleteHorario(req, res, next) {
     }
 }
 
-module.exports = { addHorario, addHorarios, deleteHorario };
+// Get horarios by sucursal (public endpoint for customers to see available time windows)
+async function getHorariosBySucursal(req, res, next) {
+    try {
+        const { sucursal } = req.params;
+        const horarios = await Horario.find({ sucursal });
+
+        res.status(200).json(horarios);
+    } catch (error) {
+        next(error);
+    }
+}
+
+module.exports = { addHorario, addHorarios, deleteHorario, getHorariosBySucursal };

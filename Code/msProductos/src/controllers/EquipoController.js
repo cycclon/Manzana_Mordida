@@ -13,10 +13,63 @@ const prodPopulate = [
 // OBTENER TODOS LOS EQUIPOS
 exports.getEquipos = async (req, res, next) => {
     try {
-        // Obtener equipos y completar campo producto y campo color (referencias)
-        const equipos = await Equipo.find({}).populate(prodPopulate);        
+        // Build filter query from request params
+        const filter = {};
 
-        res.status(200).json(equipos);
+        // Filter by condition (condicion)
+        if (req.query.condition) {
+            filter.condicion = req.query.condition;
+        }
+
+        // Filter by estado (status)
+        if (req.query.estado) {
+            filter.estado = req.query.estado;
+        }
+
+        // Filter by grade (grado)
+        if (req.query.grado) {
+            filter.grado = req.query.grado;
+        }
+
+        // Filter by price range
+        if (req.query.minPrice || req.query.maxPrice) {
+            filter.precio = {};
+            if (req.query.minPrice) {
+                filter.precio.$gte = parseFloat(req.query.minPrice);
+            }
+            if (req.query.maxPrice) {
+                filter.precio.$lte = parseFloat(req.query.maxPrice);
+            }
+        }
+
+        // Filter by battery health (condicionBateria)
+        if (req.query.minBatteryHealth) {
+            filter.condicionBateria = { $gte: parseFloat(req.query.minBatteryHealth) / 100 };
+        }
+
+        // Filter by canjeable (tradeable)
+        if (req.query.canjeable !== undefined) {
+            filter.canjeable = req.query.canjeable === 'true';
+        }
+
+        // Obtener equipos con filtros y completar campo producto y campo color (referencias)
+        const equipos = await Equipo.find(filter).populate(prodPopulate);
+
+        // If search query is provided, filter by producto model/marca/linea after populate
+        let filteredEquipos = equipos;
+        if (req.query.search) {
+            const searchLower = req.query.search.toLowerCase();
+            filteredEquipos = equipos.filter(equipo => {
+                const producto = equipo.producto;
+                return (
+                    producto.modelo?.toLowerCase().includes(searchLower) ||
+                    producto.marca?.toLowerCase().includes(searchLower) ||
+                    producto.linea?.toLowerCase().includes(searchLower)
+                );
+            });
+        }
+
+        res.status(200).json(filteredEquipos);
     } catch (error) {
         next(error);
     }

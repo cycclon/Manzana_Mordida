@@ -1,19 +1,11 @@
 const mongoose = require('mongoose');
 
-const equipoSchema = new mongoose.Schema({
+const canjeSchema = new mongoose.Schema({
     linea: {
         type: String,
         required: true
     },
     modelo: {
-        type: String,
-        required: true
-    },
-    color: {
-        type: String,
-        required: true
-    },
-    condicion: {
         type: String,
         required: true
     },
@@ -34,33 +26,26 @@ const senaSchema = new mongoose.Schema({
         type: String,
         required: true,
         enum: ['Solicitada', 'Pagada', 'Confirmada', 'Vencida']
-    }
-});
-
-const clienteSchema = new mongoose.Schema({
-    nombreUsuario: {
-        type: String,
-        required: true
     },
-    email: {
+    comprobante: {
         type: String,
-        required: true
-    },
-    telefono: {
-        type: String,
-        required: true
+        required: false
     }
 });
 
 const reservaSchema = new mongoose.Schema({
-    cliente: clienteSchema,
-    equipo: equipoSchema,
-    fecha: {
-        type: Date,
+    usuarioCliente: {
+        type: String,
         required: true
     },
-    sucursal: {
-        type: String,
+    equipo: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "productos",
+        required: true
+    },
+    canje: canjeSchema,
+    fecha: {
+        type: Date,
         required: true
     },
     sena: senaSchema,

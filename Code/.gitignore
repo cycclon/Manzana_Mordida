@@ -5,3 +5,6 @@ Code/nginx/conf.d/api.conf
 Code/nginx/nginx.conf
 docker-compose.prod.yml
 .env
+
+# Environment variables (contains sensitive data)
+.env

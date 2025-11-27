@@ -28,16 +28,35 @@ const {
  *             $ref: '#/components/schemas/LoginRequest'
  *     responses:
  *       "200":
- *         description: Login successful. Returns validation token
+ *         description: Login successful. Returns user data and tokens
  *         content:
  *           application/json:
- *             schema:               
+ *             schema:
  *               type: object
  *               properties:
- *                 token:
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                       description: User ID
+ *                       example: 6898ef9d6e5f03a7f4497c7b
+ *                     username:
+ *                       type: string
+ *                       description: Username
+ *                       example: admin
+ *                     role:
+ *                       type: string
+ *                       description: User role
+ *                       example: admin
+ *                 accessToken:
  *                   type: string
- *                   description: Validattion token.
+ *                   description: JWT access token
  *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2ODk4ZWY5ZDZlNWYwM2E3ZjQ0OTdjN2IiLCJ1c2VybmFtZSI6ImFkbWluIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzU1MzUzNTc1LCJleHAiOjE3NTUzNTQ0NzV9.DjraMhOtSJJcVkwtDyWqMhb6lB5W5emVL3lgYuTJcKg
+ *                 refreshToken:
+ *                   type: string
+ *                   description: Refresh token (also sent as httpOnly cookie)
+ *                   example: a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6
  *       401:
  *         description: Invalid credentials
  */
@@ -105,28 +124,45 @@ router.get("/validate", validateToken);
  *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Token refreshed
+ *         description: Token refreshed. Returns user data and new tokens
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                  token:
- *                      type: string
- *                      example: long hex string
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                       description: User ID
+ *                       example: 6898ef9d6e5f03a7f4497c7b
+ *                     username:
+ *                       type: string
+ *                       description: Username
+ *                       example: admin
+ *                     role:
+ *                       type: string
+ *                       description: User role
+ *                       example: admin
+ *                 accessToken:
+ *                   type: string
+ *                   description: New JWT access token
+ *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *                 refreshToken:
+ *                   type: string
+ *                   description: New refresh token (also sent as httpOnly cookie)
+ *                   example: a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6
  *       401:
- *         description: Invalid or missing token
+ *         description: Invalid or missing refresh token
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 valid:
- *                   type: boolean
- *                   example: false
  *                 message:
  *                   type: string
- *                   example: Invalid or expired token
+ *                   example: Invalid refresh token
  */
 router.post("/refresh", refreshToken);
 /**

@@ -16,6 +16,8 @@ import RegisterPage from '../pages/public/RegisterPage';
 import DevicesPage from '../pages/public/DevicesPage';
 import DeviceDetailPage from '../pages/public/DeviceDetailPage';
 import BookAppointmentPage from '../pages/public/BookAppointmentPage';
+import ReserveDevicePage from '../pages/public/ReserveDevicePage';
+import ReservationConfirmationPage from '../pages/public/ReservationConfirmationPage';
 
 // Customer Pages
 import ProfilePage from '../pages/customer/ProfilePage';
@@ -109,11 +111,11 @@ export const router = createBrowserRouter([
       // Reservation Routes
       {
         path: 'reservar/:deviceId',
-        element: (
-          <ProtectedRoute>
-            <div>Make Reservation Page - En construcción</div>
-          </ProtectedRoute>
-        ),
+        element: <ReserveDevicePage />,
+      },
+      {
+        path: 'reserva/:reservationId/confirmacion',
+        element: <ReservationConfirmationPage />,
       },
 
       // Admin Routes

@@ -21,6 +21,7 @@ import {
 import { PriceDisplay } from '../common/PriceDisplay';
 import { useTradeIn } from '../../hooks/useTradeIn';
 import { DEVICE_CONDITION_LABELS } from '../../constants';
+import { getThumbnailUrl } from '../../utils/imageOptimization';
 
 /**
  * DeviceCard - Display device in grid/list with image, specs, and actions
@@ -35,11 +36,12 @@ export const DeviceCard = ({ device, showActions = true }) => {
     ? getAdjustedPrice(devicePrice)
     : devicePrice;
 
-  // Get first image or placeholder
-  const imageUrl = device.imagenes?.[0] || device.images?.[0]?.url || '/placeholder-device.png';
+  // Get first image or placeholder and optimize for thumbnail
+  const originalImageUrl = device.imagenes?.[0] || device.images?.[0]?.url || '/placeholder-device.png';
+  const imageUrl = getThumbnailUrl(originalImageUrl);
 
-  // Check if device is reserved
-  const isReserved = device.estado === 'Reservado' || device.status === 'reserved' || device.reserved;
+  // Check if device is reserved (use isReserved flag or check displayEstado/estado)
+  const isReserved = device.isReserved || device.displayEstado === 'Reservado' || device.estado === 'Reservado' || device.status === 'reserved' || device.reserved;
 
   // Extract data from nested product object
   const modelo = device.producto?.modelo || device.model || 'Unknown Model';

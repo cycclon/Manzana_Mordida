@@ -23,6 +23,7 @@ import {
   Warning as WarningIcon,
 } from '@mui/icons-material';
 import { productsAPI } from '../../api/products';
+import { reservationsAPI } from '../../api/reservations';
 import { handleApiError } from '../../api/client';
 import { useTradeIn } from '../../hooks/useTradeIn';
 import { PriceDisplay } from '../../components/common/PriceDisplay';
@@ -42,6 +43,7 @@ export const DeviceDetailPage = () => {
   const [device, setDevice] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isReserved, setIsReserved] = useState(false);
 
   // Fetch device details
   useEffect(() => {
@@ -51,6 +53,11 @@ export const DeviceDetailPage = () => {
       try {
         const response = await productsAPI.getDeviceById(id);
         setDevice(response);
+
+        // Check if device has an active reservation
+        const reservedDeviceIds = await reservationsAPI.getReservedDeviceIds();
+        const hasActiveReservation = reservedDeviceIds.includes(id);
+        setIsReserved(hasActiveReservation);
       } catch (err) {
         console.error('Error fetching device:', err);
         const errorMessage = handleApiError(err);
@@ -75,13 +82,13 @@ export const DeviceDetailPage = () => {
   const detalles = device?.detalles || device?.description;
   const grado = device?.grado || device?.grade;
 
+  // Display estado - show "Reservado" if there's an active reservation
+  const displayEstado = isReserved ? 'Reservado' : estado;
+
   // Calculate display price
   const displayPrice = device && hasTradeIn
     ? getAdjustedPrice(devicePrice)
     : devicePrice;
-
-  // Check if device is reserved
-  const isReserved = estado === 'Reservado' || device?.reserved;
 
   // Loading state
   if (loading) {
@@ -224,7 +231,7 @@ export const DeviceDetailPage = () => {
               {/* Estado */}
               <Box>
                 <Typography variant="body1">
-                  <strong>Estado:</strong> {estado}
+                  <strong>Estado:</strong> {displayEstado}
                 </Typography>
               </Box>
             </Box>
@@ -253,8 +260,9 @@ export const DeviceDetailPage = () => {
                   startIcon={<ReserveIcon />}
                   onClick={() => navigate(`/reservar/${device._id || device.id}`)}
                   fullWidth
+                  disabled={isReserved || estado === 'Vendido'}
                 >
-                  Reservar Dispositivo
+                  {isReserved ? 'Dispositivo Reservado' : 'Reservar Dispositivo'}
                 </Button>
                 <Button
                   variant="outlined"
@@ -262,6 +270,7 @@ export const DeviceDetailPage = () => {
                   startIcon={<EventIcon />}
                   onClick={() => navigate(`/agendar/${device._id || device.id}`)}
                   fullWidth
+                  disabled={isReserved || estado === 'Vendido'}
                 >
                   Agendar Cita para Ver
                 </Button>
@@ -269,8 +278,8 @@ export const DeviceDetailPage = () => {
             )}
 
             {isReserved && (
-              <Alert severity="info" icon={<WarningIcon />}>
-                Este dispositivo no está disponible para reserva o citas en este momento.
+              <Alert severity="warning" icon={<WarningIcon />} sx={{ mt: 2 }}>
+                Este dispositivo ya tiene una reserva activa y no está disponible para nuevas reservas o citas.
               </Alert>
             )}
 

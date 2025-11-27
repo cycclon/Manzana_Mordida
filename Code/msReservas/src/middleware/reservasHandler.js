@@ -25,10 +25,9 @@ async function reservaPropia(req, res, next) {
         }
 
         // Verificar que el usuario sea el dueño de la reserva
-        // Comparar con username y email para mayor flexibilidad
-        const esPropia = reserva.cliente.nombreUsuario === req.user.username || 
-                       reserva.cliente.email === req.user.email;
-        
+        // Comparar con username (usuarioCliente es un string, no un objeto)
+        const esPropia = reserva.usuarioCliente === req.user.username;
+
         if (!esPropia) {
             return res.status(403).json({
                 success: false,

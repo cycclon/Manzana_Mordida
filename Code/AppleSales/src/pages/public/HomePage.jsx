@@ -19,6 +19,7 @@ import {
   ArrowForward as ArrowForwardIcon,
 } from '@mui/icons-material';
 import { productsAPI } from '../../api/products';
+import { reservationsAPI } from '../../api/reservations';
 import { handleApiError } from '../../api/client';
 import DeviceCard from '../../components/devices/DeviceCard';
 import { LoadingScreen } from '../../components/common';
@@ -35,13 +36,31 @@ export const HomePage = () => {
   useEffect(() => {
     const fetchFeaturedDevices = async () => {
       try {
+        // Fetch reserved device IDs
+        const reservedDeviceIds = await reservationsAPI.getReservedDeviceIds();
+        const reservedIdsSet = new Set(reservedDeviceIds);
+
+        // Fetch devices
         const response = await productsAPI.getAllDevices({
           page: 1,
-          limit: 4,
+          limit: 8, // Fetch more to ensure we get 4 after filtering
         });
 
         const devices = response.data || response || [];
-        setFeaturedDevices(devices.slice(0, 4));
+
+        // Filter out sold devices
+        const availableDevices = devices.filter(
+          device => device.estado !== 'Vendido' && device.status !== 'Vendido'
+        );
+
+        // Mark devices with reservation status
+        const devicesWithReservationStatus = availableDevices.map(device => ({
+          ...device,
+          isReserved: reservedIdsSet.has(device._id),
+          displayEstado: reservedIdsSet.has(device._id) ? 'Reservado' : device.estado,
+        }));
+
+        setFeaturedDevices(devicesWithReservationStatus.slice(0, 4));
       } catch (error) {
         console.error('Error fetching featured devices:', error);
         // Silently fail - not critical for homepage

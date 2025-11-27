@@ -4,11 +4,12 @@
  *  name: Clientes
  *  description: Endpoints de gestión de clientes
  */
-const { 
-    getClientes, 
-    addCliente, 
-    getCliente, 
-    editCliente 
+const {
+    getClientes,
+    addCliente,
+    getCliente,
+    editCliente,
+    getClienteByUsername
 } = require('../controllers/cliente.controller');
 // MIDDLEWARE IMPORTS
 const { authMiddleware, roleMiddleware } = require('../middleware/securityHandler');
@@ -39,6 +40,35 @@ const router = express.Router();
  *          description: 'Datos faltantes o incorrectos'
  */
 router.post('/nuevo-cliente', addCliente);
+
+// GET CUSTOMER BY USERNAME (authenticated viewers can access their own data)
+/**
+ * @swagger
+ * /api/v1/clientes/usuario/{username}:
+ *   get:
+ *      summary: Cliente por username
+ *      description: Obtiene un cliente por su nombre de usuario (campo usuario)
+ *      tags: [Clientes]
+ *      security:
+ *       - bearerAuth: []
+ *      parameters:
+ *        - in: path
+ *          name: username
+ *          required: true
+ *          schema:
+ *            type: string
+ *          description: Username del cliente
+ *      responses:
+ *        "200":
+ *          description: Objeto cliente
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: '#/components/schemas/cliente'
+ *        "404":
+ *          description: 'Cliente no encontrado'
+ */
+router.get('/usuario/:username', authMiddleware, roleMiddleware(['viewer', 'admin', 'sales']), getClienteByUsername);
 
 // ADMIN OR SALES
 /**

@@ -16,16 +16,74 @@ const multer = require('multer');
  * @swagger
  * /api/equipos/:
  *   get:
- *      summary: Listado de equipos
+ *      summary: Listado de equipos con filtros opcionales
+ *      description: Obtiene una lista de equipos. Soporta múltiples filtros para búsqueda y filtrado avanzado
  *      tags: [Equipos]
+ *      parameters:
+ *        - in: query
+ *          name: search
+ *          schema:
+ *            type: string
+ *          description: Buscar por modelo, marca o línea del producto (ej. "iPhone", "MacBook")
+ *          example: iPhone
+ *        - in: query
+ *          name: condition
+ *          schema:
+ *            type: string
+ *            enum: [Nuevo, Usado, Reacondicionado]
+ *          description: Filtrar por condición del equipo
+ *          example: Usado
+ *        - in: query
+ *          name: estado
+ *          schema:
+ *            type: string
+ *            enum: [Disponible, Reservado, Vendido]
+ *          description: Filtrar por estado del equipo
+ *          example: Disponible
+ *        - in: query
+ *          name: grado
+ *          schema:
+ *            type: string
+ *            enum: [A+, A, A-, Sealed, OEM]
+ *          description: Filtrar por grado del equipo
+ *          example: A+
+ *        - in: query
+ *          name: minPrice
+ *          schema:
+ *            type: number
+ *            format: float
+ *          description: Precio mínimo en USD
+ *          example: 500
+ *        - in: query
+ *          name: maxPrice
+ *          schema:
+ *            type: number
+ *            format: float
+ *          description: Precio máximo en USD
+ *          example: 2000
+ *        - in: query
+ *          name: minBatteryHealth
+ *          schema:
+ *            type: number
+ *            format: float
+ *            minimum: 0
+ *            maximum: 100
+ *          description: Salud mínima de batería en porcentaje (0-100)
+ *          example: 80
+ *        - in: query
+ *          name: canjeable
+ *          schema:
+ *            type: boolean
+ *          description: Filtrar equipos canjeables
+ *          example: true
  *      responses:
  *        "200":
- *          description: Listado de equipos registrados
+ *          description: Listado de equipos registrados (filtrado según parámetros)
  *          content:
  *              application/json:
  *                  schema:
  *                      type: array
- *                      items: [$ref: '#/components/schemas/equipo']          
+ *                      items: [$ref: '#/components/schemas/equipo']
  */
 router.get('/', EquipoController.getEquipos);
 /**

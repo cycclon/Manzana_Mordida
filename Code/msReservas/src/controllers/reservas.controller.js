@@ -1,4 +1,5 @@
 const Reserva = require('../schemas/reserva.model');
+const { uploadComprobante } = require('../utils/R2Client');
 
 /**
  * Solicitar una nueva reserva
@@ -7,19 +8,7 @@ const Reserva = require('../schemas/reserva.model');
  */
 async function solicitarReserva(req, res, next) {
     try {
-        const { equipo, sucursal } = req.body;
-        
-        // Obtener información del usuario autenticado
-        const cliente = {
-            nombreUsuario: req.user.username || req.user.nombreUsuario,
-            email: req.user.email,
-            telefono: req.body.telefono || req.user.telefono
-        };
-
-        // Calcular la seña (20% del precio según el .env)
-        const porcentajeReserva = parseFloat(process.env.PORCENTAJE_RESERVA) || 0.2;
-        const precioEquipo = req.body.precio || 0; // Debería venir del body o del servicio de productos
-        const montoSena = precioEquipo * porcentajeReserva;
+        const { usuarioCliente, IdEquipo, canje, montoSena } = req.body;
 
         // Calcular fecha de vencimiento
         const vigenciaReserva = parseInt(process.env.VIGENCIA_RESERVA) || 7;
@@ -28,10 +17,10 @@ async function solicitarReserva(req, res, next) {
 
         // Crear la reserva
         const nuevaReserva = new Reserva({
-            cliente,
-            equipo,
+            usuarioCliente,
+            equipo: IdEquipo,
+            canje,
             fecha: new Date(),
-            sucursal,
             sena: {
                 monto: montoSena,
                 estado: 'Solicitada'
@@ -54,15 +43,20 @@ async function solicitarReserva(req, res, next) {
 /**
  * Pagar la seña de una reserva
  * POST /api/v1/reservas/pagarsena/:idReserva
- * Body: { metodoPago: string, comprobante?: string }
+ * Body (multipart/form-data): { metodoPago: string, comprobante: File }
  */
 async function pagarSena(req, res, next) {
     try {
         const { idReserva } = req.params;
-        const { metodoPago, comprobante } = req.body;
+        const { metodoPago } = req.body;
+        const comprobanteFile = req.file;
+
+        console.log('pagarSena - idReserva:', idReserva);
+        console.log('pagarSena - metodoPago:', metodoPago);
+        console.log('pagarSena - file:', comprobanteFile);
 
         const reserva = await Reserva.findById(idReserva);
-        
+
         if (!reserva) {
             return res.status(404).json({
                 success: false,
@@ -78,13 +72,23 @@ async function pagarSena(req, res, next) {
             });
         }
 
-        // Actualizar estado de la seña (el middleware ya lo hace, pero lo confirmamos aquí)
-        reserva.sena.estado = 'Pagada';
-        
-        await reserva.save();
+        // Verificar que se haya subido un archivo
+        if (!comprobanteFile) {
+            return res.status(400).json({
+                success: false,
+                message: 'Debe subir un comprobante de pago'
+            });
+        }
 
-        // Aquí podrías integrar con un servicio de pagos real
-        // o registrar el comprobante en otra colección
+        // Upload payment proof to R2
+        const comprobanteUrl = await uploadComprobante(comprobanteFile);
+        console.log('pagarSena - comprobanteUrl:', comprobanteUrl);
+
+        // Actualizar estado de la seña y guardar URL del comprobante
+        reserva.sena.estado = 'Pagada';
+        reserva.sena.comprobante = comprobanteUrl;
+
+        await reserva.save();
 
         res.status(200).json({
             success: true,
@@ -92,6 +96,7 @@ async function pagarSena(req, res, next) {
             data: reserva
         });
     } catch (error) {
+        console.error('Error en pagarSena:', error);
         next(error);
     }
 }
@@ -115,8 +120,7 @@ async function getReserva(req, res, next) {
 
         // Si es un viewer, verificar que sea dueño de la reserva
         if (req.user.role === 'viewer') {
-            if (reserva.cliente.nombreUsuario !== req.user.username && 
-                reserva.cliente.email !== req.user.email) {
+            if (reserva.usuarioCliente !== req.user.username) {
                 return res.status(403).json({
                     success: false,
                     message: 'No tienes permiso para ver esta reserva'
@@ -239,13 +243,9 @@ async function getReservas(req, res, next) {
         if (estado) {
             filtros.estado = estado;
         }
-        
-        if (sucursal) {
-            filtros.sucursal = sucursal;
-        }
-        
+
         if (cliente) {
-            filtros['cliente.nombreUsuario'] = { $regex: cliente, $options: 'i' };
+            filtros.usuarioCliente = { $regex: cliente, $options: 'i' };
         }
         
         if (fechaDesde || fechaHasta) {
@@ -283,11 +283,42 @@ async function getReservas(req, res, next) {
     }
 }
 
-module.exports = { 
-    solicitarReserva,  
+function calcularSena(req, res, next) {
+    const { monto } = req.body;
+    return res.status(200).json({ sena: monto * (process.env.PORCENTAJE_RESERVA || .2)});
+};
+
+/**
+ * Get reserved device IDs (public endpoint)
+ * GET /api/v1/reservas/reserved-devices
+ * Returns array of device IDs that have active reservations
+ */
+async function getReservedDevices(req, res, next) {
+    try {
+        const activeReservations = await Reserva.find({
+            estado: { $nin: ['Cancelada', 'Vencida'] }
+        }).select('equipo');
+
+        const reservedDeviceIds = activeReservations
+            .map(r => r.equipo)
+            .filter(Boolean);
+
+        res.status(200).json({
+            success: true,
+            data: reservedDeviceIds
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
+module.exports = {
+    solicitarReserva,
     pagarSena,
     getReserva,
     confirmarReserva,
     completarReserva,
-    getReservas
+    getReservas,
+    calcularSena,
+    getReservedDevices
 };

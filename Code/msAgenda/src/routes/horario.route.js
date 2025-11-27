@@ -6,11 +6,35 @@
  */
 const express = require('express');
 const router = new express.Router();
-const { addHorario, 
-        addHorarios, 
-        deleteHorario } = require('../controllers/horario.controller');
+const { addHorario,
+        addHorarios,
+        deleteHorario,
+        getHorariosBySucursal } = require('../controllers/horario.controller');
 const { authMiddleware, roleMiddleware } = require('../middleware/securityHandler');
 const { detectarSuperposicionSimple, detectarSuperposicionMultiple } = require('../middleware/horario.middleware');
+
+// PUBLIC - Get horarios by sucursal
+/**
+ * @swagger
+ * /api/v1/horarios/sucursal/{sucursal}:
+ *   get:
+ *     summary: Obtener horarios por sucursal
+ *     description: Devuelve todos los horarios disponibles para una sucursal específica
+ *     tags: [Horarios]
+ *     parameters:
+ *       - in: path
+ *         name: sucursal
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID de la sucursal
+ *     responses:
+ *       "200":
+ *         description: Lista de horarios de la sucursal
+ *       "404":
+ *         $ref: '#/components/responses/404'
+ */
+router.get('/sucursal/:sucursal', getHorariosBySucursal);
 
 // ADMIN OR SALES 
 /**

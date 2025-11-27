@@ -13,6 +13,7 @@ import {
   Close as CloseIcon,
 } from '@mui/icons-material';
 import { useSwipeable } from 'react-swipeable';
+import { getFullQualityUrl, getThumbnailUrl } from '../../utils/imageOptimization';
 
 /**
  * ImageCarousel - Swipeable image carousel with zoom capability
@@ -80,11 +81,12 @@ export const ImageCarousel = ({ images = [], alt = 'Device image' }) => {
 
   // Single image (no carousel needed)
   if (images.length === 1) {
+    const imageUrl = images[0].url || images[0];
     return (
       <Box sx={{ position: 'relative' }}>
         <Box
           component="img"
-          src={images[0].url || images[0]}
+          src={getFullQualityUrl(imageUrl)}
           alt={alt}
           sx={{
             width: '100%',
@@ -142,7 +144,7 @@ export const ImageCarousel = ({ images = [], alt = 'Device image' }) => {
             </IconButton>
             <Box
               component="img"
-              src={images[0].url || images[0]}
+              src={getFullQualityUrl(imageUrl)}
               alt={alt}
               sx={{
                 maxWidth: '95vw',
@@ -174,12 +176,14 @@ export const ImageCarousel = ({ images = [], alt = 'Device image' }) => {
         }}
       >
         {/* Images */}
-        {images.map((image, index) => (
-          <Box
-            key={index}
-            component="img"
-            src={image.url || image}
-            alt={`${alt} ${index + 1}`}
+        {images.map((image, index) => {
+          const imageUrl = image.url || image;
+          return (
+            <Box
+              key={index}
+              component="img"
+              src={getFullQualityUrl(imageUrl)}
+              alt={`${alt} ${index + 1}`}
             sx={{
               position: 'absolute',
               top: 0,
@@ -191,9 +195,10 @@ export const ImageCarousel = ({ images = [], alt = 'Device image' }) => {
               transform: `translateX(${(index - activeStep) * 100}%)`,
               opacity: index === activeStep ? 1 : 0,
             }}
-            onClick={() => setIsZoomed(true)}
-          />
-        ))}
+              onClick={() => setIsZoomed(true)}
+            />
+          );
+        })}
 
         {/* Navigation buttons */}
         {!isMobile && (
@@ -306,13 +311,15 @@ export const ImageCarousel = ({ images = [], alt = 'Device image' }) => {
             },
           }}
         >
-          {images.map((image, index) => (
-            <Box
-              key={index}
-              component="img"
-              src={image.url || image}
-              alt={`Thumbnail ${index + 1}`}
-              onClick={() => handleStepChange(index)}
+          {images.map((image, index) => {
+            const imageUrl = image.url || image;
+            return (
+              <Box
+                key={index}
+                component="img"
+                src={getThumbnailUrl(imageUrl)}
+                alt={`Thumbnail ${index + 1}`}
+                onClick={() => handleStepChange(index)}
               sx={{
                 width: 80,
                 height: 80,
@@ -328,8 +335,9 @@ export const ImageCarousel = ({ images = [], alt = 'Device image' }) => {
                   borderColor: 'primary.main',
                 },
               }}
-            />
-          ))}
+              />
+            );
+          })}
         </Box>
       )}
 
@@ -394,7 +402,7 @@ export const ImageCarousel = ({ images = [], alt = 'Device image' }) => {
           {/* Zoomed image */}
           <Box
             component="img"
-            src={images[activeStep].url || images[activeStep]}
+            src={getFullQualityUrl(images[activeStep].url || images[activeStep])}
             alt={`${alt} ${activeStep + 1}`}
             sx={{
               maxWidth: '95vw',

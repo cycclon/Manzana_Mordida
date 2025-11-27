@@ -131,9 +131,11 @@ export const Header = () => {
                   <Typography variant="body2">
                     {user?.username || user?.name || user?.email}
                   </Typography>
-                  <Typography variant="caption" color="inherit" sx={{ opacity: 0.8 }}>
-                    {user?.role}
-                  </Typography>
+                  {user?.role && user.role !== 'viewer' && (
+                    <Typography variant="caption" color="inherit" sx={{ opacity: 0.8 }}>
+                      {user.role}
+                    </Typography>
+                  )}
                 </Box>
 
                 <IconButton

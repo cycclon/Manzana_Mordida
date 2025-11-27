@@ -79,4 +79,21 @@ async function editCliente(req, res, next) {
     }
 }
 
-module.exports = { getClientes, addCliente, getCliente, editCliente };
+// Devuelve un cliente según su username (usuario field)
+async function getClienteByUsername(req, res, next) {
+    try {
+        const { username } = req.params;
+
+        const cliente = await Cliente.findOne({ usuario: username });
+
+        if (!cliente) {
+            return res.status(404).json({ message: 'Cliente no encontrado' });
+        }
+
+        res.status(200).json(cliente);
+    } catch (error) {
+        next(error);
+    }
+}
+
+module.exports = { getClientes, addCliente, getCliente, editCliente, getClienteByUsername };

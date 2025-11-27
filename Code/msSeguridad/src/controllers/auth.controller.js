@@ -41,7 +41,16 @@ async function login(req, res, next) {
 
         res.cookie("refreshToken", rtDoc.token, cookieOptions);
 
-        res.json({ token });
+        // Return user data along with tokens
+        res.json({
+            user: {
+                id: user._id,
+                username: user.username,
+                role: user.role
+            },
+            accessToken: token,
+            refreshToken: rtDoc.token
+        });
     } catch (error) {
         next(error);
     }
@@ -117,7 +126,15 @@ async function refreshToken(req, res, next) {
         };
 
         res.cookie("refreshToken", newRt.token, cookieOptions);
-        return res.json({ token: newAccessToken });
+        return res.json({
+            user: {
+                id: user._id,
+                username: user.username,
+                role: user.role
+            },
+            accessToken: newAccessToken,
+            refreshToken: newRt.token
+        });
     } catch (error) {
         next(error);
     }    
