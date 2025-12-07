@@ -27,7 +27,7 @@ export const ConfirmDialog = ({
   };
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
+    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth disableRestoreFocus>
       <DialogTitle sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
         {severity === 'warning' && (
           <WarningIcon color="warning" />

@@ -88,17 +88,35 @@ const EquipoSchema = new mongoose.Schema({
     canjeable: { // EDITABLE
         type: Boolean,
         required: true
+    },
+    fechaVenta: { // EDITABLE - Auto set when estado changes to "Vendido"
+        type: Date,
+        required: false
     }
 });
 
 // Validar que el equipo tenga al menos una garantía pero no ambas
+// Excepción: Dispositivos sellados pueden no tener garantía definida (se activa al primer uso)
 EquipoSchema.pre('validate', function (next) {
     const hasApple = !!this.garantiaApple;
-    const hasOwn = !!this.garantiaPropia || this.garantiaPropia === '';
+    const hasOwn = !!this.garantiaPropia;
+    const isSealed = this.condicion === 'Sellado';
 
-    if((hasApple && hasOwn)||(!hasApple && !hasOwn)) {
+    // Para dispositivos sellados, las garantías son opcionales
+    if (isSealed) {
+        // Si tienen ambas garantías definidas, es un error
+        if (hasApple && hasOwn) {
+            return next(new Error('Debe definir sólo uno de los campos: Garantía Apple o Garantía propia'));
+        }
+        // Si no tienen ninguna o tienen solo una, está bien
+        return next();
+    }
+
+    // Para dispositivos NO sellados, deben tener exactamente una garantía
+    if ((hasApple && hasOwn) || (!hasApple && !hasOwn)) {
         return next(new Error('Debe definir sólo uno de los campos: Garantía Apple o Garantía propia'));
     }
+
     next();
 });
 

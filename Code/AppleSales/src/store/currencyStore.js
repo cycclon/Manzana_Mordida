@@ -59,7 +59,7 @@ export const useCurrencyStore = create((set, get) => ({
       });
 
       // Return a fallback rate if all else fails
-      return 1000; // Fallback rate
+      return 1500; // Fallback rate
     }
   },
 

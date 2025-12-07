@@ -65,12 +65,17 @@ async function deletePrecioCanje(req, res, next) {
 async function editPrecioCanje(req, res, next) {
     try {
         const { id } = req.params;
-        const { precioCanje } = req.body;
+        const { linea, modelo, bateriaMin, bateriaMax, precioCanje } = req.body;
         const canje = await PrecioCanje.findById(id);
 
-        if(!precioCanje) return res.status(404).json({ message: 'Canje no encontrado.'});
+        if(!canje) return res.status(404).json({ message: 'Canje no encontrado.'});
 
-        canje.precioCanje = precioCanje;
+        // Update fields if provided
+        if (linea !== undefined) canje.linea = linea;
+        if (modelo !== undefined) canje.modelo = modelo;
+        if (bateriaMin !== undefined) canje.bateriaMin = bateriaMin;
+        if (bateriaMax !== undefined) canje.bateriaMax = bateriaMax;
+        if (precioCanje !== undefined) canje.precioCanje = precioCanje;
 
         await canje.save();
         res.status(201).json({ message: 'Precio de canje actualizado.'});

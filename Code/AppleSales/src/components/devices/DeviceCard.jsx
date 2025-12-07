@@ -26,7 +26,7 @@ import { getThumbnailUrl } from '../../utils/imageOptimization';
 /**
  * DeviceCard - Display device in grid/list with image, specs, and actions
  */
-export const DeviceCard = ({ device, showActions = true }) => {
+export const DeviceCard = ({ device, showActions = true, listView = false }) => {
   const navigate = useNavigate();
   const { getAdjustedPrice, hasTradeIn } = useTradeIn();
 
@@ -43,8 +43,12 @@ export const DeviceCard = ({ device, showActions = true }) => {
   // Check if device is reserved (use isReserved flag or check displayEstado/estado)
   const isReserved = device.isReserved || device.displayEstado === 'Reservado' || device.estado === 'Reservado' || device.status === 'reserved' || device.reserved;
 
+  // Check if device is "A pedido" (On Order) - can't schedule appointments for devices not in stock
+  const isOnOrder = device.displayEstado === 'A pedido' || device.estado === 'A pedido';
+
   // Extract data from nested product object
   const modelo = device.producto?.modelo || device.model || 'Unknown Model';
+  const linea = device.producto?.linea || 'N/A';
   const colorNombre = device.color?.nombre || device.color || '';
   const bateria = device.condicionBateria ? device.condicionBateria * 100 : device.batteryHealth || 0;
   const condicion = device.condicion || device.condition;
@@ -66,17 +70,18 @@ export const DeviceCard = ({ device, showActions = true }) => {
   return (
     <Card
       sx={{
-        height: '100%',
+        height: listView ? '100px' : '100%',
         display: 'flex',
-        flexDirection: 'column',
+        flexDirection: listView ? 'row' : 'column',
         position: 'relative',
         opacity: isReserved ? 0.7 : 1,
         cursor: 'pointer',
         transition: 'transform 0.2s, box-shadow 0.2s',
         '&:hover': {
-          transform: 'translateY(-4px)',
+          transform: listView ? 'translateX(4px)' : 'translateY(-4px)',
           boxShadow: 6,
         },
+        width: '100%',
       }}
       onClick={handleViewDetails}
     >
@@ -99,63 +104,78 @@ export const DeviceCard = ({ device, showActions = true }) => {
       {/* Device Image */}
       <CardMedia
         component="img"
-        height="200"
+        height={listView ? undefined : "200"}
         image={imageUrl}
         alt={device.model || 'Device'}
         sx={{
           objectFit: 'cover',
           bgcolor: 'grey.100',
+          width: listView ? 100 : '100%',
+          minWidth: listView ? 100 : undefined,
+          maxWidth: listView ? 100 : undefined,
+          height: listView ? '100%' : 200,
         }}
       />
 
-      <CardContent sx={{ flexGrow: 1, pb: 1 }}>
-        {/* Model */}
-        <Typography variant="h6" component="h3" gutterBottom noWrap>
-          {modelo}
-        </Typography>
+      <CardContent sx={{ flexGrow: 1, pb: 1, display: 'flex', flexDirection: listView ? 'row' : 'column', gap: listView ? 2 : 0, width: '100%', justifyContent: 'space-between', alignItems: listView ? 'center' : 'flex-start' }}>
+        <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+          {/* Line & Model */}
+          <Typography variant="h6" component="h3" gutterBottom={!listView} noWrap sx={{ mb: listView ? 0.5 : undefined }}>
+            {linea} {modelo}
+          </Typography>
 
-        {/* Specs Grid */}
-        <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 2 }}>
-          {/* Condition */}
-          <Chip
-            label={DEVICE_CONDITION_LABELS[condicion] || condicion}
-            size="small"
-            color="primary"
-            variant="outlined"
-          />
-
-          {/* Battery Health */}
-          {bateria > 0 && (
+          {/* Specs Grid */}
+          <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: listView ? 0 : 2 }}>
+            {/* Condition */}
             <Chip
-              icon={<BatteryIcon />}
-              label={`${bateria}%`}
+              label={DEVICE_CONDITION_LABELS[condicion] || condicion}
               size="small"
-              color={bateria >= 90 ? 'success' : 'default'}
+              color="primary"
               variant="outlined"
             />
-          )}
 
-          {/* Grade */}
-          {device.grado && (
-            <Chip
-              label={device.grado}
-              size="small"
-              color="info"
-              variant="outlined"
-            />
-          )}
+            {/* Battery Health */}
+            {bateria > 0 && (
+              <Chip
+                icon={<BatteryIcon />}
+                label={`${bateria}%`}
+                size="small"
+                color={bateria >= 90 ? 'success' : 'default'}
+                variant="outlined"
+              />
+            )}
+
+            {/* Grade */}
+            {device.grado && (
+              <Chip
+                label={device.grado}
+                size="small"
+                color="info"
+                variant="outlined"
+              />
+            )}
+          </Box>
         </Box>
 
-        {/* Color (if available) */}
-        {colorNombre && (
+        {/* Color (if available) - Positioned between specs and price in list view */}
+        {listView && colorNombre && (
+          <Box sx={{ minWidth: 120, textAlign: 'center' }}>
+            <Typography variant="body2" color="text.secondary">
+              {colorNombre}
+            </Typography>
+          </Box>
+        )}
+
+        {/* Color in grid view - Below specs */}
+        {!listView && colorNombre && (
           <Typography variant="body2" color="text.secondary" gutterBottom>
             Color: {colorNombre}
           </Typography>
         )}
 
         {/* Price */}
-        <Box sx={{ mt: 2 }}>
-          <PriceDisplay usdAmount={displayPrice} usdVariant="h5" arsVariant="body2" />
+        <Box sx={{ mt: listView ? 0 : 2, minWidth: listView ? 150 : undefined, textAlign: listView ? 'right' : 'left', display: 'flex', flexDirection: 'column', alignItems: listView ? 'flex-end' : 'flex-start', justifyContent: 'center' }}>
+          <PriceDisplay usdAmount={displayPrice} usdVariant={listView ? "h6" : "h5"} arsVariant="body2" />
           {hasTradeIn && (
             <Typography variant="caption" color="success.main" sx={{ display: 'block', mt: 0.5 }}>
               Precio con canje aplicado
@@ -166,30 +186,50 @@ export const DeviceCard = ({ device, showActions = true }) => {
 
       {/* Actions */}
       {showActions && (
-        <CardActions sx={{ justifyContent: 'space-between', px: 2, pb: 2 }}>
-          <Button
-            size="small"
-            startIcon={<VisibilityIcon />}
-            onClick={handleViewDetails}
-          >
-            Ver Más
-          </Button>
+        <CardActions sx={{
+          justifyContent: 'space-between',
+          px: 2,
+          pb: 2,
+          minWidth: listView ? 140 : undefined,
+          width: listView ? 140 : undefined,
+          flexShrink: 0,
+        }}>
+          {listView ? (
+            <IconButton
+              size="small"
+              color="primary"
+              onClick={handleViewDetails}
+              title="Ver Más"
+            >
+              <VisibilityIcon />
+            </IconButton>
+          ) : (
+            <Button
+              size="small"
+              startIcon={<VisibilityIcon />}
+              onClick={handleViewDetails}
+            >
+              Ver Más
+            </Button>
+          )}
 
           {!isReserved && (
-            <Box sx={{ display: 'flex', gap: 1 }}>
-              <IconButton
-                size="small"
-                color="primary"
-                onClick={handleBookAppointment}
-                title="Agendar Cita"
-              >
-                <EventIcon />
-              </IconButton>
+            <Box sx={{ display: 'flex', gap: 1, minWidth: listView ? 80 : undefined }}>
+              {!isOnOrder && (
+                <IconButton
+                  size="small"
+                  color="primary"
+                  onClick={handleBookAppointment}
+                  title="Agendar Cita"
+                >
+                  <EventIcon />
+                </IconButton>
+              )}
               <IconButton
                 size="small"
                 color="secondary"
                 onClick={handleMakeReservation}
-                title="Reservar"
+                title={isOnOrder ? "Reservar (A pedido)" : "Reservar"}
               >
                 <ReserveIcon />
               </IconButton>

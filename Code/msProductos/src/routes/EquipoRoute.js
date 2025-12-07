@@ -86,6 +86,27 @@ const multer = require('multer');
  *                      items: [$ref: '#/components/schemas/equipo']
  */
 router.get('/', EquipoController.getEquipos);
+
+/**
+ * @swagger
+ * /api/equipos/detalles:
+ *   get:
+ *      summary: Obtener todos los detalles únicos
+ *      description: Devuelve una lista de todos los detalles únicos usados en dispositivos (para autocomplete)
+ *      tags: [Equipos]
+ *      responses:
+ *        "200":
+ *          description: Lista de detalles únicos
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: array
+ *                      items:
+ *                        type: string
+ *                      example: ["Rayón en pantalla", "Línea fina en marco", "Sin detalles"]
+ */
+router.get('/detalles', EquipoController.getAllDetalles);
+
 /**
  * @swagger
  * /api/equipos/{id}:

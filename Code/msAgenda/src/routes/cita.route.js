@@ -11,15 +11,18 @@ const { authMiddleware, roleMiddleware } = require('../middleware/securityHandle
 const { cambiarEstado, establecerCita } = require('../middleware/cita.middleware');
 
 // CONTROLLER
-const { 
-    getCitas, 
+const {
+    getCitas,
+    getCitasRango,
     getCitasAnonimas,
     getCitasAnonimasRango,
     solicitarCita,
     cancelarCita,
     confirmarCita,
-    reprogramarCita
- } = require('../controllers/cita.controller');
+    reprogramarCita,
+    getMisCitas,
+    aceptarCita
+} = require('../controllers/cita.controller');
 
 //----------------- PUBLIC ROUTES------------------//
 /////////////////////////////////////////////////////
@@ -96,6 +99,33 @@ router.post('/cancelar/:id',
 );
 /**
  * @swagger
+ * /api/v1/citas/mis-citas:
+ *   get:
+ *     summary: Obtener mis citas
+ *     description: Obtiene todas las citas del usuario (filtradas por email). Endpoint público que requiere email como query param.
+ *     tags: [Citas]
+ *     parameters:
+ *       - in: query
+ *         name: email
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Email del cliente para filtrar sus citas
+ *     responses:
+ *       200:
+ *         description: Lista de citas del usuario
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/cita'
+ *       400:
+ *         description: Email es requerido
+ */
+router.get('/mis-citas', getMisCitas);
+/**
+ * @swagger
  * /api/v1/citas/solicitar:
  *   post:
  *     summary: Solicitar Cita
@@ -114,6 +144,36 @@ router.post('/cancelar/:id',
  *         $ref: '#/components/responses/400'
  */
 router.post('/solicitar', solicitarCita);
+/**
+ * @swagger
+ * /api/v1/citas/aceptar/{idCita}:
+ *   post:
+ *     summary: Aceptar Cita Reprogramada
+ *     description: Permite al cliente aceptar una cita que fue reprogramada por el vendedor
+ *     tags: [Citas]
+ *     parameters:
+ *       - $ref: '#/components/parameters/CitaIdParam'
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 description: Email del cliente para verificar propiedad
+ *     responses:
+ *       200:
+ *         description: Cita aceptada correctamente
+ *       400:
+ *         $ref: '#/components/responses/400'
+ *       403:
+ *         description: No autorizado
+ *       404:
+ *         $ref: '#/components/responses/404'
+ */
+router.post('/aceptar/:id', aceptarCita);
 /**
  * @swagger
  * /api/v1/citas/reprogramar/{idCita}:
@@ -138,13 +198,46 @@ router.post('/solicitar', solicitarCita);
  *         $ref: '#/components/responses/404'
  */
 router.post('/reprogramar/:id',
+    authMiddleware,
+    roleMiddleware(['admin', 'sales']),
     establecerCita,
-    cambiarEstado('Reprogramada'), 
+    cambiarEstado('Reprogramada'),
     reprogramarCita
 );
 
 //------------ ADMIN OR SALES ROUTES---------------//
 /////////////////////////////////////////////////////
+/**
+ * @swagger
+ * /api/v1/citas/rango/{fechaDesde}/{fechaHasta}:
+ *   get:
+ *     summary: Citas por rango de fechas
+ *     description: Devuelve el listado de citas completas (con cliente) por rango de fechas
+ *     tags: [Citas]
+ *     parameters:
+ *       - $ref: '#/components/parameters/citaFechaDesde'
+ *       - $ref: '#/components/parameters/citaFechaHasta'
+ *       - in: query
+ *         name: vendedor
+ *         schema:
+ *           type: string
+ *         description: Filtrar por vendedor (opcional)
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Listado de citas completas para el rango de fechas
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items: [$ref: '#/components/schemas/cita']
+ */
+router.get('/rango/:fechaDesde/:fechaHasta',
+    authMiddleware,
+    roleMiddleware(['admin', 'sales']),
+    getCitasRango
+);
 /**
  * @swagger
  * /api/v1/citas/{fecha}:
@@ -165,7 +258,7 @@ router.post('/reprogramar/:id',
  *               type: array
  *               items: [$ref: '#/components/schemas/cita']
  */
-router.get('/:fecha', 
+router.get('/:fecha',
     authMiddleware,
     roleMiddleware(['admin', 'sales']),
     getCitas

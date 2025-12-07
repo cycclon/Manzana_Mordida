@@ -67,6 +67,10 @@ const citaSchema = new mongoose.Schema({
     vendedor: {
         type: String,
         required: false
+    },
+    motivoCancelacion: {
+        type: String,
+        required: false
     }
 });
 

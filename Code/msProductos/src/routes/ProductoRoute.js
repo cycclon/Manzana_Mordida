@@ -104,11 +104,38 @@ router.post(
  *          $ref: '#/components/responses/404'
  */
 router.put(
-    '/producto/:id', 
-    authMiddleware, 
-    roleMiddleware(['admin', 'sales']), 
-    ProductoIdValidator, 
+    '/producto/:id',
+    authMiddleware,
+    roleMiddleware(['admin', 'sales']),
+    ProductoIdValidator,
     ProductoController.editProducto
+);
+
+/**
+ * @swagger
+ * /api/productos/{id}:
+ *   delete:
+ *      summary: Eliminar producto
+ *      description: Elimina un producto si no tiene dispositivos asociados
+ *      tags: [Productos]
+ *      parameters:
+ *        - $ref: '#/components/parameters/ProductoIdParam'
+ *      security:
+ *       - bearerAuth: []
+ *      responses:
+ *        "200":
+ *          description: 'Producto eliminado correctamente'
+ *        "400":
+ *          description: 'No se puede eliminar el producto porque tiene dispositivos asociados'
+ *        "404":
+ *          $ref: '#/components/responses/404'
+ */
+router.delete(
+    '/:id',
+    authMiddleware,
+    roleMiddleware(['admin', 'sales']),
+    ProductoIdValidator,
+    ProductoController.deleteProducto
 );
 
 module.exports = router;

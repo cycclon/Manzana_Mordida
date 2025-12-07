@@ -73,6 +73,7 @@ export const DeviceDetailPage = () => {
 
   // Extract data from backend response (handles Spanish field names and nested objects)
   const devicePrice = device?.precio || device?.price || 0;
+  const linea = device?.producto?.linea || 'N/A';
   const modelo = device?.producto?.modelo || device?.model || 'Unknown Model';
   const colorNombre = device?.color?.nombre || device?.color || '';
   const bateria = device?.condicionBateria ? device?.condicionBateria * 100 : device?.batteryHealth || 0;
@@ -158,9 +159,9 @@ export const DeviceDetailPage = () => {
               </Alert>
             )}
 
-            {/* Model */}
+            {/* Line & Model */}
             <Typography variant="h4" component="h1" gutterBottom>
-              {modelo}
+              {linea} {modelo}
             </Typography>
 
             {/* Condition and Grade */}
@@ -262,7 +263,7 @@ export const DeviceDetailPage = () => {
                   fullWidth
                   disabled={isReserved || estado === 'Vendido'}
                 >
-                  {isReserved ? 'Dispositivo Reservado' : 'Reservar Dispositivo'}
+                  {isReserved ? 'Dispositivo Reservado' : estado === 'A pedido' ? 'Reservar (Señar A pedido)' : 'Reservar Dispositivo'}
                 </Button>
                 <Button
                   variant="outlined"
@@ -270,7 +271,7 @@ export const DeviceDetailPage = () => {
                   startIcon={<EventIcon />}
                   onClick={() => navigate(`/agendar/${device._id || device.id}`)}
                   fullWidth
-                  disabled={isReserved || estado === 'Vendido'}
+                  disabled={isReserved || estado === 'Vendido' || estado === 'A pedido'}
                 >
                   Agendar Cita para Ver
                 </Button>
@@ -283,8 +284,14 @@ export const DeviceDetailPage = () => {
               </Alert>
             )}
 
+            {estado === 'A pedido' && !isReserved && (
+              <Alert severity="info" sx={{ mt: 2 }}>
+                Este dispositivo está por pedido y no se encuentra en stock. Puede reservarlo con una seña para solicitarlo al proveedor. No es posible agendar citas para verlo en persona.
+              </Alert>
+            )}
+
             {/* Additional info */}
-            <Box sx={{ mt: 3, p: 2, bgcolor: 'grey.50', borderRadius: 1 }}>
+            <Box sx={{ mt: 3, p: 2, bgcolor: 'background.default', borderRadius: 1, border: '1px solid', borderColor: 'divider' }}>
               <Typography variant="caption" color="text.secondary" component="div">
                 <strong>¿Tienes un dispositivo para canjear?</strong>
               </Typography>

@@ -35,7 +35,7 @@ export const customersAPI = {
 
   // Update customer (only email and whatsapp can be edited)
   updateCustomer: async (id, customerData) => {
-    const response = await clientesAPI.put(`/api/v1/clientes/${id}`, {
+    const response = await clientesAPI.patch(`/api/v1/clientes/${id}`, {
       email: customerData.email,
       whatsapp: customerData.whatsapp,
     });

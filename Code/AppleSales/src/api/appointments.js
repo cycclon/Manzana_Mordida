@@ -34,11 +34,28 @@ export const appointmentsAPI = {
     return response.data;
   },
 
+  // Accept a rescheduled appointment (public - viewer can accept)
+  // acceptData: { email: string }
+  acceptAppointment: async (appointmentId, email) => {
+    const response = await agendaAPI.post(`/api/v1/citas/aceptar/${appointmentId}`, { email });
+    return response.data;
+  },
+
   // Admin/Sales endpoints (require authentication)
 
   // Get appointments for a specific date (with full details)
   getAppointmentsByDate: async (fecha) => {
     const response = await agendaAPI.get(`/api/v1/citas/${fecha}`);
+    return response.data;
+  },
+
+  // Get appointments for a date range (with full details) - admin/sales only
+  // Optional vendedor query param to filter by seller
+  getAppointmentsByRange: async (fechaDesde, fechaHasta, vendedor = null) => {
+    const url = `/api/v1/citas/rango/${fechaDesde}/${fechaHasta}`;
+    const response = await agendaAPI.get(url, {
+      params: vendedor ? { vendedor } : {}
+    });
     return response.data;
   },
 
@@ -51,6 +68,14 @@ export const appointmentsAPI = {
   // Get horarios (available time windows) for a branch
   getHorariosBySucursal: async (sucursal) => {
     const response = await agendaAPI.get(`/api/v1/horarios/sucursal/${sucursal}`);
+    return response.data;
+  },
+
+  // Get appointments for current user (by email)
+  getMyAppointments: async (email) => {
+    const response = await agendaAPI.get('/api/v1/citas/mis-citas', {
+      params: { email },
+    });
     return response.data;
   },
 };

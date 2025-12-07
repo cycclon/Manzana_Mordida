@@ -20,6 +20,7 @@ const redoc = require('redoc-express');
 const errorHandler = require('./middleware/errorHandler');
 
 // ROUTES
+const ColorRoute = require('./routes/ColorRoute');
 const ProductoRoute = require('./routes/ProductoRoute');
 const EquipoRoute = require('./routes/EquipoRoute');
 
@@ -47,6 +48,7 @@ app.get('/swagger.json', (req, res) => {
 });
 
 // ROUTES
+app.use('/api/colores', ColorRoute);
 app.use('/api/productos', ProductoRoute);
 app.use('/api/equipos', EquipoRoute);
 

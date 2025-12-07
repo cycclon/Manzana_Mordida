@@ -15,7 +15,9 @@ const {
     completarReserva,
     getReservas,
     calcularSena,
-    getReservedDevices
+    getReservedDevices,
+    getMisReservas,
+    cancelarReserva
 } = require('../controllers/reservas.controller');
 const { authMiddleware, roleMiddleware} = require('../middleware/securityHandler');
 const { reservaPropia, cambiarEstadoReserva, cambiarEstadoSena } = require('../middleware/reservasHandler');
@@ -187,6 +189,39 @@ router.post('/solicitar',
 
 /**
  * @swagger
+ * /api/v1/reservas/mis-reservas:
+ *   get:
+ *     summary: Obtener mis reservas
+ *     description: Obtiene todas las reservas del usuario autenticado (viewer)
+ *     tags: [Reservas]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Lista de reservas del usuario
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Reserva'
+ *       401:
+ *         $ref: '#/components/responses/401'
+ */
+router.get('/mis-reservas',
+    authMiddleware,
+    roleMiddleware(['viewer']),
+    getMisReservas
+);
+
+/**
+ * @swagger
  * /api/v1/reservas/{id}:
  *   get:
  *     summary: Reserva por ID
@@ -290,6 +325,62 @@ router.post('/pagarsena/:idReserva',
     upload.single('comprobante'),
     cambiarEstadoSena('Pagada'),
     pagarSena
+);
+
+/**
+ * @swagger
+ * /api/v1/reservas/cancelar/{id}:
+ *   post:
+ *     summary: Cancelar reserva
+ *     description: Permite cancelar una reserva en estado Solicitada o Confirmada. Los viewers solo pueden cancelar sus propias reservas. Admin y sales pueden cancelar cualquier reserva.
+ *     tags: [Reservas]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: ID de la reserva a cancelar
+ *         schema:
+ *           type: string
+ *           example: "507f1f77bcf86cd799439011"
+ *     requestBody:
+ *       required: false
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               motivoCancelacion:
+ *                 type: string
+ *                 description: Motivo de la cancelación
+ *                 example: "Cancelado por el cliente"
+ *     responses:
+ *       200:
+ *         description: Reserva cancelada exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Reserva cancelada exitosamente"
+ *                 data:
+ *                   $ref: '#/components/schemas/Reserva'
+ *       400:
+ *         description: No se puede cancelar una reserva en este estado
+ *       403:
+ *         description: No tienes permiso para cancelar esta reserva
+ *       404:
+ *         $ref: '#/components/responses/404'
+ *       401:
+ *         $ref: '#/components/responses/401'
+ */
+router.post('/cancelar/:id',
+    authMiddleware,
+    roleMiddleware(['viewer', 'admin', 'sales']),
+    cancelarReserva
 );
 
 // ============================================

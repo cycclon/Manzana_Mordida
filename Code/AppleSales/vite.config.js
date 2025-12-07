@@ -17,6 +17,14 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api\/productos/, ''),
       },
+      '/api/equipos': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+      },
+      '/api/colores': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+      },
       '/api/clientes': {
         target: 'http://localhost:3003',
         changeOrigin: true,

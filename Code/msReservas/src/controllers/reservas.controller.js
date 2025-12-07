@@ -10,10 +10,9 @@ async function solicitarReserva(req, res, next) {
     try {
         const { usuarioCliente, IdEquipo, canje, montoSena } = req.body;
 
-        // Calcular fecha de vencimiento
-        const vigenciaReserva = parseInt(process.env.VIGENCIA_RESERVA) || 7;
-        const fechaVencimiento = new Date();
-        fechaVencimiento.setDate(fechaVencimiento.getDate() + vigenciaReserva);
+        // Calcular fecha de vencimiento de la seña (30 minutos)
+        const fechaVencimientoSena = new Date();
+        fechaVencimientoSena.setMinutes(fechaVencimientoSena.getMinutes() + 30);
 
         // Crear la reserva
         const nuevaReserva = new Reserva({
@@ -23,7 +22,8 @@ async function solicitarReserva(req, res, next) {
             fecha: new Date(),
             sena: {
                 monto: montoSena,
-                estado: 'Solicitada'
+                estado: 'Solicitada',
+                fechaVencimiento: fechaVencimientoSena
             },
             estado: 'Solicitada'
         });
@@ -190,9 +190,9 @@ async function completarReserva(req, res, next) {
     try {
         const { id } = req.params;
         const { pagoFinal, metodoPago } = req.body;
-        
+
         const reserva = await Reserva.findById(id);
-        
+
         if (!reserva) {
             return res.status(404).json({
                 success: false,
@@ -208,16 +208,39 @@ async function completarReserva(req, res, next) {
             });
         }
 
-        // El middleware ya cambió el estado
+        // Mark reservation as completed
         reserva.estado = 'Completada';
-        
         await reserva.save();
 
-        // Aquí podrías:
-        // - Registrar la venta final en el servicio de ventas
-        // - Actualizar el inventario
-        // - Generar factura/recibo
-        // - Enviar notificación de confirmación al cliente
+        // Update device status to "Vendido" in msProductos microservice
+        try {
+            const productosUrl = process.env.PRODUCTOSMS_URL || 'http://msProductos:3001/';
+            const updateUrl = `${productosUrl}api/equipos/${reserva.equipo}`;
+
+            console.log(`Updating device ${reserva.equipo} to Vendido...`);
+
+            const updateResponse = await fetch(updateUrl, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    estado: 'Vendido',
+                    fechaVenta: new Date()
+                })
+            });
+
+            if (!updateResponse.ok) {
+                console.error(`Failed to update device status: ${updateResponse.status}`);
+                // Don't fail the reservation completion if device update fails
+                // The reservation is still marked as completed
+            } else {
+                console.log(`Device ${reserva.equipo} marked as Vendido successfully`);
+            }
+        } catch (error) {
+            console.error('Error updating device status:', error.message);
+            // Don't fail the reservation completion if device update fails
+        }
 
         res.status(200).json({
             success: true,
@@ -260,17 +283,46 @@ async function getReservas(req, res, next) {
 
         // Paginación
         const skip = (parseInt(page) - 1) * parseInt(limit);
-        
+
         const reservas = await Reserva.find(filtros)
             .sort({ fecha: -1 })
             .skip(skip)
             .limit(parseInt(limit));
-        
+
         const total = await Reserva.countDocuments(filtros);
+
+        // Fetch device details from productos microservice
+        const productosUrl = process.env.PRODUCTOSMS_URL || 'http://msProductos:3001/';
+
+        const reservasConEquipos = await Promise.all(
+            reservas.map(async (reserva) => {
+                try {
+                    const url = `${productosUrl}api/equipos/equipo/${reserva.equipo}`;
+                    console.log(`Fetching equipment from: ${url}`);
+                    const response = await fetch(url);
+                    console.log(`Response status: ${response.status}`);
+
+                    if (response.ok) {
+                        const equipo = await response.json();
+                        console.log(`Equipment fetched successfully:`, equipo);
+                        return {
+                            ...reserva.toObject(),
+                            equipo: equipo
+                        };
+                    } else {
+                        console.error(`Failed to fetch equipo ${reserva.equipo}, status: ${response.status}`);
+                    }
+                } catch (error) {
+                    console.error(`Error fetching equipo ${reserva.equipo}:`, error.message);
+                }
+                // If fetch fails, return with just the ID
+                return reserva.toObject();
+            })
+        );
 
         res.status(200).json({
             success: true,
-            data: reservas,
+            data: reservasConEquipos,
             pagination: {
                 total,
                 page: parseInt(page),
@@ -312,6 +364,106 @@ async function getReservedDevices(req, res, next) {
     }
 }
 
+/**
+ * Get reservations for the current logged-in user (viewer only)
+ * GET /api/v1/reservas/mis-reservas
+ */
+async function getMisReservas(req, res, next) {
+    try {
+        // Get username from JWT token (set by authMiddleware in req.user)
+        const username = req.user.username;
+
+        const reservas = await Reserva.find({ usuarioCliente: username })
+            .sort({ fecha: -1 });
+
+        // Check and update expired reservations
+        const now = new Date();
+        const reservasActualizadas = await Promise.all(
+            reservas.map(async (reserva) => {
+                // Check if seña has expired (only for 'Solicitada' state)
+                if (reserva.sena.estado === 'Solicitada' &&
+                    reserva.sena.fechaVencimiento &&
+                    now > reserva.sena.fechaVencimiento) {
+                    // Mark as expired
+                    reserva.sena.estado = 'Vencida';
+                    reserva.estado = 'Vencida';
+                    await reserva.save();
+                }
+                return reserva;
+            })
+        );
+
+        // Fetch device details from productos microservice
+        const productosUrl = process.env.PRODUCTOSMS_URL || 'http://msProductos:3001/';
+
+        const reservasConEquipos = await Promise.all(
+            reservasActualizadas.map(async (reserva) => {
+                try {
+                    const response = await fetch(`${productosUrl}api/equipos/equipo/${reserva.equipo}`);
+                    if (response.ok) {
+                        const equipo = await response.json();
+                        return {
+                            ...reserva.toObject(),
+                            equipo: equipo
+                        };
+                    }
+                } catch (error) {
+                    console.error(`Error fetching equipo ${reserva.equipo}:`, error);
+                }
+                // If fetch fails, return with just the ID
+                return reserva.toObject();
+            })
+        );
+
+        res.status(200).json({
+            success: true,
+            data: reservasConEquipos
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
+/**
+ * Cancel a reservation
+ * POST /api/v1/reservas/cancelar/:id
+ */
+async function cancelarReserva(req, res, next) {
+    try {
+        const { id } = req.params;
+        const { motivoCancelacion } = req.body;
+
+        const reserva = await Reserva.findById(id);
+
+        if (!reserva) {
+            return res.status(404).json({ message: 'Reserva no encontrada' });
+        }
+
+        // Check if user owns this reservation (for viewers)
+        if (req.user.role === 'viewer' && reserva.usuarioCliente !== req.user.username) {
+            return res.status(403).json({ message: 'No tienes permiso para cancelar esta reserva' });
+        }
+
+        // Can only cancel if in Solicitada or Confirmada state
+        if (reserva.estado !== 'Solicitada' && reserva.estado !== 'Confirmada') {
+            return res.status(400).json({
+                message: `No se puede cancelar una reserva en estado ${reserva.estado}`
+            });
+        }
+
+        reserva.estado = 'Cancelada';
+        reserva.motivoCancelacion = motivoCancelacion || 'Sin especificar';
+        await reserva.save();
+
+        res.status(200).json({
+            message: 'Reserva cancelada exitosamente',
+            data: reserva
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
 module.exports = {
     solicitarReserva,
     pagarSena,
@@ -320,5 +472,7 @@ module.exports = {
     completarReserva,
     getReservas,
     calcularSena,
-    getReservedDevices
+    getReservedDevices,
+    getMisReservas,
+    cancelarReserva
 };

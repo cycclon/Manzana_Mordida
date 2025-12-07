@@ -55,14 +55,14 @@ export const ReservationConfirmationPage = () => {
         const response = await reservationsAPI.getReservationById(reservationId);
         // Handle both {data: ...} and direct object responses
         const data = response.data || response;
-        console.log('Reservation data:', data);
+        //console.log('Reservation data:', data);
         setReservation(data);
 
         // Fetch device details if equipo is an ObjectId string
         if (data.equipo && typeof data.equipo === 'string') {
           try {
             const deviceData = await productsAPI.getDeviceById(data.equipo);
-            console.log('Device data:', deviceData);
+            //console.log('Device data:', deviceData);
             setDevice(deviceData);
           } catch (err) {
             console.error('Error fetching device:', err);
@@ -77,7 +77,7 @@ export const ReservationConfirmationPage = () => {
         if (data.usuarioCliente) {
           try {
             const customerData = await customersAPI.getCustomerByUsername(data.usuarioCliente);
-            console.log('Customer data:', customerData);
+            //console.log('Customer data:', customerData);
             setCustomer(customerData);
           } catch (err) {
             console.error('Error fetching customer:', err);

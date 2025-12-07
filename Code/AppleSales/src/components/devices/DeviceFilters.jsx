@@ -22,7 +22,7 @@ import {
   FilterList as FilterIcon,
   Clear as ClearIcon,
 } from '@mui/icons-material';
-import { DEVICE_CONDITIONS, STORAGE_OPTIONS, DEVICE_CONDITION_LABELS } from '../../constants';
+import { DEVICE_CONDITIONS, DEVICE_CONDITION_LABELS } from '../../constants';
 
 /**
  * DeviceFilters - Filter devices by various criteria
@@ -126,7 +126,7 @@ export const DeviceFilters = ({ filters, onFiltersChange, onClear }) => {
           />
         </Grid>
 
-        {/* Storage */}
+        {/* Storage 
         <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <FormControl fullWidth size="small" sx={{ minWidth: 180 }}>
             <InputLabel>Almacenamiento</InputLabel>
@@ -144,10 +144,11 @@ export const DeviceFilters = ({ filters, onFiltersChange, onClear }) => {
             </Select>
           </FormControl>
         </Grid>
+        */}
 
         {/* Condition */}
         <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-          <FormControl fullWidth size="small" sx={{ minWidth: 180 }}>
+          <FormControl fullWidth size="small">
             <InputLabel>Condición</InputLabel>
             <Select
               value={localFilters.condition || ''}

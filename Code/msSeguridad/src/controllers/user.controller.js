@@ -85,4 +85,16 @@ async function viewerExists(req, res, next) {
     }
 }
 
-module.exports = { registerViewer, registerStaff, firstAdmin, viewerExists };
+// Get all users (admin only)
+async function getAllUsers(req, res, next) {
+    try {
+        // Get all users, exclude password field
+        const users = await User.find({}).select('-password').sort({ createdAt: -1 });
+
+        res.status(200).json(users);
+    } catch (error) {
+        next(error);
+    }
+}
+
+module.exports = { registerViewer, registerStaff, firstAdmin, viewerExists, getAllUsers };

@@ -9,7 +9,8 @@ const router = new express.Router();
 const { addHorario,
         addHorarios,
         deleteHorario,
-        getHorariosBySucursal } = require('../controllers/horario.controller');
+        getHorariosBySucursal,
+        getHorariosByVendedor } = require('../controllers/horario.controller');
 const { authMiddleware, roleMiddleware } = require('../middleware/securityHandler');
 const { detectarSuperposicionSimple, detectarSuperposicionMultiple } = require('../middleware/horario.middleware');
 
@@ -35,6 +36,31 @@ const { detectarSuperposicionSimple, detectarSuperposicionMultiple } = require('
  *         $ref: '#/components/responses/404'
  */
 router.get('/sucursal/:sucursal', getHorariosBySucursal);
+
+// AUTHENTICATED - Get horarios by vendedor (seller's own schedules)
+/**
+ * @swagger
+ * /api/v1/horarios/vendedor/{vendedor}:
+ *   get:
+ *     summary: Obtener horarios por vendedor
+ *     description: Devuelve todos los horarios de un vendedor específico
+ *     tags: [Horarios]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: vendedor
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Username del vendedor
+ *     responses:
+ *       "200":
+ *         description: Lista de horarios del vendedor
+ *       "401":
+ *         $ref: '#/components/responses/401'
+ */
+router.get('/vendedor/:vendedor', authMiddleware, roleMiddleware(['admin', 'sales']), getHorariosByVendedor);
 
 // ADMIN OR SALES 
 /**

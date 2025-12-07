@@ -27,6 +27,8 @@ function cambiarEstado(nuevoEstado) {
                     if(req.cita.estado !== 'Solicitada' && req.cita.estado !== 'Confirmada') {
                         return res.status(400).json({ message: `No se puede cancelar una cita ${ req.cita.estado }` });
                     }
+                    // Add cancellation reason from request body
+                    req.cita.motivoCancelacion = req.body.motivo || 'No especificado';
                     break;
                 case "Reprogramada":
                     if(req.cita.estado === 'Reprogramada') {
@@ -34,6 +36,7 @@ function cambiarEstado(nuevoEstado) {
                     } else {
                         console.log(req.cita);
                         const { nuevaFecha, nuevaHora } = req.body;
+                        // Create new appointment with reference to old one
                         const citaReprogramada = new Cita({
                             cliente: req.cita.cliente,
                             fecha: nuevaFecha,
@@ -41,12 +44,11 @@ function cambiarEstado(nuevoEstado) {
                             sucursal: req.cita.sucursal,
                             estado: "Solicitada",
                             duracion: req.cita.cliente.canje ? 2 : 0.5,
-                            vendedor: req.cita.vendedor
+                            vendedor: req.user.username, // Set the seller who is rescheduling
+                            reprogramada: req.cita._id // Reference to the old appointment
                         });
                         console.log('ok');
-                        const result = await citaReprogramada.save();
-
-                        req.cita.reprogramada = result._id;
+                        await citaReprogramada.save();
                     }
                     break;
                 default:

@@ -39,7 +39,6 @@ export const DevicesPage = () => {
   const [filters, setFilters] = useState({
     search: initialSearch,
     condition: '',
-    storage: '',
     minPrice: 0,
     maxPrice: 5000,
     minBattery: 0,
@@ -78,10 +77,7 @@ export const DevicesPage = () => {
         params.search = debouncedSearch;
       }
       if (filters.condition) {
-        params.condition = filters.condition;
-      }
-      if (filters.storage) {
-        params.storage = filters.storage;
+        params.condicion = filters.condition;
       }
       if (filters.minPrice > 0) {
         params.minPrice = filters.minPrice;
@@ -212,6 +208,7 @@ export const DevicesPage = () => {
         page={page}
         totalPages={totalPages}
         onPageChange={handlePageChange}
+        viewMode={viewMode}
       />
     </Container>
   );

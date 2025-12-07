@@ -30,6 +30,10 @@ const senaSchema = new mongoose.Schema({
     comprobante: {
         type: String,
         required: false
+    },
+    fechaVencimiento: {
+        type: Date,
+        required: true
     }
 });
 

@@ -17,8 +17,8 @@ exports.getEquipos = async (req, res, next) => {
         const filter = {};
 
         // Filter by condition (condicion)
-        if (req.query.condition) {
-            filter.condicion = req.query.condition;
+        if (req.query.condicion) {
+            filter.condicion = req.query.condicion;
         }
 
         // Filter by estado (status)
@@ -43,8 +43,15 @@ exports.getEquipos = async (req, res, next) => {
         }
 
         // Filter by battery health (condicionBateria)
+        // Sealed devices (condicion: "Sellado") are assumed to have 100% battery
         if (req.query.minBatteryHealth) {
-            filter.condicionBateria = { $gte: parseFloat(req.query.minBatteryHealth) / 100 };
+            const minBattery = parseFloat(req.query.minBatteryHealth) / 100;
+            filter.$or = [
+                { condicionBateria: { $gte: minBattery } },
+                // Include sealed devices when filtering (they're assumed 100% battery)
+                { condicion: 'Sellado', condicionBateria: { $exists: false } },
+                { condicion: 'Sellado', condicionBateria: null }
+            ];
         }
 
         // Filter by canjeable (tradeable)
@@ -139,12 +146,33 @@ exports.editEquipo = async (req, res, next) => {
     //console.log('edit equipo');
     try {
         const equipoEditado = await Equipo.findOne({_id: req.params.id});
-        const { condicionBateria, grado, estado, costo, precio, detalles, accesorios, garantiaApple, garantiaPropia, ubicacion, canjeable} = req.body;
+        const { condicionBateria, grado, estado, costo, precio, detalles, accesorios, garantiaApple, garantiaPropia, ubicacion, canjeable, fechaVenta} = req.body;
 
         // Verificar si cada variable del cuerpo tiene algun valor, si lo tiene, establecerla
         equipoEditado.condicionBateria = condicionBateria || equipoEditado.condicionBateria;
         equipoEditado.grado = grado || equipoEditado.grado;
-        equipoEditado.estado = estado || equipoEditado.estado;
+
+        // Handle estado changes and fechaVenta logic
+        const oldEstado = equipoEditado.estado;
+        const newEstado = estado || equipoEditado.estado;
+        equipoEditado.estado = newEstado;
+
+        // Auto-manage fechaVenta based on estado
+        if (newEstado === 'Vendido') {
+            // If changing to Vendido, set fechaVenta (use provided or current date)
+            if (fechaVenta !== undefined) {
+                // Manual date provided
+                equipoEditado.fechaVenta = fechaVenta ? new Date(fechaVenta) : new Date();
+            } else if (oldEstado !== 'Vendido') {
+                // Auto-set to current date when first changing to Vendido
+                equipoEditado.fechaVenta = new Date();
+            }
+            // If already Vendido and no fechaVenta provided, keep existing
+        } else {
+            // If changing from Vendido to something else, clear fechaVenta
+            equipoEditado.fechaVenta = undefined;
+        }
+
         equipoEditado.costo = costo || equipoEditado.costo;
         equipoEditado.precio = precio || equipoEditado.precio;
         equipoEditado.detalles = detalles || equipoEditado.detalles;
@@ -214,9 +242,9 @@ exports.deleteImagen = async (req, res, next) => {
         }
 
         const equipo = await Equipo.findById(req.params.id);
-        
+
         if(!equipo) {
-            return res.status(404).json({message: 'Equipo no encontrado'});            
+            return res.status(404).json({message: 'Equipo no encontrado'});
         }
 
         // remove from R2
@@ -229,6 +257,23 @@ exports.deleteImagen = async (req, res, next) => {
         return res.json({
             message: 'Imagen eliminada exitosamente'
         });
+    } catch (error) {
+        next(error);
+    }
+};
+
+// Get all unique details from devices (for autocomplete)
+exports.getAllDetalles = async (req, res, next) => {
+    try {
+        // Get all unique details from all equipos
+        const detalles = await Equipo.distinct('detalles');
+
+        // Filter out empty strings and sort alphabetically
+        const filteredDetalles = detalles
+            .filter(detalle => detalle && detalle.trim() !== '')
+            .sort((a, b) => a.localeCompare(b));
+
+        res.status(200).json(filteredDetalles);
     } catch (error) {
         next(error);
     }

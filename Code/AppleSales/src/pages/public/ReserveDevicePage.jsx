@@ -226,9 +226,9 @@ export const ReserveDevicePage = () => {
         };
       }
 
-      console.log('Creating reservation with data:', reservationData);
+      //console.log('Creating reservation with data:', reservationData);
       const response = await reservationsAPI.createReservation(reservationData);
-      console.log('Reservation response:', response);
+      //console.log('Reservation response:', response);
 
       // Extract reservation ID from response (could be in response.data._id or response._id)
       const reservationIdFromResponse = response.data?._id || response._id || response.id;
@@ -239,7 +239,7 @@ export const ReserveDevicePage = () => {
       }
 
       setReservationId(reservationIdFromResponse);
-      console.log('Reservation ID set to:', reservationIdFromResponse);
+      //console.log('Reservation ID set to:', reservationIdFromResponse);
       toast.success('Reserva creada exitosamente. Por favor sube el comprobante de pago.');
 
       // Move to step 2 (upload payment proof)
@@ -263,9 +263,9 @@ export const ReserveDevicePage = () => {
 
   // Upload payment proof after step 2
   const uploadPaymentProof = async () => {
-    console.log('uploadPaymentProof called');
-    console.log('reservationId:', reservationId);
-    console.log('paymentProof:', paymentProof);
+    //console.log('uploadPaymentProof called');
+    //console.log('reservationId:', reservationId);
+    //console.log('paymentProof:', paymentProof);
 
     if (!paymentProof) {
       toast.error('Por favor sube el comprobante de pago');
@@ -273,7 +273,7 @@ export const ReserveDevicePage = () => {
     }
 
     if (!reservationId) {
-      console.error('No reservation ID found!');
+      //console.error('No reservation ID found!');
       toast.error('Error: No se encontró el ID de la reserva. Por favor intenta crear la reserva nuevamente.');
       return;
     }
@@ -281,7 +281,7 @@ export const ReserveDevicePage = () => {
     setSubmitting(true);
 
     try {
-      console.log('Uploading payment proof for reservation:', reservationId);
+      //console.log('Uploading payment proof for reservation:', reservationId);
       await reservationsAPI.uploadPaymentProof(reservationId, paymentProof);
       toast.success('Comprobante subido exitosamente');
 

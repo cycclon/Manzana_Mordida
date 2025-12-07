@@ -75,22 +75,22 @@ export const HomePage = () => {
   const categories = [
     {
       name: 'iPhone',
-      icon: <PhoneIcon sx={{ fontSize: 40 }} />,
+      icon: <PhoneIcon sx={{ fontSize: { xs: 32, md: 40 } }} />,
       description: 'Teléfonos inteligentes',
     },
     {
       name: 'MacBook',
-      icon: <LaptopIcon sx={{ fontSize: 40 }} />,
+      icon: <LaptopIcon sx={{ fontSize: { xs: 32, md: 40 } }} />,
       description: 'Laptops y computadoras',
     },
     {
-      name: 'Apple Watch',
-      icon: <WatchIcon sx={{ fontSize: 40 }} />,
+      name: 'Watch',
+      icon: <WatchIcon sx={{ fontSize: { xs: 32, md: 40 } }} />,
       description: 'Relojes inteligentes',
     },
     {
       name: 'AirPods',
-      icon: <HeadphonesIcon sx={{ fontSize: 40 }} />,
+      icon: <HeadphonesIcon sx={{ fontSize: { xs: 32, md: 40 } }} />,
       description: 'Audífonos y accesorios',
     },
   ];
@@ -128,7 +128,7 @@ export const HomePage = () => {
         </Typography>
         <Grid container spacing={3}>
           {categories.map((category) => (
-            <Grid size={{ md: 3 }} key={category.name}>
+            <Grid size={{ xs: 6, sm: 6, md: 3 }} key={category.name}>
               <Paper
                 sx={{
                   p: 3,
@@ -159,8 +159,8 @@ export const HomePage = () => {
 
       {/* Featured Devices Section */}
       <Box>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-          <Typography variant="h4" component="h2">
+        <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, justifyContent: 'space-between', alignItems: { xs: 'flex-start', sm: 'center' }, gap: { xs: 1, sm: 0 }, mb: 3 }}>
+          <Typography variant="h4" component="h2" sx={{ fontSize: { xs: '1.5rem', md: '2.125rem' } }}>
             Dispositivos Destacados
           </Typography>
           <Button
@@ -224,10 +224,10 @@ export const HomePage = () => {
           <Grid size={{ xs: 12, md: 4 }}>
             <Paper sx={{ p: 3, textAlign: 'center', height: '100%' }}>
               <Typography variant="h6" gutterBottom color="primary">
-                ✓ Entrega a Domicilio
+                ✓ Oficina segura
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Recibe tu dispositivo en la comodidad de tu hogar
+                Visitanos en nuestra oficina en el centro con todas las comodidades
               </Typography>
             </Paper>
           </Grid>

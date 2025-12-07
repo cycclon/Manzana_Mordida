@@ -5,7 +5,7 @@
  *  description: Authentication endpoints
  */
 const express = require('express');
-const { registerViewer, registerStaff, firstAdmin, viewerExists } = require('../controllers/user.controller');
+const { registerViewer, registerStaff, firstAdmin, viewerExists, getAllUsers } = require('../controllers/user.controller');
 const authMiddleware = require('../middleware/auth.middleware');
 const roleMiddleware = require('../middleware/role.middleware');
 const router = express.Router();
@@ -97,6 +97,45 @@ router.post(
     authMiddleware,
     roleMiddleware(['admin']),
     registerStaff
+);
+
+/**
+ * @swagger
+ * /users/:
+ *   get:
+ *     summary: Get all users
+ *     description: Returns a list of all users (admin only)
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: List of users
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   _id:
+ *                     type: string
+ *                   username:
+ *                     type: string
+ *                   role:
+ *                     type: string
+ *                   createdAt:
+ *                     type: string
+ *                   updatedAt:
+ *                     type: string
+ *       401:
+ *         description: Unauthorized
+ */
+router.get(
+    "/",
+    authMiddleware,
+    roleMiddleware(['admin']),
+    getAllUsers
 );
 
 module.exports = router;

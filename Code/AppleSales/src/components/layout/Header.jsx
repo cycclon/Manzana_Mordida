@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   AppBar,
   Toolbar,
@@ -10,6 +10,7 @@ import {
   MenuItem,
   Avatar,
   Divider,
+  Chip,
 } from '@mui/material';
 import {
   Menu as MenuIcon,
@@ -21,11 +22,14 @@ import {
   Person as PersonIcon,
   Home as HomeIcon,
   Devices as DevicesIcon,
+  CurrencyExchange as CurrencyIcon,
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
+import { useCurrencyStore } from '../../store/currencyStore';
 import { USER_ROLES } from '../../constants';
 import { getInitials } from '../../utils/formatters';
+import logoImg from '../../assets/mm.png';
 
 /**
  * Header Component - Sticky navigation bar
@@ -33,8 +37,14 @@ import { getInitials } from '../../utils/formatters';
 export const Header = () => {
   const navigate = useNavigate();
   const { user, isAuthenticated, logout, isAdmin, isSales } = useAuth();
+  const { exchangeRate, fetchExchangeRate } = useCurrencyStore();
   const [anchorEl, setAnchorEl] = useState(null);
   const [mobileMenuAnchor, setMobileMenuAnchor] = useState(null);
+
+  // Fetch exchange rate on mount
+  useEffect(() => {
+    fetchExchangeRate();
+  }, [fetchExchangeRate]);
 
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -78,18 +88,34 @@ export const Header = () => {
             alignItems: 'center',
             cursor: 'pointer',
             mr: 4,
+            transition: 'all 0.3s ease',
+            '&:hover': {
+              filter: 'drop-shadow(0 0 8px rgba(227, 24, 55, 0.6))',
+            },
           }}
           onClick={() => navigate('/')}
         >
+            <Box
+              component="img"
+              src={logoImg}
+              alt="Manzana Mordida"
+              sx={{
+                height: 40,
+                mr: 1.5,
+              }}
+            />
             <Typography
               variant="h6"
               component="div"
               sx={{
+                fontFamily: '"Exo 2", sans-serif',
                 fontWeight: 700,
-                letterSpacing: '.1rem',
+                letterSpacing: '.05rem',
+                textTransform: 'uppercase',
+                display: { xs: 'none', sm: 'block' },
               }}
             >
-              🍎 Manzana Mordida
+              Manzana Mordida
             </Typography>
           </Box>
 
@@ -123,11 +149,30 @@ export const Header = () => {
             </Button>
           </Box>
 
+          {/* Exchange Rate Display */}
+          {exchangeRate && (
+            <Chip
+              icon={<CurrencyIcon sx={{ fontSize: 16 }} />}
+              label={`USD $1 = ARS $${exchangeRate.toLocaleString('es-AR')}`}
+              size="small"
+              sx={{
+                bgcolor: 'rgba(255, 255, 255, 0.15)',
+                color: 'inherit',
+                fontWeight: 500,
+                mr: 2,
+                display: { xs: 'none', sm: 'flex' },
+                '& .MuiChip-icon': {
+                  color: 'inherit',
+                },
+              }}
+            />
+          )}
+
           {/* User Menu */}
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             {isAuthenticated ? (
               <>
-                <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+                {/* <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
                   <Typography variant="body2">
                     {user?.username || user?.name || user?.email}
                   </Typography>
@@ -136,7 +181,7 @@ export const Header = () => {
                       {user.role}
                     </Typography>
                   )}
-                </Box>
+                </Box> */}
 
                 <IconButton
                   size="large"

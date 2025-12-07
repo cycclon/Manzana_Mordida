@@ -68,4 +68,16 @@ async function getHorariosBySucursal(req, res, next) {
     }
 }
 
-module.exports = { addHorario, addHorarios, deleteHorario, getHorariosBySucursal };
+// Get horarios by vendedor (authenticated endpoint for sellers to see their own schedules)
+async function getHorariosByVendedor(req, res, next) {
+    try {
+        const { vendedor } = req.params;
+        const horarios = await Horario.find({ vendedor }).sort({ diaSemana: 1, horaInicio: 1 });
+
+        res.status(200).json(horarios);
+    } catch (error) {
+        next(error);
+    }
+}
+
+module.exports = { addHorario, addHorarios, deleteHorario, getHorariosBySucursal, getHorariosByVendedor };

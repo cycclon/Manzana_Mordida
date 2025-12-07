@@ -253,7 +253,13 @@ export const BookAppointmentPage = () => {
 
       await appointmentsAPI.requestAppointment(appointmentData);
       toast.success('Cita agendada exitosamente');
-      navigate('/');
+
+      // If user is authenticated and is a viewer, redirect to profile with appointments tab
+      if (isAuthenticated && isViewer) {
+        navigate('/perfil?tab=2');
+      } else {
+        navigate('/');
+      }
     } catch (error) {
       console.error('Error booking appointment:', error);
       toast.error('Error al agendar la cita');
@@ -308,7 +314,7 @@ export const BookAppointmentPage = () => {
         return (
           <Grid container spacing={3}>
             <Grid size={{ xs: 12 }}>
-              <FormControl fullWidth required sx={{ minWidth: 250 }}>
+              <FormControl fullWidth required>
                 <InputLabel>Sucursal</InputLabel>
                 <Select
                   value={formData.sucursal}
@@ -457,7 +463,7 @@ export const BookAppointmentPage = () => {
               onClick={handleSubmit}
               disabled={loading}
             >
-              {loading ? <CircularProgress size={24} /> : 'Confirmar Cita'}
+              {loading ? <CircularProgress size={24} /> : 'Solicitar Cita'}
             </Button>
           ) : (
             <Button variant="contained" onClick={handleNext}>

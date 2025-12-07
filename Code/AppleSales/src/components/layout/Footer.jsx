@@ -4,6 +4,7 @@ import {
   Phone as PhoneIcon,
   LocationOn as LocationIcon,
 } from '@mui/icons-material';
+import logoImg from '../../assets/mm.png';
 
 /**
  * Footer Component
@@ -25,9 +26,25 @@ export const Footer = () => {
         <Grid container spacing={4}>
           {/* Company Info */}
           <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-            <Typography variant="h6" gutterBottom sx={{ fontWeight: 700 }}>
-              🍎 Manzana Mordida
-            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2 }}>
+              <Box
+                component="img"
+                src={logoImg}
+                alt="Manzana Mordida"
+                sx={{ height: 36 }}
+              />
+              <Typography
+                variant="h6"
+                sx={{
+                  fontFamily: '"Exo 2", sans-serif',
+                  fontWeight: 700,
+                  textTransform: 'uppercase',
+                  letterSpacing: '.05rem',
+                }}
+              >
+                Manzana Mordida
+              </Typography>
+            </Box>
             <Typography variant="body2" color="grey.400" paragraph>
               Dispositivos Apple reacondicionados de la más alta calidad.
               Compra con confianza.
@@ -91,7 +108,7 @@ export const Footer = () => {
           }}
         >
           <Typography variant="body2" color="grey.500">
-            © {currentYear} Manzana Mordida. Todos los derechos reservados.
+            © {currentYear} <Box component="span" sx={{ fontFamily: '"Exo 2", sans-serif', fontWeight: 600 }}>Manzana Mordida</Box>. Todos los derechos reservados.
           </Typography>
         </Box>
       </Container>

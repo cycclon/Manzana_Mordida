@@ -4,6 +4,7 @@ import { STORAGE_KEYS, ERROR_MESSAGES } from '../constants';
 
 // Create separate axios instances for each microservice
 const createApiClient = (baseURL) => {
+  //console.log(baseURL);
   const client = axios.create({
     baseURL,
     headers: {

@@ -24,9 +24,15 @@ import ProfilePage from '../pages/customer/ProfilePage';
 
 // Admin Pages
 import AdminDashboard from '../pages/admin/AdminDashboard';
+import ProductsManagementPage from '../pages/admin/ProductsManagementPage';
+import TradeInsPage from '../pages/admin/TradeInsPage';
+import BranchesPage from '../pages/admin/BranchesPage';
+import BankAccountsPage from '../pages/admin/BankAccountsPage';
+import UsersManagementPage from '../pages/admin/UsersManagementPage';
 
 // Sales Pages
 import SalesDashboard from '../pages/sales/SalesDashboard';
+import AllAppointmentsPage from '../pages/sales/AllAppointmentsPage';
 
 // Other Pages
 import NotFoundPage from '../pages/NotFoundPage';
@@ -134,7 +140,7 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <RoleBasedRoute allowedRoles={[USER_ROLES.ADMIN]}>
-              <div>Admin Products Page - En construcción</div>
+              <ProductsManagementPage />
             </RoleBasedRoute>
           </ProtectedRoute>
         ),
@@ -154,7 +160,7 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <RoleBasedRoute allowedRoles={[USER_ROLES.ADMIN]}>
-              <div>Admin Trade-ins Page - En construcción</div>
+              <TradeInsPage />
             </RoleBasedRoute>
           </ProtectedRoute>
         ),
@@ -164,7 +170,7 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <RoleBasedRoute allowedRoles={[USER_ROLES.ADMIN]}>
-              <div>Admin Bank Accounts Page - En construcción</div>
+              <BankAccountsPage />
             </RoleBasedRoute>
           </ProtectedRoute>
         ),
@@ -174,7 +180,17 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <RoleBasedRoute allowedRoles={[USER_ROLES.ADMIN]}>
-              <div>Admin Branches Page - En construcción</div>
+              <BranchesPage />
+            </RoleBasedRoute>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'admin/usuarios',
+        element: (
+          <ProtectedRoute>
+            <RoleBasedRoute allowedRoles={[USER_ROLES.ADMIN]}>
+              <UsersManagementPage />
             </RoleBasedRoute>
           </ProtectedRoute>
         ),
@@ -196,7 +212,7 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <RoleBasedRoute allowedRoles={[USER_ROLES.SALES, USER_ROLES.ADMIN]}>
-              <div>Sales Appointments Page - En construcción</div>
+              <AllAppointmentsPage />
             </RoleBasedRoute>
           </ProtectedRoute>
         ),

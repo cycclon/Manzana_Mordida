@@ -16,11 +16,11 @@ export const DEVICE_CONDITIONS = {
 };
 
 export const DEVICE_CONDITION_LABELS = {
-  'A-': 'Grado A- (Bueno)',
-  'A': 'Grado A (Muy bueno)',
-  'A+': 'Grado A+ (Excelente)',
-  'Sealed': 'Sellado',
-  'OEM': 'OEM Original'
+  'Sellado': 'Sellado (Nuevo)',
+  'Usado': 'Usado',
+  'ASIS': 'AS-IS (Sin garantía)',
+  'OEM': 'OEM Original',
+  'CPO': 'CPO (Certified Pre-Owned)'
 };
 
 // Appointment status
@@ -77,13 +77,13 @@ export const RESERVATION_STATUS_COLORS = {
 };
 
 // Storage options
-export const STORAGE_OPTIONS = [
-  { value: 64, label: '64 GB' },
-  { value: 128, label: '128 GB' },
-  { value: 256, label: '256 GB' },
-  { value: 512, label: '512 GB' },
-  { value: 1024, label: '1 TB' }
-];
+// export const STORAGE_OPTIONS = [
+//   { value: 64, label: '64GB' },
+//   { value: 128, label: '128GB' },
+//   { value: 256, label: '256GB' },
+//   { value: 512, label: '512GB' },
+//   { value: 1024, label: '1TB' }
+// ];
 
 // Battery health ranges
 export const BATTERY_HEALTH_RANGES = [
@@ -124,6 +124,7 @@ export const API_PATHS = {
   CUSTOMERS: '/clientes',
 
   // Products & Devices
+  COLORS: '/api/colores',
   PRODUCTS: '/api/productos',
   DEVICES: '/api/equipos',
 

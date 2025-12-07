@@ -173,11 +173,14 @@ export const TradeInCalculator = () => {
           justifyContent: 'space-between',
           px: { xs: 2, md: 4 },
           py: 1.5,
-          bgcolor: hasTradeIn ? 'success.light' : 'grey.50',
+          bgcolor: hasTradeIn ? 'rgba(76, 175, 80, 0.15)' : 'background.paper',
           cursor: 'pointer',
-          transition: 'all 0.2s',
+          transition: 'all 0.3s ease',
+          borderBottom: '1px solid',
+          borderColor: hasTradeIn ? 'success.main' : 'divider',
           '&:hover': {
-            bgcolor: hasTradeIn ? 'success.main' : 'grey.100',
+            bgcolor: hasTradeIn ? 'rgba(76, 175, 80, 0.25)' : 'rgba(227, 24, 55, 0.08)',
+            borderColor: hasTradeIn ? 'success.light' : 'primary.main',
           },
         }}
         onClick={() => setIsExpanded(!isExpanded)}

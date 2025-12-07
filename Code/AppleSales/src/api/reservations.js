@@ -46,7 +46,7 @@ export const reservationsAPI = {
 
   // Get reservations for current user
   getMyReservations: async () => {
-    const response = await reservasAPI.get('/api/v1/reservas/my');
+    const response = await reservasAPI.get('/api/v1/reservas/mis-reservas');
     return response.data;
   },
 

@@ -13,6 +13,12 @@ export const branchesAPI = {
     return response.data;
   },
 
+  // Get branches by province and locality
+  getBranchesByLocation: async (provincia, localidad) => {
+    const response = await sucursalesAPI.get(`/api/v1/sucursales/provincia/${provincia}-${localidad}`);
+    return response.data;
+  },
+
   // Create branch (admin)
   createBranch: async (branchData) => {
     const response = await sucursalesAPI.post('/api/v1/sucursales/nueva-sucursal', branchData);
