@@ -1,4 +1,12 @@
-.env
-Code/docker-compose.prod.yml
-Code/nginx
 Docs/
+.vscode
+.env
+Code/nginx/conf.d/api.conf
+Code/nginx/nginx.conf
+docker-compose.prod.yml
+
+.DS_Store
+**/.DS_Store
+
+# Environment variables (contains sensitive data)
+.env
