@@ -28,12 +28,15 @@ import {
   OutlinedInput,
   Checkbox,
   ListItemText,
+  InputAdornment,
 } from '@mui/material';
 import {
   Add as AddIcon,
   Edit as EditIcon,
   Delete as DeleteIcon,
   Refresh as RefreshIcon,
+  Search as SearchIcon,
+  FilterList as FilterIcon,
 } from '@mui/icons-material';
 import { productsAPI } from '../../../api/products';
 
@@ -60,6 +63,10 @@ export const ProductsTab = () => {
     message: '',
     severity: 'success',
   });
+
+  // Filter state
+  const [searchModel, setSearchModel] = useState('');
+  const [filterLine, setFilterLine] = useState('');
 
   // Fetch products and colors
   const fetchProducts = useCallback(async () => {
@@ -191,10 +198,23 @@ export const ProductsTab = () => {
     }
   };
 
+  // Filter products based on search and line filter
+  const filteredProducts = products.filter((product) => {
+    const matchesSearch = searchModel === '' ||
+      product.modelo.toLowerCase().includes(searchModel.toLowerCase());
+    const matchesLine = filterLine === '' || product.linea === filterLine;
+    return matchesSearch && matchesLine;
+  });
+
+  const handleClearFilters = () => {
+    setSearchModel('');
+    setFilterLine('');
+  };
+
   return (
     <Box>
       {/* Actions Bar */}
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
         <Typography variant="h6">Productos (Modelos)</Typography>
         <Box display="flex" gap={1}>
           <Button
@@ -213,6 +233,57 @@ export const ProductsTab = () => {
           </Button>
         </Box>
       </Box>
+
+      {/* Filters Bar */}
+      <Paper sx={{ p: 2, mb: 2 }}>
+        <Box display="flex" alignItems="center" gap={2} flexWrap="wrap">
+          <FilterIcon color="action" />
+          <TextField
+            size="small"
+            placeholder="Buscar por modelo..."
+            value={searchModel}
+            onChange={(e) => setSearchModel(e.target.value)}
+            sx={{ minWidth: 250 }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon fontSize="small" />
+                </InputAdornment>
+              ),
+            }}
+          />
+          <FormControl size="small" sx={{ minWidth: 150 }}>
+            <InputLabel>Línea</InputLabel>
+            <Select
+              value={filterLine}
+              label="Línea"
+              onChange={(e) => setFilterLine(e.target.value)}
+            >
+              <MenuItem value="">Todas</MenuItem>
+              {PRODUCT_LINES.map((line) => (
+                <MenuItem key={line} value={line}>
+                  {line}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          {(searchModel || filterLine) && (
+            <Button
+              size="small"
+              onClick={handleClearFilters}
+            >
+              Limpiar filtros
+            </Button>
+          )}
+          <Box sx={{ flexGrow: 1 }} />
+          <Chip
+            label={`${filteredProducts.length} de ${products.length} productos`}
+            size="small"
+            color="primary"
+            variant="outlined"
+          />
+        </Box>
+      </Paper>
 
       {/* Table */}
       <TableContainer component={Paper}>
@@ -233,16 +304,18 @@ export const ProductsTab = () => {
                   <CircularProgress />
                 </TableCell>
               </TableRow>
-            ) : products.length === 0 ? (
+            ) : filteredProducts.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={5} align="center" sx={{ py: 8 }}>
                   <Typography color="text.secondary">
-                    No hay productos registrados
+                    {products.length === 0
+                      ? 'No hay productos registrados'
+                      : 'No se encontraron productos con los filtros aplicados'}
                   </Typography>
                 </TableCell>
               </TableRow>
             ) : (
-              products.map((product) => (
+              filteredProducts.map((product) => (
                 <TableRow key={product._id} hover>
                   <TableCell>{product.marca}</TableCell>
                   <TableCell>

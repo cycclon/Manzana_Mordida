@@ -43,6 +43,7 @@ import {
   Image as ImageIcon,
   CloudUpload as CloudUploadIcon,
   Close as CloseIcon,
+  Search as SearchIcon,
 } from '@mui/icons-material';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -78,6 +79,7 @@ export const DevicesTab = () => {
   const [bulkStatus, setBulkStatus] = useState('');
   const [statusFilters, setStatusFilters] = useState([]);
   const [lineaFilters, setLineaFilters] = useState([]);
+  const [searchModel, setSearchModel] = useState('');
   const [selectedProductType, setSelectedProductType] = useState('');
   const [formData, setFormData] = useState({
     producto: '',
@@ -468,11 +470,19 @@ export const DevicesTab = () => {
   const handleClearFilters = () => {
     setStatusFilters([]);
     setLineaFilters([]);
+    setSearchModel('');
     setPage(0);
   };
 
-  // Filter devices based on selected statuses and lineas
+  // Filter devices based on selected statuses, lineas, and search
   let filteredDevices = devices;
+
+  // Apply search filter by model name
+  if (searchModel) {
+    filteredDevices = filteredDevices.filter((device) =>
+      device.producto?.modelo?.toLowerCase().includes(searchModel.toLowerCase())
+    );
+  }
 
   // Apply status filter
   if (statusFilters.length > 0) {
@@ -530,6 +540,23 @@ export const DevicesTab = () => {
     }
   };
 
+  // Helper functions for color contrast
+  const hexToRgb = (hex) => {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+      r: parseInt(result[1], 16),
+      g: parseInt(result[2], 16),
+      b: parseInt(result[3], 16)
+    } : null;
+  };
+
+  const getContrastColor = (hexColor) => {
+    const rgb = hexToRgb(hexColor);
+    if (!rgb) return '#000';
+    const luminance = (0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b) / 255;
+    return luminance > 0.5 ? '#000' : '#fff';
+  };
+
   return (
     <Box>
       {/* Actions Bar */}
@@ -582,11 +609,39 @@ export const DevicesTab = () => {
         </Paper>
       )}
 
-      {/* Status Filters */}
+      {/* Search and Status Filters */}
       <Paper sx={{ p: 2, mb: 2 }}>
-        <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
+        <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
           <Typography variant="subtitle2" fontWeight={500}>
-            Filtrar por Estado
+            Buscar y Filtrar
+          </Typography>
+          <Chip
+            label={`${filteredDevices.length} de ${devices.length} dispositivos`}
+            size="small"
+            color="primary"
+            variant="outlined"
+          />
+        </Box>
+        <TextField
+          size="small"
+          placeholder="Buscar por modelo..."
+          value={searchModel}
+          onChange={(e) => {
+            setSearchModel(e.target.value);
+            setPage(0);
+          }}
+          sx={{ mb: 2, minWidth: 300 }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon fontSize="small" />
+              </InputAdornment>
+            ),
+          }}
+        />
+        <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
+          <Typography variant="caption" color="text.secondary">
+            Filtrar por Estado:
           </Typography>
         </Box>
         <FormGroup row>
@@ -624,13 +679,13 @@ export const DevicesTab = () => {
           <Typography variant="subtitle2" fontWeight={500}>
             Filtrar por Línea
           </Typography>
-          {(statusFilters.length > 0 || lineaFilters.length > 0) && (
+          {(statusFilters.length > 0 || lineaFilters.length > 0 || searchModel) && (
             <Button
               size="small"
               onClick={handleClearFilters}
               sx={{ textTransform: 'none' }}
             >
-              Limpiar todos los filtros ({statusFilters.length + lineaFilters.length})
+              Limpiar todos los filtros ({statusFilters.length + lineaFilters.length + (searchModel ? 1 : 0)})
             </Button>
           )}
         </Box>
@@ -697,9 +752,9 @@ export const DevicesTab = () => {
               </TableRow>
             ) : filteredDevices.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={9} align="center" sx={{ py: 8 }}>
+                <TableCell colSpan={10} align="center" sx={{ py: 8 }}>
                   <Typography color="text.secondary">
-                    {statusFilters.length > 0
+                    {(statusFilters.length > 0 || lineaFilters.length > 0 || searchModel)
                       ? 'No hay dispositivos que coincidan con los filtros seleccionados'
                       : 'No hay dispositivos registrados'}
                   </Typography>
@@ -742,7 +797,28 @@ export const DevicesTab = () => {
                       <Chip label={`Grado ${device.grado}`} size="small" sx={{ mt: 0.5 }} />
                     )}
                   </TableCell>
-                  <TableCell>{device.color?.nombre || 'N/A'}</TableCell>
+                  <TableCell>
+                    {device.color?.hex ? (
+                      <Chip
+                        label={device.color.nombre}
+                        size="small"
+                        sx={{
+                          backgroundColor: `${device.color.hex} !important`,
+                          color: `${getContrastColor(device.color.hex)} !important`,
+                          border: '1px solid',
+                          borderColor: 'rgba(128, 128, 128, 0.3)',
+                          fontWeight: 500,
+                          '& .MuiChip-label': {
+                            color: `${getContrastColor(device.color.hex)} !important`,
+                          },
+                        }}
+                      />
+                    ) : (
+                      <Typography variant="body2" color="text.secondary">
+                        {device.color?.nombre || 'N/A'}
+                      </Typography>
+                    )}
+                  </TableCell>
                   <TableCell>
                     <Chip label={device.condicion} size="small" variant="outlined" />
                   </TableCell>
@@ -756,6 +832,7 @@ export const DevicesTab = () => {
                       usdAmount={device.precio}
                       usdVariant="body2"
                       arsVariant="caption"
+                      showARS={device.estado !== 'Vendido'}
                     />
                   </TableCell>
                   <TableCell align="center">
