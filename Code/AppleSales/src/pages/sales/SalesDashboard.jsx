@@ -47,6 +47,7 @@ import {
   ChevronLeft as ChevronLeftIcon,
   ChevronRight as ChevronRightIcon,
   ViewList as ViewListIcon,
+  Groups as GroupsIcon,
 } from '@mui/icons-material';
 import { appointmentsAPI } from '../../api/appointments';
 import { reservationsAPI } from '../../api/reservations';
@@ -58,6 +59,7 @@ import { es } from 'date-fns/locale';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { gradientTextSilver } from '../../theme';
 
 const ESTADO_COLORS = {
   Solicitada: 'warning',
@@ -501,7 +503,7 @@ export const SalesDashboard = () => {
         <Box display="flex" alignItems="center">
           <PointOfSaleIcon sx={{ fontSize: { xs: 32, md: 40 }, color: 'primary.main', mr: 2 }} />
           <Box>
-            <Typography variant="h4" component="h1" sx={{ fontSize: { xs: '1.5rem', md: '2.125rem' } }}>
+            <Typography variant="h4" component="h1" sx={{ fontSize: { xs: '1.5rem', md: '2.125rem' }, ...gradientTextSilver }}>
               Panel de Ventas
             </Typography>
             <Typography variant="body2" color="text.secondary">
@@ -513,8 +515,7 @@ export const SalesDashboard = () => {
           variant="outlined"
           startIcon={<EventNoteIcon />}
           onClick={fetchDashboardData}
-          fullWidth
-          sx={{ maxWidth: { xs: '100%', sm: 'auto' } }}
+          sx={{ maxWidth: { xs: 160, sm: 'auto' }, flexShrink: 0 }}
         >
           Actualizar
         </Button>
@@ -575,6 +576,35 @@ export const SalesDashboard = () => {
             </CardContent>
           </Card>
         </Grid>
+
+        {/* CRM Quick Access */}
+        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+          <Card
+            sx={{
+              cursor: 'pointer',
+              transition: 'all 0.2s ease-in-out',
+              '&:hover': {
+                transform: 'translateY(-2px)',
+                boxShadow: 4
+              }
+            }}
+            onClick={() => navigate('/crm')}
+          >
+            <CardContent>
+              <Box display="flex" alignItems="center" justifyContent="space-between">
+                <Box>
+                  <Typography variant="body2" color="text.secondary" gutterBottom>
+                    Gestión de Clientes
+                  </Typography>
+                  <Typography variant="h6" color="primary.main">
+                    CRM
+                  </Typography>
+                </Box>
+                <GroupsIcon sx={{ fontSize: { xs: 36, md: 48 }, color: 'primary.main', opacity: 0.3 }} />
+              </Box>
+            </CardContent>
+          </Card>
+        </Grid>
       </Grid>
 
       <Grid container spacing={3}>
@@ -584,7 +614,7 @@ export const SalesDashboard = () => {
             <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
               <Box display="flex" alignItems="center">
                 <EventNoteIcon sx={{ mr: 1, color: 'primary.main' }} />
-                <Typography variant="h6">
+                <Typography variant="h6" sx={{ ...gradientTextSilver }}>
                   Agenda Semanal
                 </Typography>
               </Box>
@@ -687,7 +717,7 @@ export const SalesDashboard = () => {
           <Paper sx={{ p: 3 }}>
             <Box display="flex" alignItems="center" mb={2}>
               <ShoppingCartIcon sx={{ mr: 1, color: 'warning.main' }} />
-              <Typography variant="h6">
+              <Typography variant="h6" sx={{ ...gradientTextSilver }}>
                 Reservas Pendientes
               </Typography>
             </Box>
@@ -750,7 +780,7 @@ export const SalesDashboard = () => {
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
           <Box display="flex" alignItems="center">
             <AccessTimeIcon sx={{ color: 'primary.main', mr: 1 }} />
-            <Typography variant="h6">
+            <Typography variant="h6" sx={{ ...gradientTextSilver }}>
               Mi Disponibilidad
             </Typography>
           </Box>

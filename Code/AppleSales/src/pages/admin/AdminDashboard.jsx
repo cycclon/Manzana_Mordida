@@ -24,6 +24,7 @@ import {
 import { productsAPI } from '../../api/products';
 import { reservationsAPI } from '../../api/reservations';
 import { PriceDisplay } from '../../components/common/PriceDisplay';
+import { gradientTextSilver } from '../../theme';
 
 /**
  * AdminDashboard - Main admin dashboard with navigation cards
@@ -148,7 +149,7 @@ export const AdminDashboard = () => {
       <Box display="flex" alignItems="center" mb={4}>
         <DashboardIcon sx={{ fontSize: { xs: 32, md: 40 }, color: 'primary.main', mr: 2 }} />
         <Box>
-          <Typography variant="h4" component="h1" sx={{ fontSize: { xs: '1.5rem', md: '2.125rem' } }}>
+          <Typography variant="h4" component="h1" sx={{ fontSize: { xs: '1.5rem', md: '2.125rem' }, ...gradientTextSilver }}>
             Panel de Administración
           </Typography>
           <Typography variant="body2" color="text.secondary">
@@ -210,7 +211,7 @@ export const AdminDashboard = () => {
       </Grid>
 
       {/* Navigation Cards */}
-      <Typography variant="h5" gutterBottom sx={{ mb: 3 }}>
+      <Typography variant="h5" gutterBottom sx={{ mb: 3, ...gradientTextSilver }}>
         Accesos Rápidos
       </Typography>
       <Grid container spacing={3}>

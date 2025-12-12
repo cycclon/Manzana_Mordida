@@ -1,5 +1,6 @@
 import { Box, Typography, Skeleton } from '@mui/material';
 import { useCurrency } from '../../hooks/useCurrency';
+import { gradientTextPrice } from '../../theme';
 
 /**
  * PriceDisplay - Display price in USD and ARS
@@ -41,7 +42,7 @@ export const PriceDisplay = ({
         component="div"
         sx={{
           fontWeight: 700,
-          color: 'primary.main',
+          ...gradientTextPrice,
         }}
       >
         {usd}

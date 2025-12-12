@@ -85,90 +85,100 @@ const DeviceTableRow = ({ device, isMobile, isTablet }) => {
       }}
     >
       {/* Image */}
-      <TableCell sx={{ width: 80 }}>
+      <TableCell sx={{ width: isMobile ? 50 : 80, p: isMobile ? 1 : 2 }}>
         <Avatar
           src={imageUrl}
           alt={modelo}
           variant="rounded"
-          sx={{ width: 64, height: 64 }}
+          sx={{ width: isMobile ? 40 : 64, height: isMobile ? 40 : 64 }}
         />
       </TableCell>
 
       {/* Model */}
       <TableCell>
-        <Typography variant="body1" fontWeight={500}>
+        <Typography variant={isMobile ? 'body2' : 'body1'} fontWeight={500}>
           {linea} {modelo}
         </Typography>
       </TableCell>
 
-      {/* Color */}
-      <TableCell>
-        <Typography variant="body2" color="text.secondary">
-          {colorNombre || '-'}
-        </Typography>
-      </TableCell>
+      {/* Color - hidden on mobile */}
+      {!isMobile && (
+        <TableCell>
+          <Typography variant="body2" color="text.secondary">
+            {colorNombre || '-'}
+          </Typography>
+        </TableCell>
+      )}
 
-      {/* Condition */}
-      <TableCell>
-        <Chip
-          label={DEVICE_CONDITION_LABELS[condicion] || condicion}
-          size="small"
-          color="primary"
-          variant="outlined"
-        />
-      </TableCell>
-
-      {/* Battery */}
-      <TableCell>
-        {bateria > 0 ? (
+      {/* Condition - hidden on tablet and mobile */}
+      {!isTablet && (
+        <TableCell>
           <Chip
-            icon={<BatteryIcon />}
-            label={`${bateria}%`}
+            label={DEVICE_CONDITION_LABELS[condicion] || condicion}
             size="small"
-            color={bateria >= 90 ? 'success' : 'default'}
+            color="primary"
             variant="outlined"
           />
-        ) : (
-          <Typography variant="body2" color="text.secondary">-</Typography>
-        )}
-      </TableCell>
+        </TableCell>
+      )}
 
-      {/* Grade */}
-      <TableCell>
-        {device.grado ? (
-          <Chip
-            label={device.grado}
-            size="small"
-            color="info"
-            variant="outlined"
-          />
-        ) : (
-          <Typography variant="body2" color="text.secondary">-</Typography>
-        )}
-      </TableCell>
+      {/* Battery - hidden on tablet and mobile */}
+      {!isTablet && (
+        <TableCell>
+          {bateria > 0 ? (
+            <Chip
+              icon={<BatteryIcon />}
+              label={`${bateria}%`}
+              size="small"
+              color={bateria >= 90 ? 'success' : 'default'}
+              variant="outlined"
+            />
+          ) : (
+            <Typography variant="body2" color="text.secondary">-</Typography>
+          )}
+        </TableCell>
+      )}
 
-      {/* Status */}
-      <TableCell>
-        {isReserved && (
-          <Chip
-            label="RESERVADO"
-            color="warning"
-            size="small"
-            sx={{ fontWeight: 700 }}
-          />
-        )}
-        {isOnOrder && !isReserved && (
-          <Chip
-            label="A PEDIDO"
-            color="info"
-            size="small"
-          />
-        )}
-      </TableCell>
+      {/* Grade - hidden on tablet and mobile */}
+      {!isTablet && (
+        <TableCell>
+          {device.grado ? (
+            <Chip
+              label={device.grado}
+              size="small"
+              color="info"
+              variant="outlined"
+            />
+          ) : (
+            <Typography variant="body2" color="text.secondary">-</Typography>
+          )}
+        </TableCell>
+      )}
+
+      {/* Status - hidden on mobile */}
+      {!isMobile && (
+        <TableCell>
+          {isReserved && (
+            <Chip
+              label="RESERVADO"
+              color="warning"
+              size="small"
+              sx={{ fontWeight: 700 }}
+            />
+          )}
+          {isOnOrder && !isReserved && (
+            <Chip
+              label="A PEDIDO"
+              color="info"
+              size="small"
+            />
+          )}
+        </TableCell>
+      )}
 
       {/* Price */}
       <TableCell align="right">
-        <PriceDisplay usdAmount={displayPrice} usdVariant="body1" arsVariant="caption" />
+        <PriceDisplay usdAmount={displayPrice} usdVariant={isMobile ? 'body2' : 'body1'} arsVariant="caption" />
         {hasTradeIn && (
           <Typography variant="caption" color="success.main" sx={{ display: 'block', mt: 0.5 }}>
             Con canje
@@ -177,17 +187,17 @@ const DeviceTableRow = ({ device, isMobile, isTablet }) => {
       </TableCell>
 
       {/* Actions */}
-      <TableCell align="center" sx={{ width: 140 }}>
-        <Box sx={{ display: 'flex', gap: 1, justifyContent: 'center' }} onClick={(e) => e.stopPropagation()}>
+      <TableCell align="center" sx={{ width: isMobile ? 50 : 140, p: isMobile ? 1 : 2 }}>
+        <Box sx={{ display: 'flex', gap: isMobile ? 0 : 1, justifyContent: 'center' }} onClick={(e) => e.stopPropagation()}>
           <IconButton
             size="small"
             color="primary"
             onClick={handleViewDetails}
             title="Ver Más"
           >
-            <VisibilityIcon />
+            <VisibilityIcon fontSize={isMobile ? 'small' : 'medium'} />
           </IconButton>
-          {!isReserved && !isOnOrder && (
+          {!isMobile && !isReserved && !isOnOrder && (
             <IconButton
               size="small"
               color="primary"
@@ -197,7 +207,7 @@ const DeviceTableRow = ({ device, isMobile, isTablet }) => {
               <EventIcon />
             </IconButton>
           )}
-          {!isReserved && (
+          {!isMobile && !isReserved && (
             <IconButton
               size="small"
               color="secondary"
@@ -224,6 +234,10 @@ export const DeviceGrid = ({
   onPageChange,
   viewMode = 'grid',
 }) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isTablet = useMediaQuery(theme.breakpoints.down('md'));
+
   if (loading) {
     return <LoadingScreen message="Cargando dispositivos..." />;
   }
@@ -241,7 +255,7 @@ export const DeviceGrid = ({
     <Box>
       {/* Device Grid or Table */}
       {viewMode === 'grid' ? (
-        <Grid container spacing={3}>
+        <Grid container spacing={{ xs: 2, md: 3 }}>
           {devices.map((device) => (
             <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={device._id || device.id}>
               <DeviceCard device={device} />
@@ -249,24 +263,24 @@ export const DeviceGrid = ({
           ))}
         </Grid>
       ) : (
-        <TableContainer component={Paper}>
-          <Table>
+        <TableContainer component={Paper} sx={{ overflowX: 'auto' }}>
+          <Table size={isMobile ? 'small' : 'medium'}>
             <TableHead>
               <TableRow>
                 <TableCell>Imagen</TableCell>
                 <TableCell>Modelo</TableCell>
-                <TableCell>Color</TableCell>
-                <TableCell>Condición</TableCell>
-                <TableCell>Batería</TableCell>
-                <TableCell>Grado</TableCell>
-                <TableCell>Estado</TableCell>
+                {!isMobile && <TableCell>Color</TableCell>}
+                {!isTablet && <TableCell>Condición</TableCell>}
+                {!isTablet && <TableCell>Batería</TableCell>}
+                {!isTablet && <TableCell>Grado</TableCell>}
+                {!isMobile && <TableCell>Estado</TableCell>}
                 <TableCell align="right">Precio</TableCell>
                 <TableCell align="center">Acciones</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {devices.map((device) => (
-                <DeviceTableRow key={device._id || device.id} device={device} />
+                <DeviceTableRow key={device._id || device.id} device={device} isMobile={isMobile} isTablet={isTablet} />
               ))}
             </TableBody>
           </Table>

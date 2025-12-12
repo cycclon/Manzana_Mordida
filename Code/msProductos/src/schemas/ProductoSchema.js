@@ -10,7 +10,7 @@ const ProductoSchema = new mongoose.Schema({
     linea: { // NO EDITABLE
         type: String,
         required: true,
-        enum: ["iPhone", "MacBook", "iPad", "Watch", "AirPods"]
+        enum: ["iPhone", "MacBook", "iPad", "Watch", "AirPods", "Otros"]
     },
     modelo: { // NO EDITABLE
         type: String,

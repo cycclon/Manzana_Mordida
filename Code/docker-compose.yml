@@ -114,6 +114,18 @@ services:
       - NODE_ENV=${NODE_ENV}
     networks:
       - applesales-network
+  msCRM:
+    build: ./msCRM
+    image: mscrm:latest
+    ports:
+      - "3008:3008"
+    environment:
+      - MONGO_URL=mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@${MONGODB_HOST}:${MONGODB_PORT}/crm?authSource=${MONGODB_AUTH_SOURCE}
+      - JWT_SECRET=${JWT_SECRET}
+      - PORT=3008
+      - NODE_ENV=${NODE_ENV}
+    networks:
+      - applesales-network
 
 networks:
   applesales-network:

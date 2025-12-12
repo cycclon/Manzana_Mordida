@@ -95,6 +95,7 @@ export const sucursalesAPI = createApiClient(import.meta.env.VITE_API_SUCURSALES
 export const canjesAPI = createApiClient(import.meta.env.VITE_API_CANJES);
 export const reservasAPI = createApiClient(import.meta.env.VITE_API_RESERVAS);
 export const cuentasAPI = createApiClient(import.meta.env.VITE_API_CUENTAS_BANCARIAS);
+export const crmAPIClient = createApiClient(import.meta.env.VITE_API_CRM);
 
 // Generic error handler
 export const handleApiError = (error) => {
@@ -162,4 +163,5 @@ export default {
   canjes: canjesAPI,
   reservas: reservasAPI,
   cuentas: cuentasAPI,
+  crm: crmAPIClient,
 };

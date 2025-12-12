@@ -44,6 +44,7 @@ export const BookAppointmentPage = () => {
   const [device, setDevice] = useState(null);
   const [branches, setBranches] = useState([]);
   const [horarios, setHorarios] = useState([]); // Available time windows from admin/sales
+  const [horariosLoading, setHorariosLoading] = useState(false); // Loading state for horarios
   const [occupiedSlots, setOccupiedSlots] = useState([]); // Booked appointments
 
   // Form data
@@ -112,15 +113,20 @@ export const BookAppointmentPage = () => {
   useEffect(() => {
     if (formData.sucursal) {
       const fetchHorarios = async () => {
+        setHorariosLoading(true);
         try {
           const horariosData = await appointmentsAPI.getHorariosBySucursal(formData.sucursal);
           setHorarios(horariosData);
         } catch (error) {
           console.error('Error fetching horarios:', error);
           setHorarios([]);
+        } finally {
+          setHorariosLoading(false);
         }
       };
       fetchHorarios();
+    } else {
+      setHorarios([]);
     }
   }, [formData.sucursal]);
 
@@ -164,6 +170,23 @@ export const BookAppointmentPage = () => {
   const getDayOfWeek = (date) => {
     const days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
     return days[date.getDay()];
+  };
+
+  // Check if a date should be disabled in the DatePicker
+  // Returns true if NO schedules are defined for that day of the week
+  const shouldDisableDate = (date) => {
+    // If no branch selected or no horarios loaded yet, don't disable any dates
+    if (!formData.sucursal || !horarios || horarios.length === 0) {
+      return false;
+    }
+
+    const dayOfWeek = getDayOfWeek(date);
+
+    // Check if there's at least one schedule for this day of the week
+    const hasScheduleForDay = horarios.some(horario => horario.diaSemana === dayOfWeek);
+
+    // Disable the date if there's NO schedule for that day
+    return !hasScheduleForDay;
   };
 
   // Check if hour is within horarios time windows
@@ -319,7 +342,7 @@ export const BookAppointmentPage = () => {
                 <Select
                   value={formData.sucursal}
                   label="Sucursal"
-                  onChange={(e) => setFormData({ ...formData, sucursal: e.target.value, horaInicio: '' })}
+                  onChange={(e) => setFormData({ ...formData, sucursal: e.target.value, fecha: null, horaInicio: '' })}
                 >
                   {branches.map((branch) => (
                     <MenuItem key={branch._id} value={branch._id}>
@@ -336,7 +359,22 @@ export const BookAppointmentPage = () => {
                   value={formData.fecha}
                   onChange={(newValue) => setFormData({ ...formData, fecha: newValue, horaInicio: '' })}
                   minDate={new Date()}
-                  slotProps={{ textField: { fullWidth: true, required: true } }}
+                  shouldDisableDate={shouldDisableDate}
+                  disabled={!formData.sucursal || horariosLoading}
+                  loading={horariosLoading}
+                  slotProps={{
+                    textField: {
+                      fullWidth: true,
+                      required: true,
+                      helperText: !formData.sucursal
+                        ? 'Primero selecciona una sucursal'
+                        : horariosLoading
+                          ? 'Cargando disponibilidad...'
+                          : horarios.length === 0
+                            ? 'No hay horarios configurados para esta sucursal'
+                            : 'Los días sin disponibilidad están deshabilitados'
+                    }
+                  }}
                 />
               </LocalizationProvider>
             </Grid>

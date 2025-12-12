@@ -48,6 +48,59 @@ export const APPOINTMENT_STATUS_COLORS = {
   completada: 'default'
 };
 
+// CRM Status
+export const CRM_STATUS = {
+  NUEVO_LEAD: 'Nuevo lead',
+  INTERESADO: 'Interesado',
+  EN_EVALUACION: 'En evaluación',
+  NEGOCIACION: 'Negociación/Cierre',
+  VENTA_CONCRETADA: 'Venta concretada/Postventa',
+  LEAD_FRIO: 'Lead frío',
+  PERDIDO: 'Perdido'
+};
+
+export const CRM_STATUS_LABELS = {
+  'Nuevo lead': 'Nuevo Lead',
+  'Interesado': 'Interesado',
+  'En evaluación': 'En Evaluación',
+  'Negociación/Cierre': 'Negociación/Cierre',
+  'Venta concretada/Postventa': 'Venta Concretada',
+  'Lead frío': 'Lead Frío',
+  'Perdido': 'Perdido'
+};
+
+export const CRM_STATUS_COLORS = {
+  'Nuevo lead': 'info',
+  'Interesado': 'primary',
+  'En evaluación': 'warning',
+  'Negociación/Cierre': 'secondary',
+  'Venta concretada/Postventa': 'success',
+  'Lead frío': 'default',
+  'Perdido': 'error'
+};
+
+export const REDES_SOCIALES = [
+  'Instagram',
+  'Facebook',
+  'WhatsApp',
+  'Teléfono',
+  'Email',
+  'Presencial',
+  'Web',
+  'Otro'
+];
+
+export const RED_SOCIAL_ICONS = {
+  'Instagram': 'Instagram',
+  'Facebook': 'Facebook',
+  'WhatsApp': 'WhatsApp',
+  'Teléfono': 'Phone',
+  'Email': 'Email',
+  'Presencial': 'Person',
+  'Web': 'Language',
+  'Otro': 'MoreHoriz'
+};
+
 // Reservation status
 export const RESERVATION_STATUS = {
   PENDING_PAYMENT: 'pendiente_pago',
@@ -144,7 +197,10 @@ export const API_PATHS = {
   RESERVATIONS: '/reservas',
 
   // Bank Accounts
-  BANK_ACCOUNTS: '/cuentas-bancarias'
+  BANK_ACCOUNTS: '/cuentas-bancarias',
+
+  // CRM
+  CRM: '/api/v1/crm'
 };
 
 // Local storage keys
@@ -208,7 +264,11 @@ export const ROUTES = {
   SALES_APPOINTMENTS: '/ventas/citas',
   SALES_RESERVATIONS: '/ventas/reservas',
   SALES_DEVICES: '/ventas/dispositivos',
-  SALES_AVAILABILITY: '/ventas/disponibilidad'
+  SALES_AVAILABILITY: '/ventas/disponibilidad',
+
+  // CRM
+  CRM_LIST: '/crm',
+  CRM_DETAIL: '/crm/:id'
 };
 
 // Error messages

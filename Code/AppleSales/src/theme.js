@@ -8,6 +8,35 @@ const brandRedDark = '#a11228';
 const neonGlow = '0 0 10px rgba(227, 24, 55, 0.5), 0 0 20px rgba(227, 24, 55, 0.3), 0 0 30px rgba(227, 24, 55, 0.2)';
 const neonGlowStrong = '0 0 10px rgba(227, 24, 55, 0.7), 0 0 20px rgba(227, 24, 55, 0.5), 0 0 40px rgba(227, 24, 55, 0.3)';
 
+// Gradient text styles (exported for use in components)
+export const gradientText = {
+  background: `linear-gradient(135deg, #ffffff 0%, ${brandRedLight} 50%, ${brandRed} 100%)`,
+  WebkitBackgroundClip: 'text',
+  WebkitTextFillColor: 'transparent',
+  backgroundClip: 'text',
+};
+
+export const gradientTextSubtle = {
+  background: `linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.8) 50%, ${brandRedLight} 100%)`,
+  WebkitBackgroundClip: 'text',
+  WebkitTextFillColor: 'transparent',
+  backgroundClip: 'text',
+};
+
+export const gradientTextPrice = {
+  background: `linear-gradient(135deg, #4caf50 0%, #81c784 50%, #a5d6a7 100%)`,
+  WebkitBackgroundClip: 'text',
+  WebkitTextFillColor: 'transparent',
+  backgroundClip: 'text',
+};
+
+export const gradientTextSilver = {
+  background: `linear-gradient(135deg, #ffffff 0%, #e0e0e0 50%, #bdbdbd 100%)`,
+  WebkitBackgroundClip: 'text',
+  WebkitTextFillColor: 'transparent',
+  backgroundClip: 'text',
+};
+
 // Create custom dark theme for Manzana Mordida
 export const theme = createTheme(
   {

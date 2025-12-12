@@ -22,6 +22,7 @@ import { PriceDisplay } from '../common/PriceDisplay';
 import { useTradeIn } from '../../hooks/useTradeIn';
 import { DEVICE_CONDITION_LABELS } from '../../constants';
 import { getThumbnailUrl } from '../../utils/imageOptimization';
+import { gradientTextSilver } from '../../theme';
 
 /**
  * DeviceCard - Display device in grid/list with image, specs, and actions
@@ -120,7 +121,7 @@ export const DeviceCard = ({ device, showActions = true, listView = false }) => 
       <CardContent sx={{ flexGrow: 1, pb: 1, display: 'flex', flexDirection: listView ? 'row' : 'column', gap: listView ? 2 : 0, width: '100%', justifyContent: 'space-between', alignItems: listView ? 'center' : 'flex-start' }}>
         <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
           {/* Line & Model */}
-          <Typography variant="h6" component="h3" gutterBottom={!listView} noWrap sx={{ mb: listView ? 0.5 : undefined }}>
+          <Typography variant="h6" component="h3" gutterBottom={!listView} noWrap sx={{ mb: listView ? 0.5 : undefined, ...gradientTextSilver }}>
             {linea} {modelo}
           </Typography>
 

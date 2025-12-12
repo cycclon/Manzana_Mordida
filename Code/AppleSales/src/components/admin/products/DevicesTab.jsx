@@ -44,7 +44,10 @@ import {
   CloudUpload as CloudUploadIcon,
   Close as CloseIcon,
 } from '@mui/icons-material';
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
 import { productsAPI } from '../../../api/products';
+import { branchesAPI } from '../../../api/branches';
 import { PriceDisplay } from '../../common/PriceDisplay';
 import { getThumbnailUrl } from '../../../utils/imageOptimization';
 
@@ -53,7 +56,6 @@ const DEVICE_GRADES = ['A+', 'A', 'A-'];
 const DEVICE_STATES = ['En Stock', 'Pedido', 'Reservado', 'Vendido', 'Baja', 'A pedido'];
 const ACCESSOIRES = ['Caja', 'Cable', 'Templado', 'Funda', 'Cargador'];
 const WARRANTY_OWN = ['30 días', '60 días', '90 días'];
-const LOCATIONS = ['La Rioja', 'CABA'];
 
 /**
  * DevicesTab - CRUD interface for managing device instances (stock)
@@ -63,6 +65,7 @@ export const DevicesTab = () => {
   const [products, setProducts] = useState([]);
   const [colors, setColors] = useState([]);
   const [availableDetalles, setAvailableDetalles] = useState([]);
+  const [branches, setBranches] = useState([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -155,12 +158,23 @@ export const DevicesTab = () => {
     }
   }, []);
 
+  const fetchBranches = useCallback(async () => {
+    try {
+      const data = await branchesAPI.getAllBranches();
+      setBranches(data || []);
+    } catch (error) {
+      console.error('Error fetching branches:', error);
+      setBranches([]);
+    }
+  }, []);
+
   useEffect(() => {
     fetchDevices();
     fetchProducts();
     fetchColors();
     fetchDetalles();
-  }, [fetchDevices, fetchProducts, fetchColors, fetchDetalles]);
+    fetchBranches();
+  }, [fetchDevices, fetchProducts, fetchColors, fetchDetalles, fetchBranches]);
 
   const showSnackbar = (message, severity = 'success') => {
     setSnackbar({ open: true, message, severity });
@@ -472,6 +486,16 @@ export const DevicesTab = () => {
     );
   }
 
+  // Calculate counts for status filter (based on linea filter)
+  const devicesFilteredByLinea = lineaFilters.length > 0
+    ? devices.filter((device) => lineaFilters.includes(device.producto?.linea))
+    : devices;
+
+  // Calculate counts for linea filter (based on status filter)
+  const devicesFilteredByStatus = statusFilters.length > 0
+    ? devices.filter((device) => statusFilters.includes(device.estado))
+    : devices;
+
   // Get unique product types (lineas) from products
   const availableProductTypes = [...new Set(products.map(p => p.linea))].sort();
 
@@ -585,7 +609,7 @@ export const DevicesTab = () => {
                     variant={statusFilters.includes(status) ? 'filled' : 'outlined'}
                   />
                   <Typography variant="caption" color="text.secondary">
-                    ({devices.filter((d) => d.estado === status).length})
+                    ({devicesFilteredByLinea.filter((d) => d.estado === status).length})
                   </Typography>
                 </Box>
               }
@@ -630,7 +654,7 @@ export const DevicesTab = () => {
                     variant={lineaFilters.includes(linea) ? 'filled' : 'outlined'}
                   />
                   <Typography variant="caption" color="text.secondary">
-                    ({devices.filter((d) => d.producto?.linea === linea).length})
+                    ({devicesFilteredByStatus.filter((d) => d.producto?.linea === linea).length})
                   </Typography>
                 </Box>
               }
@@ -660,7 +684,7 @@ export const DevicesTab = () => {
               <TableCell>Condición</TableCell>
               <TableCell>Batería</TableCell>
               <TableCell>Precio</TableCell>
-              <TableCell>Estado</TableCell>
+              <TableCell align="center">Estado</TableCell>
               <TableCell align="right">Acciones</TableCell>
             </TableRow>
           </TableHead>
@@ -734,12 +758,17 @@ export const DevicesTab = () => {
                       arsVariant="caption"
                     />
                   </TableCell>
-                  <TableCell>
+                  <TableCell align="center">
                     <Chip
                       label={device.estado}
                       size="small"
                       color={getStatusColor(device.estado)}
                     />
+                    {device.estado === 'Vendido' && device.fechaVenta && (
+                      <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 0.5 }}>
+                        {format(new Date(device.fechaVenta.split('T')[0] + 'T12:00:00'), 'MMM yyyy', { locale: es })}
+                      </Typography>
+                    )}
                   </TableCell>
                   <TableCell align="right">
                     <Tooltip title="Ver detalles">
@@ -849,40 +878,57 @@ export const DevicesTab = () => {
             </Grid>
 
             <Grid size={{ xs: 6 }}>
-              <TextField
-                select
-                fullWidth
-                label="Color"
-                value={formData.color}
-                onChange={(e) => handleFormChange('color', e.target.value)}
-                disabled={dialogMode === 'edit' || !formData.producto}
-                helperText={!formData.producto ? 'Primero selecciona un producto' : ''}
-              >
-                {(() => {
-                  // Filter colors based on selected product
-                  const selectedProduct = products.find(p => p.modelo === formData.producto);
-                  const productColorNames = selectedProduct?.colores?.map(c => c.nombre || c) || [];
-                  const availableColors = colors.filter(color => productColorNames.includes(color.nombre));
+              {(() => {
+                // Filter colors based on selected product
+                const selectedProduct = products.find(p => p.modelo === formData.producto);
+                const productColorNames = selectedProduct?.colores?.map(c => c.nombre || c) || [];
+                const availableColors = colors.filter(color => productColorNames.includes(color.nombre));
+                const hasOnlyOneColor = availableColors.length === 1;
+                const isDisabled = dialogMode === 'edit' || !formData.producto || hasOnlyOneColor;
 
-                  return availableColors.map((color) => (
-                    <MenuItem key={color._id} value={color.nombre}>
-                      <Box display="flex" alignItems="center" gap={1}>
-                        <Box
-                          sx={{
-                            width: 20,
-                            height: 20,
-                            bgcolor: color.hex,
-                            border: '1px solid',
-                            borderColor: 'grey.300',
-                            borderRadius: 1,
-                          }}
-                        />
-                        {color.nombre}
-                      </Box>
-                    </MenuItem>
-                  ));
-                })()}
-              </TextField>
+                // Auto-select if only one color available
+                if (hasOnlyOneColor && formData.color !== availableColors[0].nombre) {
+                  setTimeout(() => handleFormChange('color', availableColors[0].nombre), 0);
+                }
+
+                // Determine helper text
+                let helperText = '';
+                if (!formData.producto) {
+                  helperText = 'Primero selecciona un producto';
+                } else if (hasOnlyOneColor) {
+                  helperText = 'Único color disponible para este producto';
+                }
+
+                return (
+                  <TextField
+                    select
+                    fullWidth
+                    label="Color"
+                    value={formData.color}
+                    onChange={(e) => handleFormChange('color', e.target.value)}
+                    disabled={isDisabled}
+                    helperText={helperText}
+                  >
+                    {availableColors.map((color) => (
+                      <MenuItem key={color._id} value={color.nombre}>
+                        <Box display="flex" alignItems="center" gap={1}>
+                          <Box
+                            sx={{
+                              width: 20,
+                              height: 20,
+                              bgcolor: color.hex,
+                              border: '1px solid',
+                              borderColor: 'grey.300',
+                              borderRadius: 1,
+                            }}
+                          />
+                          {color.nombre}
+                        </Box>
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                );
+              })()}
             </Grid>
 
             <Grid size={{ xs: 4 }}>
@@ -1009,17 +1055,33 @@ export const DevicesTab = () => {
             </Grid>
 
             <Grid size={{ xs: 8 }}>
-              <TextField
-                select
-                fullWidth
-                label="Ubicación"
-                value={formData.ubicacion}
-                onChange={(e) => handleFormChange('ubicacion', e.target.value)}
-              >
-                {LOCATIONS.map((loc) => (
-                  <MenuItem key={loc} value={loc}>{loc}</MenuItem>
-                ))}
-              </TextField>
+              {(() => {
+                // Get unique locations from branches (Provincia, Ciudad)
+                const locations = [...new Set(branches.map(b => `${b.provincia}, ${b.localidad}`))];
+                const isDisabled = locations.length <= 1;
+
+                // Auto-select if only one location
+                if (isDisabled && locations.length === 1 && formData.ubicacion !== locations[0]) {
+                  // This will trigger on next render
+                  setTimeout(() => handleFormChange('ubicacion', locations[0]), 0);
+                }
+
+                return (
+                  <TextField
+                    select
+                    fullWidth
+                    label="Ubicación"
+                    value={formData.ubicacion}
+                    onChange={(e) => handleFormChange('ubicacion', e.target.value)}
+                    disabled={isDisabled}
+                    helperText={isDisabled && locations.length === 1 ? 'Única sucursal disponible' : ''}
+                  >
+                    {locations.map((loc) => (
+                      <MenuItem key={loc} value={loc}>{loc}</MenuItem>
+                    ))}
+                  </TextField>
+                );
+              })()}
             </Grid>
 
             <Grid size={{ xs: 4 }}>
@@ -1300,7 +1362,7 @@ export const DevicesTab = () => {
             ¿Está seguro de que desea eliminar este dispositivo?
           </Typography>
           {selectedDevice && (
-            <Box sx={{ mt: 2, p: 2, bgcolor: 'grey.100', borderRadius: 1 }}>
+            <Box sx={{ mt: 2, p: 2, bgcolor: 'background.default', borderRadius: 1 }}>
               <Typography variant="body2" fontWeight={500}>
                 {selectedDevice.producto?.modelo || 'N/A'}
               </Typography>

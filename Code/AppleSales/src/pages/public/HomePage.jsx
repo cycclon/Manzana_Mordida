@@ -23,6 +23,7 @@ import { reservationsAPI } from '../../api/reservations';
 import { handleApiError } from '../../api/client';
 import DeviceCard from '../../components/devices/DeviceCard';
 import { LoadingScreen } from '../../components/common';
+import { gradientTextSilver } from '../../theme';
 
 /**
  * HomePage - Landing page with hero section and featured devices
@@ -100,10 +101,10 @@ export const HomePage = () => {
       {/* Hero Section */}
       <Box textAlign="center" sx={{ py: { xs: 4, md: 8 }, mb: 6 }}>
         <StorefrontIcon sx={{ fontSize: { xs: 60, md: 80 }, color: 'primary.main', mb: 2 }} />
-        <Typography variant="h2" component="h1" gutterBottom sx={{ fontSize: { xs: '2rem', md: '3rem' } }}>
+        <Typography variant="h2" component="h1" gutterBottom sx={{ fontSize: { xs: '2rem', md: '3rem' }, ...gradientTextSilver }}>
           Bienvenido a Manzana Mordida
         </Typography>
-        <Typography variant="h5" color="text.secondary" paragraph sx={{ fontSize: { xs: '1.2rem', md: '1.5rem' } }}>
+        <Typography variant="h5" paragraph sx={{ fontSize: { xs: '1.2rem', md: '1.5rem' }, ...gradientTextSilver }}>
           Dispositivos Apple reacondicionados de calidad
         </Typography>
         <Typography variant="body1" color="text.secondary" paragraph sx={{ maxWidth: 600, mx: 'auto', mb: 4 }}>
@@ -123,7 +124,7 @@ export const HomePage = () => {
 
       {/* Categories Section */}
       <Box sx={{ mb: 8 }}>
-        <Typography variant="h4" component="h2" gutterBottom textAlign="center" sx={{ mb: 4 }}>
+        <Typography variant="h4" component="h2" gutterBottom textAlign="center" sx={{ mb: 4, ...gradientTextSilver }}>
           Categorías
         </Typography>
         <Grid container spacing={3}>
@@ -160,7 +161,7 @@ export const HomePage = () => {
       {/* Featured Devices Section */}
       <Box>
         <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, justifyContent: 'space-between', alignItems: { xs: 'flex-start', sm: 'center' }, gap: { xs: 1, sm: 0 }, mb: 3 }}>
-          <Typography variant="h4" component="h2" sx={{ fontSize: { xs: '1.5rem', md: '2.125rem' } }}>
+          <Typography variant="h4" component="h2" sx={{ fontSize: { xs: '1.5rem', md: '2.125rem' }, ...gradientTextSilver }}>
             Dispositivos Destacados
           </Typography>
           <Button

@@ -29,10 +29,14 @@ import TradeInsPage from '../pages/admin/TradeInsPage';
 import BranchesPage from '../pages/admin/BranchesPage';
 import BankAccountsPage from '../pages/admin/BankAccountsPage';
 import UsersManagementPage from '../pages/admin/UsersManagementPage';
+import StatisticsPage from '../pages/admin/StatisticsPage';
 
 // Sales Pages
 import SalesDashboard from '../pages/sales/SalesDashboard';
 import AllAppointmentsPage from '../pages/sales/AllAppointmentsPage';
+
+// CRM Pages
+import CRMPage from '../pages/crm/CRMPage';
 
 // Other Pages
 import NotFoundPage from '../pages/NotFoundPage';
@@ -195,6 +199,16 @@ export const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
+      {
+        path: 'admin/reportes',
+        element: (
+          <ProtectedRoute>
+            <RoleBasedRoute allowedRoles={[USER_ROLES.ADMIN]}>
+              <StatisticsPage />
+            </RoleBasedRoute>
+          </ProtectedRoute>
+        ),
+      },
 
       // Sales Routes
       {
@@ -243,6 +257,18 @@ export const router = createBrowserRouter([
           <ProtectedRoute>
             <RoleBasedRoute allowedRoles={[USER_ROLES.SALES, USER_ROLES.ADMIN]}>
               <div>Sales Availability Page - En construcción</div>
+            </RoleBasedRoute>
+          </ProtectedRoute>
+        ),
+      },
+
+      // CRM Routes
+      {
+        path: 'crm',
+        element: (
+          <ProtectedRoute>
+            <RoleBasedRoute allowedRoles={[USER_ROLES.SALES, USER_ROLES.ADMIN]}>
+              <CRMPage />
             </RoleBasedRoute>
           </ProtectedRoute>
         ),

@@ -83,7 +83,6 @@ const EquipoSchema = new mongoose.Schema({
     ubicacion: { // EDITABLE
         type: String,
         required: true,
-        enum: ['La Rioja', 'CABA']
     },
     canjeable: { // EDITABLE
         type: Boolean,

@@ -37,7 +37,7 @@ import {
 } from '@mui/icons-material';
 import { productsAPI } from '../../../api/products';
 
-const PRODUCT_LINES = ['iPhone', 'MacBook', 'iPad', 'Watch', 'AirPods'];
+const PRODUCT_LINES = ['iPhone', 'MacBook', 'iPad', 'Watch', 'AirPods', 'Otros'];
 
 /**
  * ProductsTab - CRUD interface for managing product models

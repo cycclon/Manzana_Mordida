@@ -104,7 +104,7 @@ exports.getEquipoID = async (req, res, next) => {
 // Registrar nuevo equipo
 exports.addEquipo = async (req, res, next) => {
     try {
-        const {producto, condicionBateria, condicion, grado, estado, costo, precio, detalles, accesorios, color, garantiaApple, garantiaPropia, ubicacion, canjeable} = req.body;
+        const {producto, condicionBateria, condicion, grado, estado, costo, precio, detalles, accesorios, color, garantiaApple, garantiaPropia, ubicacion, canjeable, fechaVenta} = req.body;
 
         // Obtener producto por nombre
         const p = await getProductoByName(producto);
@@ -132,7 +132,16 @@ exports.addEquipo = async (req, res, next) => {
             garantiaPropia,
             ubicacion,
             canjeable
-        });        
+        });
+
+        // Set fechaVenta if status is "Vendido"
+        if (estado === 'Vendido') {
+            if (fechaVenta && fechaVenta.trim() !== '') {
+                nuevoEquipo.fechaVenta = new Date(fechaVenta);
+            } else {
+                nuevoEquipo.fechaVenta = new Date();
+            }
+        }
 
         // console.log(nuevoEquipo);
         await nuevoEquipo.save();

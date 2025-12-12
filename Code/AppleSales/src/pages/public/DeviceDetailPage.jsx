@@ -30,6 +30,7 @@ import { PriceDisplay } from '../../components/common/PriceDisplay';
 import ImageCarousel from '../../components/devices/ImageCarousel';
 import { DEVICE_CONDITION_LABELS } from '../../constants';
 import { toast } from 'react-hot-toast';
+import { gradientTextSilver } from '../../theme';
 
 /**
  * DeviceDetailPage - Detailed view of a single device
@@ -160,7 +161,7 @@ export const DeviceDetailPage = () => {
             )}
 
             {/* Line & Model */}
-            <Typography variant="h4" component="h1" gutterBottom>
+            <Typography variant="h4" component="h1" gutterBottom sx={{ ...gradientTextSilver }}>
               {linea} {modelo}
             </Typography>
 
@@ -205,7 +206,7 @@ export const DeviceDetailPage = () => {
             <Divider sx={{ my: 3 }} />
 
             {/* Specifications */}
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h6" gutterBottom sx={{ ...gradientTextSilver }}>
               Especificaciones
             </Typography>
 
@@ -242,7 +243,7 @@ export const DeviceDetailPage = () => {
             {/* Description (if available) */}
             {detalles && (
               <>
-                <Typography variant="h6" gutterBottom>
+                <Typography variant="h6" gutterBottom sx={{ ...gradientTextSilver }}>
                   Detalles
                 </Typography>
                 <Typography variant="body2" color="text.secondary" paragraph>
@@ -306,7 +307,7 @@ export const DeviceDetailPage = () => {
 
       {/* Additional details section */}
       <Paper elevation={2} sx={{ p: 3, mt: 4 }}>
-        <Typography variant="h5" gutterBottom>
+        <Typography variant="h5" gutterBottom sx={{ ...gradientTextSilver }}>
           Información Adicional
         </Typography>
 

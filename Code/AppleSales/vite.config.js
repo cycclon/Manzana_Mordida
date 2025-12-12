@@ -5,6 +5,7 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
+    host: '0.0.0.0',
     proxy: {
       // Proxy API requests to backend microservices
       '/api/seguridad': {
@@ -54,6 +55,11 @@ export default defineConfig({
         target: 'http://localhost:3009',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api\/cuentas-bancarias/, ''),
+      },
+      '/api/crm': {
+        target: 'http://localhost:3008',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/crm/, ''),
       },
     },
   },

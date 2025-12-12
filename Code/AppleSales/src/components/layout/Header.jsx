@@ -23,6 +23,7 @@ import {
   Home as HomeIcon,
   Devices as DevicesIcon,
   CurrencyExchange as CurrencyIcon,
+  Groups as GroupsIcon,
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
@@ -152,17 +153,28 @@ export const Header = () => {
           {/* Exchange Rate Display */}
           {exchangeRate && (
             <Chip
-              icon={<CurrencyIcon sx={{ fontSize: 16 }} />}
-              label={`USD $1 = ARS $${exchangeRate.toLocaleString('es-AR')}`}
+              icon={<CurrencyIcon sx={{ fontSize: { xs: 14, sm: 16 } }} />}
+              label={
+                <>
+                  <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
+                    USD $1 = ARS ${exchangeRate.toLocaleString('es-AR')}
+                  </Box>
+                  <Box component="span" sx={{ display: { xs: 'inline', sm: 'none' } }}>
+                    ${exchangeRate.toLocaleString('es-AR')}
+                  </Box>
+                </>
+              }
               size="small"
               sx={{
                 bgcolor: 'rgba(255, 255, 255, 0.15)',
                 color: 'inherit',
                 fontWeight: 500,
-                mr: 2,
-                display: { xs: 'none', sm: 'flex' },
+                mr: { xs: 1, sm: 2 },
                 '& .MuiChip-icon': {
                   color: 'inherit',
+                },
+                '& .MuiChip-label': {
+                  px: { xs: 0.5, sm: 1 },
                 },
               }}
             />
@@ -225,6 +237,14 @@ export const Header = () => {
                     <MenuItem onClick={() => handleNavigation('/ventas')}>
                       <SalesIcon sx={{ mr: 1 }} fontSize="small" />
                       Panel Ventas
+                    </MenuItem>
+                  )}
+
+                  {/* CRM Menu */}
+                  {(isSales || isAdmin) && (
+                    <MenuItem onClick={() => handleNavigation('/crm')}>
+                      <GroupsIcon sx={{ mr: 1 }} fontSize="small" />
+                      CRM
                     </MenuItem>
                   )}
 
