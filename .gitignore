@@ -7,6 +7,7 @@ docker-compose.prod.yml
 
 .DS_Store
 **/.DS_Store
+Code/.DS_Store
 
 # Environment variables (contains sensitive data)
 .env
