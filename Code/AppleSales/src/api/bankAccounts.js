@@ -1,33 +1,35 @@
-import { cuentasAPI } from './client';
+import { baseAPI } from './client';
+
+const CUENTAS_PATH = '/api/v1/cuentas';
 
 export const bankAccountsAPI = {
   // Get all bank accounts
   getAllBankAccounts: async (params) => {
-    const response = await cuentasAPI.get('/api/v1/cuentas/', { params });
+    const response = await baseAPI.get(`${CUENTAS_PATH}/`, { params });
     return response.data;
   },
 
   // Get bank account by ID
   getBankAccountById: async (id) => {
-    const response = await cuentasAPI.get(`/api/v1/cuentas/${id}`);
+    const response = await baseAPI.get(`${CUENTAS_PATH}/${id}`);
     return response.data;
   },
 
   // Create bank account (admin)
   createBankAccount: async (accountData) => {
-    const response = await cuentasAPI.post('/api/v1/cuentas/registrar', accountData);
+    const response = await baseAPI.post(`${CUENTAS_PATH}/registrar`, accountData);
     return response.data;
   },
 
   // Update bank account (admin)
   updateBankAccount: async (id, accountData) => {
-    const response = await cuentasAPI.patch(`/api/v1/cuentas/${id}`, accountData);
+    const response = await baseAPI.patch(`${CUENTAS_PATH}/${id}`, accountData);
     return response.data;
   },
 
   // Delete bank account (admin)
   deleteBankAccount: async (id) => {
-    const response = await cuentasAPI.delete(`/api/v1/cuentas/${id}`);
+    const response = await baseAPI.delete(`${CUENTAS_PATH}/${id}`);
     return response.data;
   },
 };

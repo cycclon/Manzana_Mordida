@@ -1,22 +1,23 @@
-import { canjesAPI } from './client';
-import { API_PATHS } from '../constants';
+import { baseAPI } from './client';
+
+const CANJES_PATH = '/api/v1/canjes';
 
 export const tradeinAPI = {
   // Get all trade-in prices
   getAllTradeinPrices: async () => {
-    const response = await canjesAPI.get(API_PATHS.CANJES);
+    const response = await baseAPI.get(CANJES_PATH);
     return response.data;
   },
 
   // Get available product lines
   getProductLines: async () => {
-    const response = await canjesAPI.get(`${API_PATHS.CANJES}/lineas`);
+    const response = await baseAPI.get(`${CANJES_PATH}/lineas`);
     return response.data;
   },
 
   // Get models for a specific product line
   getModelsByLine: async (linea) => {
-    const response = await canjesAPI.get(`${API_PATHS.CANJES}/modelos/${linea}`);
+    const response = await baseAPI.get(`${CANJES_PATH}/modelos/${linea}`);
     return response.data;
   },
 
@@ -41,17 +42,17 @@ export const tradeinAPI = {
 
   // Admin endpoints (require authentication)
   createTradeinPrice: async (data) => {
-    const response = await canjesAPI.post(`${API_PATHS.CANJES}/precio-canje`, data);
+    const response = await baseAPI.post(`${CANJES_PATH}/precio-canje`, data);
     return response.data;
   },
 
   updateTradeinPrice: async (id, precioCanje) => {
-    const response = await canjesAPI.patch(`${API_PATHS.CANJES}/${id}`, { precioCanje });
+    const response = await baseAPI.patch(`${CANJES_PATH}/${id}`, { precioCanje });
     return response.data;
   },
 
   deleteTradeinPrice: async (id) => {
-    const response = await canjesAPI.delete(`${API_PATHS.CANJES}/${id}`);
+    const response = await baseAPI.delete(`${CANJES_PATH}/${id}`);
     return response.data;
   },
 };

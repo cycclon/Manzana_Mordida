@@ -224,8 +224,7 @@ const UsersManagementPage = () => {
           variant="contained"
           startIcon={<AddIcon />}
           onClick={handleOpenCreateDialog}
-          fullWidth
-          sx={{ maxWidth: { xs: '100%', sm: 'auto' } }}
+          sx={{ flexShrink: 0 }}
         >
           Nuevo Usuario
         </Button>

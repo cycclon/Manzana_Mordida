@@ -1,89 +1,91 @@
-import { productosAPI } from './client';
-import { API_PATHS } from '../constants';
+import { baseAPI } from './client';
+
+// API paths for msProductos microservice
+const COLORS_PATH = '/api/colores';
+const PRODUCTS_PATH = '/api/productos';
+const DEVICES_PATH = '/api/equipos';
 
 export const productsAPI = {
   // Colors
   getAllColors: async () => {
-    const response = await productosAPI.get(API_PATHS.COLORS);
+    const response = await baseAPI.get(COLORS_PATH);
     return response.data;
   },
 
   getColorById: async (id) => {
-    const response = await productosAPI.get(`${API_PATHS.COLORS}/${id}`);
+    const response = await baseAPI.get(`${COLORS_PATH}/${id}`);
     return response.data;
   },
 
   createColor: async (colorData) => {
-    const response = await productosAPI.post(API_PATHS.COLORS, colorData);
+    const response = await baseAPI.post(COLORS_PATH, colorData);
     return response.data;
   },
 
   updateColor: async (id, colorData) => {
-    const response = await productosAPI.put(`${API_PATHS.COLORS}/${id}`, colorData);
+    const response = await baseAPI.put(`${COLORS_PATH}/${id}`, colorData);
     return response.data;
   },
 
   deleteColor: async (id) => {
-    const response = await productosAPI.delete(`${API_PATHS.COLORS}/${id}`);
+    const response = await baseAPI.delete(`${COLORS_PATH}/${id}`);
     return response.data;
   },
 
   // Products (Classes)
   getAllProducts: async (params) => {
-    const response = await productosAPI.get(API_PATHS.PRODUCTS, { params });
+    const response = await baseAPI.get(PRODUCTS_PATH, { params });
     return response.data;
   },
 
   getProductById: async (id) => {
-    const response = await productosAPI.get(`${API_PATHS.PRODUCTS}/${id}`);
+    const response = await baseAPI.get(`${PRODUCTS_PATH}/${id}`);
     return response.data;
   },
 
   createProduct: async (productData) => {
-    console.log(productData);    
-    const response = await productosAPI.post(`${API_PATHS.PRODUCTS}/crear-producto`, productData);
+    const response = await baseAPI.post(`${PRODUCTS_PATH}/crear-producto`, productData);
     return response.data;
   },
 
   updateProduct: async (id, productData) => {
-    const response = await productosAPI.put(`/api/productos/producto/${id}`, productData);
+    const response = await baseAPI.put(`${PRODUCTS_PATH}/producto/${id}`, productData);
     return response.data;
   },
 
   deleteProduct: async (id) => {
-    const response = await productosAPI.delete(`${API_PATHS.PRODUCTS}/${id}`);
+    const response = await baseAPI.delete(`${PRODUCTS_PATH}/${id}`);
     return response.data;
   },
 
   // Devices (Instances)
   getAllDevices: async (params) => {
-    const response = await productosAPI.get(API_PATHS.DEVICES, { params });
+    const response = await baseAPI.get(DEVICES_PATH, { params });
     return response.data;
   },
 
   searchDevices: async (searchParams) => {
-    const response = await productosAPI.get(`${API_PATHS.DEVICES}/search`, { params: searchParams });
+    const response = await baseAPI.get(`${DEVICES_PATH}/search`, { params: searchParams });
     return response.data;
   },
 
   getDeviceById: async (id) => {
-    const response = await productosAPI.get(`${API_PATHS.DEVICES}/equipo/${id}`);
+    const response = await baseAPI.get(`${DEVICES_PATH}/equipo/${id}`);
     return response.data;
   },
 
   createDevice: async (deviceData) => {
-    console.log(deviceData);
-    const response = await productosAPI.post(`${API_PATHS.DEVICES}/crear-equipo`, deviceData);
+    const response = await baseAPI.post(`${DEVICES_PATH}/crear-equipo`, deviceData);
     return response.data;
   },
 
   updateDevice: async (id, deviceData) => {
-    const response = await productosAPI.put(`/api/equipos/equipo/${id}`, deviceData);
+    const response = await baseAPI.put(`${DEVICES_PATH}/equipo/${id}`, deviceData);
     return response.data;
   },
 
   deleteDevice: async (id) => {
-    const response = await productosAPI.delete(`/api/equipos/equipo/${id}`);
+    const response = await baseAPI.delete(`${DEVICES_PATH}/equipo/${id}`);
     return response.data;
   },
 
@@ -95,8 +97,8 @@ export const productsAPI = {
       formData.append('imagenes', file);
     });
 
-    const response = await productosAPI.post(
-      `/api/equipos/equipo/${deviceId}/imagenes`,
+    const response = await baseAPI.post(
+      `${DEVICES_PATH}/equipo/${deviceId}/imagenes`,
       formData,
       {
         headers: {
@@ -108,8 +110,8 @@ export const productsAPI = {
   },
 
   deleteDeviceImage: async (deviceId, imageUrl) => {
-    const response = await productosAPI.delete(
-      `/api/equipos/equipo/${deviceId}/imagenes`,
+    const response = await baseAPI.delete(
+      `${DEVICES_PATH}/equipo/${deviceId}/imagenes`,
       {
         data: { imageUrl },
       }
@@ -119,7 +121,7 @@ export const productsAPI = {
 
   // Device details (for autocomplete)
   getAllDetalles: async () => {
-    const response = await productosAPI.get('/api/equipos/detalles');
+    const response = await baseAPI.get(`${DEVICES_PATH}/detalles`);
     return response.data;
   },
 };

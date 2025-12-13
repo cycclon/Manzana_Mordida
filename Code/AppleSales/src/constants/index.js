@@ -176,7 +176,7 @@ export const API_PATHS = {
   // Customers
   CUSTOMERS: '/clientes',
 
-  // Products & Devices
+  // Products & Devices (relative to msProductos base URL)
   COLORS: '/api/colores',
   PRODUCTS: '/api/productos',
   DEVICES: '/api/equipos',

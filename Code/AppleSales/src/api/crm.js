@@ -1,48 +1,48 @@
-import { crmAPIClient } from './client';
+import { baseAPI } from './client';
 
-const API_BASE = '/api/v1/crm';
+const CRM_PATH = '/api/v1/crm';
 
 export const crmAPI = {
   // Get all CRMs with filters and pagination
   getAll: async (params = {}) => {
-    const response = await crmAPIClient.get(API_BASE, { params });
+    const response = await baseAPI.get(CRM_PATH, { params });
     return response.data;
   },
 
   // Get single CRM by ID
   getById: async (id) => {
-    const response = await crmAPIClient.get(`${API_BASE}/${id}`);
+    const response = await baseAPI.get(`${CRM_PATH}/${id}`);
     return response.data;
   },
 
   // Search CRMs by username
   searchByUser: async (usuario) => {
-    const response = await crmAPIClient.get(`${API_BASE}/cliente/${usuario}`);
+    const response = await baseAPI.get(`${CRM_PATH}/cliente/${usuario}`);
     return response.data;
   },
 
   // Get CRMs by status
   getByStatus: async (estado) => {
-    const response = await crmAPIClient.get(`${API_BASE}/estado/${estado}`);
+    const response = await baseAPI.get(`${CRM_PATH}/estado/${estado}`);
     return response.data;
   },
 
   // Create new CRM
   create: async (crmData) => {
-    const response = await crmAPIClient.post(API_BASE, crmData);
+    const response = await baseAPI.post(CRM_PATH, crmData);
     return response.data;
   },
 
   // Update CRM
   update: async (id, crmData) => {
-    const response = await crmAPIClient.put(`${API_BASE}/${id}`, crmData);
+    const response = await baseAPI.put(`${CRM_PATH}/${id}`, crmData);
     return response.data;
   },
 
   // Change CRM status
   changeStatus: async (id, nuevoEstado, notas = '') => {
-    const response = await crmAPIClient.put(
-      `${API_BASE}/${id}/estado/${nuevoEstado}`,
+    const response = await baseAPI.put(
+      `${CRM_PATH}/${id}/estado/${nuevoEstado}`,
       { notas }
     );
     return response.data;
@@ -50,7 +50,7 @@ export const crmAPI = {
 
   // Bulk status change
   bulkChangeStatus: async (ids, nuevoEstado, notas = '') => {
-    const response = await crmAPIClient.put(`${API_BASE}/estado-multiple`, {
+    const response = await baseAPI.put(`${CRM_PATH}/estado-multiple`, {
       ids,
       nuevoEstado,
       notas
@@ -60,7 +60,7 @@ export const crmAPI = {
 
   // Toggle requiereHumano flag
   toggleRequiereHumano: async (id, requiereHumano) => {
-    const response = await crmAPIClient.put(`${API_BASE}/${id}/requiere-humano`, {
+    const response = await baseAPI.put(`${CRM_PATH}/${id}/requiere-humano`, {
       requiereHumano
     });
     return response.data;
@@ -68,19 +68,19 @@ export const crmAPI = {
 
   // Delete CRM
   delete: async (id) => {
-    const response = await crmAPIClient.delete(`${API_BASE}/${id}`);
+    const response = await baseAPI.delete(`${CRM_PATH}/${id}`);
     return response.data;
   },
 
   // Get statistics
   getStatistics: async (params = {}) => {
-    const response = await crmAPIClient.get(`${API_BASE}/estadisticas`, { params });
+    const response = await baseAPI.get(`${CRM_PATH}/estadisticas`, { params });
     return response.data;
   },
 
   // Get dropdown options (states and social networks)
   getOptions: async () => {
-    const response = await crmAPIClient.get(`${API_BASE}/opciones`);
+    const response = await baseAPI.get(`${CRM_PATH}/opciones`);
     return response.data;
   }
 };

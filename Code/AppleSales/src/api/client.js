@@ -45,7 +45,7 @@ const createApiClient = (baseURL) => {
           }
 
           const response = await axios.post(
-            `${import.meta.env.VITE_API_SEGURIDAD}/auth/refresh`,
+            '/api/seguridad/auth/refresh',
             { refreshToken },
             { withCredentials: true }
           );
@@ -89,6 +89,7 @@ const createApiClient = (baseURL) => {
 // Create API clients for each microservice
 export const seguridadAPI = createApiClient(import.meta.env.VITE_API_SEGURIDAD);
 export const productosAPI = createApiClient(import.meta.env.VITE_API_PRODUCTOS);
+export const baseAPI = createApiClient(''); // Base API client for direct path calls (equipos, colores)
 export const clientesAPI = createApiClient(import.meta.env.VITE_API_CLIENTES);
 export const agendaAPI = createApiClient(import.meta.env.VITE_API_AGENDA);
 export const sucursalesAPI = createApiClient(import.meta.env.VITE_API_SUCURSALES);

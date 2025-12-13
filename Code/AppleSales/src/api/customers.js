@@ -1,21 +1,23 @@
-import { clientesAPI } from './client';
+import { baseAPI } from './client';
+
+const CLIENTES_PATH = '/api/v1/clientes';
 
 export const customersAPI = {
   // Get all customers (admin/sales)
   getAllCustomers: async (params) => {
-    const response = await clientesAPI.get('/api/v1/clientes', { params });
+    const response = await baseAPI.get(CLIENTES_PATH, { params });
     return response.data;
   },
 
   // Get customer by ID
   getCustomerById: async (id) => {
-    const response = await clientesAPI.get(`/api/v1/clientes/${id}`);
+    const response = await baseAPI.get(`${CLIENTES_PATH}/${id}`);
     return response.data;
   },
 
   // Get customer by username (usuario field)
   getCustomerByUsername: async (username) => {
-    const response = await clientesAPI.get(`/api/v1/clientes/usuario/${username}`);
+    const response = await baseAPI.get(`${CLIENTES_PATH}/usuario/${username}`);
     return response.data;
   },
 
@@ -23,7 +25,7 @@ export const customersAPI = {
   // Requires: nombres, apellidos, email, usuario (username)
   // Optional: whatsapp
   createCustomer: async (customerData) => {
-    const response = await clientesAPI.post('/api/v1/clientes/nuevo-cliente', {
+    const response = await baseAPI.post(`${CLIENTES_PATH}/nuevo-cliente`, {
       nombres: customerData.nombres,
       apellidos: customerData.apellidos,
       email: customerData.email,
@@ -35,7 +37,7 @@ export const customersAPI = {
 
   // Update customer (only email and whatsapp can be edited)
   updateCustomer: async (id, customerData) => {
-    const response = await clientesAPI.patch(`/api/v1/clientes/${id}`, {
+    const response = await baseAPI.patch(`${CLIENTES_PATH}/${id}`, {
       email: customerData.email,
       whatsapp: customerData.whatsapp,
     });
@@ -44,7 +46,7 @@ export const customersAPI = {
 
   // Delete customer
   deleteCustomer: async (id) => {
-    const response = await clientesAPI.delete(`/api/v1/clientes/${id}`);
+    const response = await baseAPI.delete(`${CLIENTES_PATH}/${id}`);
     return response.data;
   },
 };
