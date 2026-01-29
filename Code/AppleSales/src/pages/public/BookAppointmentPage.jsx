@@ -471,8 +471,8 @@ export const BookAppointmentPage = () => {
         </Typography>
         <Typography variant="body2" color="text.secondary" align="center" paragraph>
           {device
-            ? `Agenda una cita para ver el ${device.producto?.modelo || device.model}`
-            : 'Agenda una cita para visitar nuestra sucursal'}
+            ? `Agendá una cita para ver el ${device.producto?.modelo || device.model}`
+            : 'Agendá una cita para visitar nuestra sucursal'}
         </Typography>
 
         <Stepper activeStep={activeStep} sx={{ my: 4 }}>

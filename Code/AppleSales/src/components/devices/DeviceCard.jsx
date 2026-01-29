@@ -221,7 +221,7 @@ export const DeviceCard = ({ device, showActions = true, listView = false }) => 
                   size="small"
                   color="primary"
                   onClick={handleBookAppointment}
-                  title="Agendar Cita"
+                  title="Agendá una Cita"
                 >
                   <EventIcon />
                 </IconButton>
@@ -230,7 +230,7 @@ export const DeviceCard = ({ device, showActions = true, listView = false }) => 
                 size="small"
                 color="secondary"
                 onClick={handleMakeReservation}
-                title={isOnOrder ? "Reservar (A pedido)" : "Reservar"}
+                title={isOnOrder ? "Reservá (A pedido)" : "Reservá"}
               >
                 <ReserveIcon />
               </IconButton>

@@ -49,13 +49,15 @@ export const TradeInCalculator = () => {
   const [batteryHealth, setBatteryHealth] = useState(80);
   const [calculatedValue, setCalculatedValue] = useState(null);
 
-  // Fetch product lines on mount
+  // Fetch product lines on mount (extracted from trade-in prices)
   useEffect(() => {
     const fetchLines = async () => {
       setLoading(true);
       try {
-        const lines = await tradeinAPI.getProductLines();
-        setProductLines(lines);
+        // Get all trade-in prices and extract unique product lines
+        const prices = await tradeinAPI.getAllTradeinPrices();
+        const uniqueLines = [...new Set(prices.map(p => p.linea).filter(Boolean))].sort();
+        setProductLines(uniqueLines);
       } catch (error) {
         console.error('Error fetching product lines:', error);
         toast.error('Error al cargar líneas de productos');
@@ -67,7 +69,7 @@ export const TradeInCalculator = () => {
     fetchLines();
   }, []);
 
-  // Fetch models when line changes
+  // Fetch models when line changes (extracted from trade-in prices)
   useEffect(() => {
     if (!selectedLine) {
       setModels([]);
@@ -78,8 +80,15 @@ export const TradeInCalculator = () => {
     const fetchModels = async () => {
       setLoading(true);
       try {
-        const modelsList = await tradeinAPI.getModelsByLine(selectedLine);
-        setModels(modelsList);
+        // Get all trade-in prices and extract unique models for selected line
+        const prices = await tradeinAPI.getAllTradeinPrices();
+        const modelsForLine = [...new Set(
+          prices
+            .filter(p => p.linea === selectedLine)
+            .map(p => p.modelo)
+            .filter(Boolean)
+        )].sort();
+        setModels(modelsForLine);
         setSelectedModel('');
       } catch (error) {
         console.error('Error fetching models:', error);
@@ -238,7 +247,7 @@ export const TradeInCalculator = () => {
         <Box sx={{ px: { xs: 2, md: 4 }, py: 3, bgcolor: 'background.paper' }}>
           {/* Instructions */}
           <Alert severity="info" sx={{ mb: 3 }}>
-            Selecciona tu dispositivo usado y su condición de batería para calcular el
+            Seleccioná tu dispositivo usado y su condición de batería para calcular el
             valor de canje. El descuento se aplicará automáticamente a todos los precios.
           </Alert>
 

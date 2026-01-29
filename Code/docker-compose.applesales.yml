@@ -1,0 +1,223 @@
+version: "3.8"
+
+services:
+  ############################
+  # MongoDB
+  ############################
+  mongodb:
+    image: mongo:7
+    container_name: applesales-mongodb
+    restart: unless-stopped
+    command: mongod --auth
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD}
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - applesales
+
+  ############################
+  # Seguridad
+  ############################
+  ms-seguridad:
+    build: ./Code/msSeguridad
+    image: applesales-ms-seguridad:latest
+    container_name: ms-seguridad
+    restart: unless-stopped
+    expose:
+      - "3002"
+    environment:
+      PORT: 3002
+      NODE_ENV: production
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRY: 15m
+      REFRESH_TOKEN_EXPIRY_DAYS: 7
+      REFRESH_TOKEN_BYTES: 64
+      COOKIE_SECURE: "true"
+      MONGO_URI: mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@mongodb:27017/seguridad?authSource=admin
+    depends_on:
+      - mongodb
+    networks:
+      - applesales
+
+  ############################
+  # Clientes
+  ############################
+  ms-clientes:
+    build: ./Code/msClientes
+    image: applesales-ms-clientes:latest
+    container_name: ms-clientes
+    restart: unless-stopped
+    expose:
+      - "3003"
+    environment:
+      PORT: 3003
+      NODE_ENV: production
+      JWT_SECRET: ${JWT_SECRET}
+      SEGURIDADMS_URL: http://ms-seguridad:3002
+      MONGO_URL: mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@mongodb:27017/clientes?authSource=admin
+    depends_on:
+      - mongodb
+      - ms-seguridad
+    networks:
+      - applesales
+
+  ############################
+  # Productos
+  ############################
+  ms-productos:
+    build: ./Code/msProductos
+    image: applesales-ms-productos:latest
+    container_name: ms-productos
+    restart: unless-stopped
+    expose:
+      - "3001"
+    environment:
+      PORT: 3001
+      NODE_ENV: production
+      JWT_SECRET: ${JWT_SECRET}
+      MONGO_URL: mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@mongodb:27017/productos?authSource=admin
+      R2_ENDPOINT: ${R2_ENDPOINT}
+      R2_ACCESS_KEY_ID: ${R2_ACCESS_KEY_ID}
+      R2_SECRET_ACCESS_KEY: ${R2_SECRET_ACCESS_KEY}
+      R2_BUCKET_NAME: ${R2_BUCKET_NAME}
+      R2_PUBLIC_URL: ${R2_PUBLIC_URL}
+    depends_on:
+      - mongodb
+    networks:
+      - applesales
+
+  ############################
+  # Canjes
+  ############################
+  ms-canjes:
+    build: ./Code/msCanjes
+    image: applesales-ms-canjes:latest
+    container_name: ms-canjes
+    restart: unless-stopped
+    expose:
+      - "3006"
+    environment:
+      PORT: 3006
+      NODE_ENV: production
+      JWT_SECRET: ${JWT_SECRET}
+      MONGO_URL: mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@mongodb:27017/canjes?authSource=admin
+    depends_on:
+      - mongodb
+    networks:
+      - applesales
+
+  ############################
+  # Agenda
+  ############################
+  ms-agenda:
+    build: ./Code/msAgenda
+    image: applesales-ms-agenda:latest
+    container_name: ms-agenda
+    restart: unless-stopped
+    expose:
+      - "3004"
+    environment:
+      PORT: 3004
+      NODE_ENV: production
+      JWT_SECRET: ${JWT_SECRET}
+      MONGO_URL: mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@mongodb:27017/agenda?authSource=admin
+    depends_on:
+      - mongodb
+    networks:
+      - applesales
+
+  ############################
+  # Cuentas
+  ############################
+  ms-cuentas:
+    build: ./Code/msCuentasBancarias
+    image: applesales-ms-cuentas:latest
+    container_name: ms-cuentas
+    restart: unless-stopped
+    expose:
+      - "3009"
+    environment:
+      PORT: 3009
+      NODE_ENV: production
+      JWT_SECRET: ${JWT_SECRET}
+      MONGO_URL: mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@mongodb:27017/cuentas_bancarias?authSource=admin
+    depends_on:
+      - mongodb
+    networks:
+      - applesales
+
+  ############################
+  # Reservas
+  ############################
+  ms-reservas:
+    build: ./Code/msReservas
+    image: applesales-ms-reservas:latest
+    container_name: ms-reservas
+    restart: unless-stopped
+    expose:
+      - "3007"
+    environment:
+      PORT: 3007
+      NODE_ENV: production
+      JWT_SECRET: ${JWT_SECRET}
+      PORCENTAJE_RESERVA: 0.2
+      VIGENCIA_RESERVA: 7
+      MONGO_URL: mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@mongodb:27017/reservas?authSource=admin
+      R2_ENDPOINT: ${R2_ENDPOINT}
+      R2_ACCESS_KEY_ID: ${R2_ACCESS_KEY_ID}
+      R2_SECRET_ACCESS_KEY: ${R2_SECRET_ACCESS_KEY}
+      R2_BUCKET_NAME: ${R2_BUCKET_NAME}
+      R2_PUBLIC_URL: ${R2_PUBLIC_URL}
+    depends_on:
+      - mongodb
+    networks:
+      - applesales
+
+  ############################
+  # Sucursales
+  ############################
+  ms-sucursales:
+    build: ./Code/msSucursales
+    image: applesales-ms-sucursales:latest
+    container_name: ms-sucursales
+    restart: unless-stopped
+    expose:
+      - "3005"
+    environment:
+      PORT: 3005
+      NODE_ENV: production
+      JWT_SECRET: ${JWT_SECRET}
+      MONGO_URL: mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@mongodb:27017/sucursales?authSource=admin
+    depends_on:
+      - mongodb
+    networks:
+      - applesales
+
+  ############################
+  # CRM
+  ############################
+  ms-crm:
+    build: ./Code/msCRM
+    image: applesales-ms-crm:latest
+    container_name: ms-crm
+    restart: unless-stopped
+    expose:
+      - "3008"
+    environment:
+      PORT: 3008
+      NODE_ENV: production
+      JWT_SECRET: ${JWT_SECRET}
+      MONGO_URL: mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@mongodb:27017/crm?authSource=admin
+    depends_on:
+      - mongodb
+    networks:
+      - applesales
+
+networks:
+  applesales:
+    external: true
+
+volumes:
+  mongodb_data:

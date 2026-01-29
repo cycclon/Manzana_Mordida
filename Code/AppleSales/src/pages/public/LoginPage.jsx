@@ -15,7 +15,7 @@ export const LoginPage = () => {
             Iniciar Sesión
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Ingresa con tu cuenta de Manzana Mordida
+            Ingresá con tu cuenta de Manzana Mordida
           </Typography>
         </Box>
 

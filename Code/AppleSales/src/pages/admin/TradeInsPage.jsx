@@ -661,7 +661,7 @@ const TradeInsPage = () => {
                     {...params}
                     label="Modelo"
                     required
-                    helperText="Selecciona un modelo existente o escribe uno nuevo"
+                    helperText="Seleccioná un modelo existente o escribí uno nuevo"
                   />
                 )}
               />
@@ -769,8 +769,8 @@ const TradeInsPage = () => {
                 onChange={(e) => handleBulkUpdateChange('value', e.target.value)}
                 helperText={
                   bulkUpdateData.updateType === 'fixed'
-                    ? 'Usa números positivos para aumentar, negativos para disminuir (ej: 10 o -10)'
-                    : 'Usa números positivos para aumentar, negativos para disminuir (ej: 10 o -10)'
+                    ? 'Usá números positivos para aumentar, negativos para disminuir (ej: 10 o -10)'
+                    : 'Usá números positivos para aumentar, negativos para disminuir (ej: 10 o -10)'
                 }
                 inputProps={{ step: bulkUpdateData.updateType === 'fixed' ? 0.01 : 1 }}
                 required
@@ -831,7 +831,7 @@ const TradeInsPage = () => {
                     {...params}
                     label="Modelo"
                     required
-                    helperText="Selecciona un modelo existente o escribe uno nuevo"
+                    helperText="Seleccioná un modelo existente o escribí uno nuevo"
                   />
                 )}
               />

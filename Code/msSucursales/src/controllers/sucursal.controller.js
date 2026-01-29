@@ -16,7 +16,7 @@ async function getSucursalID(req, res, next) {
         if(!id) res.status(400).json({message: 'Debe especificar un ID de sucursal'});
         const sucursal = await Sucursal.findById({ _id: id });
         if(!sucursal) return res.status(404).json({message: 'Sucursal no encontrada'});
-        res.stauts(200).json(sucursal);
+        res.status(200).json(sucursal);
 
         res.status(200).json({message: 'ok'});
     } catch (error) {

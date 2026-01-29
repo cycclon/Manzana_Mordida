@@ -360,7 +360,7 @@ export const SalesDashboard = () => {
   const handleCompleteReservation = async () => {
     if (!selectedReservation) return;
 
-    if (!window.confirm('¿Confirmar que el cliente ha pagado el resto y retirado el dispositivo? Esto marcará el dispositivo como vendido.')) {
+    if (!window.confirm('¿Confirmás que el cliente ha pagado el resto y retirado el dispositivo? Esto marcará el dispositivo como vendido.')) {
       return;
     }
 
@@ -799,7 +799,7 @@ export const SalesDashboard = () => {
           </Box>
         ) : schedules.length === 0 ? (
           <Alert severity="info">
-            No has configurado tu disponibilidad. Haz clic en "Agregar Horario" para definir cuándo puedes recibir citas.
+            No has configurado tu disponibilidad. Hacé clic en "Agregar Horario" para definir cuándo podés recibir citas.
           </Alert>
         ) : (
           <TableContainer>

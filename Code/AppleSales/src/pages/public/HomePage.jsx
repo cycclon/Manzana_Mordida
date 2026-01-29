@@ -105,11 +105,11 @@ export const HomePage = () => {
           Bienvenido a Manzana Mordida
         </Typography>
         <Typography variant="h5" paragraph sx={{ fontSize: { xs: '1.2rem', md: '1.5rem' }, ...gradientTextSilver }}>
-          Dispositivos Apple reacondicionados de calidad
+          Dispositivos Apple sellados, seminuevos y usados de calidad
         </Typography>
         <Typography variant="body1" color="text.secondary" paragraph sx={{ maxWidth: 600, mx: 'auto', mb: 4 }}>
-          Encuentra los mejores dispositivos Apple reacondicionados con garantía,
-          entrega a domicilio y la opción de canjear tu dispositivo usado.
+          Encontrá los mejores dispositivos Apple con garantía de fábrica o propia.<br />
+          Entrega en oficina segura en el centro 📍
         </Typography>
         <Button
           variant="contained"

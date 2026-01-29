@@ -147,7 +147,7 @@ export const LoginForm = () => {
           underline="hover"
           sx={{ cursor: 'pointer' }}
         >
-          ¿No tienes cuenta? Regístrate aquí
+          ¿No tenés cuenta? Registrate aquí
         </Link>
       </Box>
     </Box>

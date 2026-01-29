@@ -118,7 +118,7 @@ export const DeviceFilters = ({ filters, onFiltersChange, onClear }) => {
         <Grid size={{ xs: 12, md: 4 }}>
           <TextField
             fullWidth
-            label="Buscar modelo"
+            label="Buscá modelo"
             placeholder="iPhone 15 Pro..."
             value={localFilters.search || ''}
             onChange={(e) => handleChange('search', e.target.value)}

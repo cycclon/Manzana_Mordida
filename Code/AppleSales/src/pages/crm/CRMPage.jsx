@@ -437,7 +437,7 @@ const CRMPage = () => {
               <TextField
                 fullWidth
                 size="small"
-                label="Buscar usuario"
+                label="Buscá usuario"
                 value={filters.usuario}
                 onChange={(e) => handleFilterChange('usuario', e.target.value)}
                 InputProps={{

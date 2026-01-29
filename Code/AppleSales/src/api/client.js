@@ -68,6 +68,7 @@ const createApiClient = (baseURL) => {
           localStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
           localStorage.removeItem(STORAGE_KEYS.REFRESH_TOKEN);
           localStorage.removeItem(STORAGE_KEYS.USER);
+          localStorage.removeItem('auth-storage'); // Clear Zustand persisted state
           Cookies.remove('refreshToken');
 
           // Redirect to login page

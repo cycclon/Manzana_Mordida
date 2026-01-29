@@ -20,7 +20,7 @@ export const RoleBasedRoute = ({ children, allowedRoles = [] }) => {
           Acceso Denegado
         </Typography>
         <Typography variant="body1" color="text.secondary" paragraph>
-          No tienes permisos para acceder a esta página.
+          No tenés permisos para acceder a esta página.
         </Typography>
         <Typography variant="body2" color="text.secondary" paragraph>
           Tu rol actual: <strong>{user?.role || 'No definido'}</strong>

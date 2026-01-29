@@ -157,14 +157,14 @@ const UsersManagementPage = () => {
 
     // Confirm password validation
     if (!formData.confirmPassword) {
-      errors.confirmPassword = 'Confirma la contraseña';
+      errors.confirmPassword = 'Confirmá la contraseña';
     } else if (formData.password !== formData.confirmPassword) {
       errors.confirmPassword = 'Las contraseñas no coinciden';
     }
 
     // Role validation
     if (!formData.role || ![USER_ROLES.ADMIN, USER_ROLES.SALES].includes(formData.role)) {
-      errors.role = 'Selecciona un rol válido';
+      errors.role = 'Seleccioná un rol válido';
     }
 
     setFormErrors(errors);
@@ -232,7 +232,7 @@ const UsersManagementPage = () => {
 
       {/* Info Alert */}
       <Alert severity="info" sx={{ mb: 3 }}>
-        Solo puedes crear usuarios con roles de <strong>Administrador</strong> o <strong>Vendedor</strong>.
+        Solo podés crear usuarios con roles de <strong>Administrador</strong> o <strong>Vendedor</strong>.
         Los clientes (Viewers) se registran desde la página pública.
       </Alert>
 
@@ -297,7 +297,7 @@ const UsersManagementPage = () => {
         fullWidth
         disableRestoreFocus
       >
-        <DialogTitle>Crear Nuevo Usuario</DialogTitle>
+        <DialogTitle>Creá un Nuevo Usuario</DialogTitle>
         <DialogContent>
           <Box sx={{ mt: 2 }}>
             <Grid container spacing={2}>
@@ -367,7 +367,7 @@ const UsersManagementPage = () => {
         <DialogActions>
           <Button onClick={handleCloseCreateDialog}>Cancelar</Button>
           <Button onClick={handleSubmitCreate} variant="contained" color="primary">
-            Crear Usuario
+            Crear
           </Button>
         </DialogActions>
       </Dialog>

@@ -77,12 +77,32 @@ export const DeviceDetailPage = () => {
   const linea = device?.producto?.linea || 'N/A';
   const modelo = device?.producto?.modelo || device?.model || 'Unknown Model';
   const colorNombre = device?.color?.nombre || device?.color || '';
+  const colorHex = device?.color?.hex || null;
   const bateria = device?.condicionBateria ? device?.condicionBateria * 100 : device?.batteryHealth || 0;
   const condicion = device?.condicion || device?.condition;
   const estado = device?.estado || device?.status;
   const imagenes = device?.imagenes || device?.images || [];
   const detalles = device?.detalles || device?.description;
   const grado = device?.grado || device?.grade;
+
+  // Helper function to convert hex to RGB
+  const hexToRgb = (hex) => {
+    if (!hex) return null;
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+      r: parseInt(result[1], 16),
+      g: parseInt(result[2], 16),
+      b: parseInt(result[3], 16)
+    } : null;
+  };
+
+  // Helper function to get contrasting text color
+  const getContrastColor = (hexColor) => {
+    const rgb = hexToRgb(hexColor);
+    if (!rgb) return '#000000';
+    const luminance = (0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b) / 255;
+    return luminance > 0.5 ? '#000000' : '#FFFFFF';
+  };
 
   // Display estado - show "Reservado" if there's an active reservation
   const displayEstado = isReserved ? 'Reservado' : estado;
@@ -211,22 +231,33 @@ export const DeviceDetailPage = () => {
             </Typography>
 
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mb: 3 }}>
-              {/* Battery */}
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <BatteryIcon
-                  color={bateria >= 90 ? 'success' : bateria >= 80 ? 'warning' : 'action'}
-                />
-                <Typography variant="body1">
-                  <strong>Salud de Batería:</strong> {Math.round(bateria)}%
-                </Typography>
-              </Box>
+              {/* Battery - only show if battery health is specified */}
+              {bateria > 0 && (
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <BatteryIcon
+                    color={bateria >= 90 ? 'success' : bateria >= 80 ? 'warning' : 'action'}
+                  />
+                  <Typography variant="body1">
+                    <strong>Salud de Batería:</strong> {Math.round(bateria)}%
+                  </Typography>
+                </Box>
+              )}
 
               {/* Color */}
               {colorNombre && (
-                <Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <Typography variant="body1">
-                    <strong>Color:</strong> {colorNombre}
+                    <strong>Color:</strong>
                   </Typography>
+                  <Chip
+                    label={colorNombre}
+                    size="small"
+                    sx={colorHex ? {
+                      backgroundColor: `${colorHex} !important`,
+                      color: `${getContrastColor(colorHex)} !important`,
+                      fontWeight: 500,
+                    } : {}}
+                  />
                 </Box>
               )}
 
@@ -241,7 +272,7 @@ export const DeviceDetailPage = () => {
             <Divider sx={{ my: 3 }} />
 
             {/* Description (if available) */}
-            {detalles && (
+            {detalles && detalles.trim && detalles.trim() !== '' && (
               <>
                 <Typography variant="h6" gutterBottom sx={{ ...gradientTextSilver }}>
                   Detalles
@@ -264,7 +295,7 @@ export const DeviceDetailPage = () => {
                   fullWidth
                   disabled={isReserved || estado === 'Vendido'}
                 >
-                  {isReserved ? 'Dispositivo Reservado' : estado === 'A pedido' ? 'Reservar (Señar A pedido)' : 'Reservar Dispositivo'}
+                  {isReserved ? 'Dispositivo Reservado' : estado === 'A pedido' ? 'Reservá (Señar A pedido)' : 'Reservá este Dispositivo'}
                 </Button>
                 <Button
                   variant="outlined"
@@ -274,7 +305,7 @@ export const DeviceDetailPage = () => {
                   fullWidth
                   disabled={isReserved || estado === 'Vendido' || estado === 'A pedido'}
                 >
-                  Agendar Cita para Ver
+                  Agendá una Cita para Verlo
                 </Button>
               </Box>
             )}
@@ -287,17 +318,17 @@ export const DeviceDetailPage = () => {
 
             {estado === 'A pedido' && !isReserved && (
               <Alert severity="info" sx={{ mt: 2 }}>
-                Este dispositivo está por pedido y no se encuentra en stock. Puede reservarlo con una seña para solicitarlo al proveedor. No es posible agendar citas para verlo en persona.
+                Este dispositivo está por pedido y no se encuentra en stock. Podés reservarlo con una seña para solicitarlo al proveedor. No es posible agendar citas para verlo en persona.
               </Alert>
             )}
 
             {/* Additional info */}
             <Box sx={{ mt: 3, p: 2, bgcolor: 'background.default', borderRadius: 1, border: '1px solid', borderColor: 'divider' }}>
               <Typography variant="caption" color="text.secondary" component="div">
-                <strong>¿Tienes un dispositivo para canjear?</strong>
+                <strong>¿Tenés un dispositivo para canjear?</strong>
               </Typography>
               <Typography variant="caption" color="text.secondary">
-                Usa la calculadora de canje en la parte superior para ver el precio
+                Usá la calculadora de canje en la parte superior para ver el precio
                 ajustado con tu dispositivo usado.
               </Typography>
             </Box>
@@ -330,7 +361,7 @@ export const DeviceDetailPage = () => {
                 ✓ Entrega a Domicilio
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Recibe tu dispositivo en la comodidad de tu hogar o retíralo
+                Recibí tu dispositivo en la comodidad de tu hogar o retiralo
                 en nuestra sucursal.
               </Typography>
             </Box>
@@ -342,7 +373,7 @@ export const DeviceDetailPage = () => {
                 ✓ Asesoramiento Personalizado
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Agenda una cita para ver el dispositivo en persona y resolver
+                Agendá una cita para ver el dispositivo en persona y resolver
                 todas tus dudas.
               </Typography>
             </Box>

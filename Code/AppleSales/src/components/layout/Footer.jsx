@@ -46,8 +46,8 @@ export const Footer = () => {
               </Typography>
             </Box>
             <Typography variant="body2" color="grey.400" paragraph>
-              Dispositivos Apple reacondicionados de la más alta calidad.
-              Compra con confianza.
+              Dispositivos Apple sellados, seminuevos y usados de calidad.
+              Comprá con confianza.
             </Typography>
           </Grid>
 
@@ -78,19 +78,19 @@ export const Footer = () => {
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 <EmailIcon fontSize="small" />
                 <Typography variant="body2" color="grey.400">
-                  info@manzanamordida.com
+                  manzanamordida.lr@gmail.com
                 </Typography>
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 <PhoneIcon fontSize="small" />
                 <Typography variant="body2" color="grey.400">
-                  +54 11 1234-5678
+                  +54 380 4280591/+54 380 4805100
                 </Typography>
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 <LocationIcon fontSize="small" />
                 <Typography variant="body2" color="grey.400">
-                  Buenos Aires, Argentina
+                  La Rioja, Argentina
                 </Typography>
               </Box>
             </Box>

@@ -21,7 +21,8 @@ const {
     confirmarCita,
     reprogramarCita,
     getMisCitas,
-    aceptarCita
+    aceptarCita,
+    crearCitaConfirmada
 } = require('../controllers/cita.controller');
 
 //----------------- PUBLIC ROUTES------------------//
@@ -284,8 +285,97 @@ router.post('/confirmar/:id',
     authMiddleware,
     roleMiddleware(['admin', 'sales']),
     establecerCita,
-    cambiarEstado('Confirmada'), 
+    cambiarEstado('Confirmada'),
     confirmarCita
+);
+
+//------------ AI AGENT ROUTES---------------//
+/////////////////////////////////////////////////////
+/**
+ * @swagger
+ * /api/v1/citas/crear-confirmada:
+ *   post:
+ *     summary: Crear Cita Confirmada (AI Agent)
+ *     description: Crea una cita directamente en estado Confirmada. Para uso de agentes de IA.
+ *     tags: [Citas]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - cliente
+ *               - fecha
+ *               - horaInicio
+ *               - sucursal
+ *               - vendedor
+ *             properties:
+ *               cliente:
+ *                 type: object
+ *                 required:
+ *                   - nombre
+ *                 properties:
+ *                   nombre:
+ *                     type: string
+ *                     description: Nombre del cliente
+ *                   email:
+ *                     type: string
+ *                     description: Email del cliente (opcional)
+ *                   telefono:
+ *                     type: string
+ *                     description: Teléfono del cliente (opcional)
+ *                   canje:
+ *                     type: object
+ *                     properties:
+ *                       linea:
+ *                         type: string
+ *                         enum: [iPhone, MacBook, iPad, AirPods, Watch]
+ *                       modelo:
+ *                         type: string
+ *                       bateria:
+ *                         type: number
+ *                         minimum: 0
+ *                         maximum: 1
+ *               fecha:
+ *                 type: string
+ *                 format: date
+ *                 description: Fecha de la cita (YYYY-MM-DD)
+ *               horaInicio:
+ *                 type: number
+ *                 description: Hora de inicio (0-23)
+ *               sucursal:
+ *                 type: string
+ *                 description: ID de la sucursal
+ *               vendedor:
+ *                 type: string
+ *                 description: Nombre o ID del vendedor asignado
+ *               duracion:
+ *                 type: number
+ *                 description: Duración en horas (default 0.5, o 2 si hay canje)
+ *     responses:
+ *       201:
+ *         description: Cita confirmada creada exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 data:
+ *                   $ref: '#/components/schemas/cita'
+ *       400:
+ *         description: Campos requeridos faltantes
+ *       401:
+ *         description: No autorizado - Token inválido o faltante
+ */
+router.post('/crear-confirmada',
+    authMiddleware,
+    roleMiddleware(['admin', 'sales']),
+    crearCitaConfirmada
 );
 
 module.exports = router;

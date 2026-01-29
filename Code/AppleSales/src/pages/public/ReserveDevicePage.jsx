@@ -450,7 +450,7 @@ export const ReserveDevicePage = () => {
             </Card>
 
             <Typography variant="h6" gutterBottom>
-              Selecciona Cuenta Bancaria
+              Seleccioná Cuenta Bancaria
             </Typography>
 
             {bankAccounts.length === 0 ? (
@@ -612,7 +612,7 @@ export const ReserveDevicePage = () => {
               />
               <UploadIcon sx={{ fontSize: 48, color: 'text.secondary', mb: 2 }} />
               <Typography variant="body1" gutterBottom>
-                {paymentProof ? paymentProof.name : 'Haz clic para seleccionar archivo'}
+                {paymentProof ? paymentProof.name : 'Hacé clic para seleccionar archivo'}
               </Typography>
               <Typography variant="caption" color="text.secondary">
                 JPG, PNG, WEBP o PDF (máx. 5MB)

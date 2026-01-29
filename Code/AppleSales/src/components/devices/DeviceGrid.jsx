@@ -202,7 +202,7 @@ const DeviceTableRow = ({ device, isMobile, isTablet }) => {
               size="small"
               color="primary"
               onClick={handleBookAppointment}
-              title="Agendar Cita"
+              title="Agendá una Cita"
             >
               <EventIcon />
             </IconButton>
@@ -212,7 +212,7 @@ const DeviceTableRow = ({ device, isMobile, isTablet }) => {
               size="small"
               color="secondary"
               onClick={handleMakeReservation}
-              title={isOnOrder ? "Reservar (A pedido)" : "Reservar"}
+              title={isOnOrder ? "Reservá (A pedido)" : "Reservá"}
             >
               <ReserveIcon />
             </IconButton>
@@ -246,7 +246,7 @@ export const DeviceGrid = ({
     return (
       <EmptyState
         title="No se encontraron dispositivos"
-        description="Intenta ajustar los filtros para ver más resultados"
+        description="Intentá ajustar los filtros para ver más resultados"
       />
     );
   }

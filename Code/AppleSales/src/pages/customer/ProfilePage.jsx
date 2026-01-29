@@ -457,10 +457,10 @@ const ProfilePage = () => {
       <Container maxWidth="lg" sx={{ py: 4 }}>
         <Box sx={{ mb: 4 }}>
           <Typography variant="h4" component="h1" gutterBottom>
-            Completar Perfil
+            Completá tu Perfil
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Para poder usar todas las funciones de la plataforma, por favor completa tu perfil
+            Para poder usar todas las funciones de la plataforma, por favor completá tu perfil
           </Typography>
         </Box>
 
@@ -515,7 +515,7 @@ const ProfilePage = () => {
               startIcon={<SaveIcon />}
               onClick={handleCreateProfile}
             >
-              Crear Perfil
+              Creá tu Perfil
             </Button>
           </Box>
         </Paper>
@@ -638,7 +638,7 @@ const ProfilePage = () => {
               <CircularProgress />
             </Box>
           ) : reservations.length === 0 ? (
-            <Alert severity="info">No tienes reservas registradas</Alert>
+            <Alert severity="info">No tenés reservas registradas</Alert>
           ) : (
             <TableContainer>
               <Table>
@@ -769,7 +769,7 @@ const ProfilePage = () => {
               <CircularProgress />
             </Box>
           ) : appointments.length === 0 ? (
-            <Alert severity="info">No tienes citas registradas</Alert>
+            <Alert severity="info">No tenés citas registradas</Alert>
           ) : (
             <Grid container spacing={2}>
               {appointments.map((cita) => (
@@ -836,7 +836,7 @@ const ProfilePage = () => {
               fullWidth
               sx={{ mt: 2 }}
             >
-              {paymentFile ? paymentFile.name : 'Seleccionar Archivo'}
+              {paymentFile ? paymentFile.name : 'Seleccioná Archivo'}
               <input
                 type="file"
                 hidden

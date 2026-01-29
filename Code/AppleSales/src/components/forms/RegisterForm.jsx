@@ -329,7 +329,7 @@ export const RegisterForm = () => {
           underline="hover"
           sx={{ cursor: 'pointer' }}
         >
-          ¿Ya tienes cuenta? Inicia sesión aquí
+          ¿Ya tenés cuenta? Iniciá sesión aquí
         </Link>
       </Box>
     </Box>

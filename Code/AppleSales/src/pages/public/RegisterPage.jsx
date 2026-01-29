@@ -12,10 +12,10 @@ export const RegisterPage = () => {
         <Box textAlign="center" mb={3}>
           <PersonAddIcon sx={{ fontSize: 60, color: 'primary.main', mb: 2 }} />
           <Typography variant="h4" component="h1" gutterBottom>
-            Crear Cuenta
+            Creá tu Cuenta
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Regístrate para comenzar a comprar dispositivos Apple
+            Registrate para comenzar a comprar dispositivos Apple
           </Typography>
         </Box>
 

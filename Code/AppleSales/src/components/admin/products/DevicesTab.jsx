@@ -923,7 +923,7 @@ export const DevicesTab = () => {
                 value={selectedProductType}
                 onChange={(e) => handleProductTypeChange(e.target.value)}
                 disabled={dialogMode === 'edit'}
-                helperText={dialogMode === 'create' ? 'Selecciona el tipo de producto primero' : ''}
+                helperText={dialogMode === 'create' ? 'Seleccioná el tipo de producto primero' : ''}
               >
                 <MenuItem value="">
                   <em>Todos los tipos</em>
@@ -944,7 +944,7 @@ export const DevicesTab = () => {
                 value={formData.producto}
                 onChange={(e) => handleFormChange('producto', e.target.value)}
                 disabled={dialogMode === 'edit'}
-                helperText={!selectedProductType && dialogMode === 'create' ? 'Selecciona un tipo de producto primero' : ''}
+                helperText={!selectedProductType && dialogMode === 'create' ? 'Seleccioná un tipo de producto primero' : ''}
               >
                 {filteredProducts.map((product) => (
                   <MenuItem key={product._id} value={product.modelo}>
@@ -1405,7 +1405,7 @@ export const DevicesTab = () => {
                       startIcon={<ImageIcon />}
                       fullWidth
                     >
-                      Seleccionar Imágenes
+                      Seleccioná Imágenes
                       <input
                         type="file"
                         hidden

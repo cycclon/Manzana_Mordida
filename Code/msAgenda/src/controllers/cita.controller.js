@@ -204,6 +204,50 @@ async function aceptarCita(req, res, next) {
     }
 }
 
+/**
+ * Create a confirmed appointment (for AI agent)
+ * POST /api/v1/citas/crear-confirmada
+ * Requires JWT authentication
+ * Creates appointment directly in "Confirmada" state
+ */
+async function crearCitaConfirmada(req, res, next) {
+    try {
+        const { cliente, fecha, horaInicio, sucursal, vendedor, duracion } = req.body;
+
+        // Validate required fields
+        if (!cliente || !fecha || !horaInicio || !sucursal || !vendedor) {
+            return res.status(400).json({
+                message: 'Campos requeridos: cliente (con nombre), fecha, horaInicio, sucursal, vendedor'
+            });
+        }
+
+        if (!cliente.nombre) {
+            return res.status(400).json({
+                message: 'El cliente debe tener al menos un nombre'
+            });
+        }
+
+        const nuevaCita = new Cita({
+            cliente,
+            fecha,
+            horaInicio,
+            sucursal,
+            vendedor,
+            estado: 'Confirmada',
+            duracion: duracion || (cliente.canje ? 2 : 0.5)
+        });
+
+        await nuevaCita.save();
+
+        res.status(201).json({
+            message: 'Cita confirmada creada exitosamente',
+            data: nuevaCita
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
 module.exports = {
     getCitas,
     getCitasRango,
@@ -214,5 +258,6 @@ module.exports = {
     confirmarCita,
     reprogramarCita,
     getMisCitas,
-    aceptarCita
+    aceptarCita,
+    crearCitaConfirmada
 };
