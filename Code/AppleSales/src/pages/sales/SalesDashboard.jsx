@@ -163,7 +163,7 @@ export const SalesDashboard = () => {
 
       // Calculate stats for the week
       const completedThisWeek = appointmentsArray.filter(apt => apt.estado === 'Completada').length;
-      const todayAppts = appointmentsArray.filter(apt => isToday(parseISO(apt.fecha))).length;
+      const todayAppts = appointmentsArray.filter(apt => isToday(parseLocalDate(apt.fecha))).length;
 
       setStats({
         todayAppointments: todayAppts,
