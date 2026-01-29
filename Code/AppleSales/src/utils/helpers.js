@@ -213,3 +213,17 @@ export const unique = (array) => {
 export const isEmpty = (obj) => {
   return Object.keys(obj).length === 0;
 };
+
+/**
+ * Parse a date string as local date (without timezone shift)
+ * Fixes the issue where "2026-01-29" parsed as UTC becomes "2026-01-28" in local time
+ * @param {string} dateStr - Date string (e.g., "2026-01-29" or "2026-01-29T00:00:00.000Z")
+ * @returns {Date} - Date object in local time
+ */
+export const parseLocalDate = (dateStr) => {
+  if (!dateStr) return null;
+  // Extract just the date part (YYYY-MM-DD)
+  const datePart = dateStr.split('T')[0];
+  // Add noon time to avoid timezone shift issues
+  return new Date(datePart + 'T12:00:00');
+};

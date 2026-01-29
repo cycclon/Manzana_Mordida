@@ -44,6 +44,7 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { appointmentsAPI } from '../../api/appointments';
 import { branchesAPI } from '../../api/branches';
 import { useAuth } from '../../hooks/useAuth';
+import { parseLocalDate } from '../../utils/helpers';
 
 const ESTADO_COLORS = {
   Solicitada: 'warning',
@@ -352,7 +353,7 @@ const AllAppointmentsPage = () => {
                   return (
                     <TableRow key={appointment._id} hover>
                       <TableCell>
-                        {format(parseISO(appointment.fecha), isMobile ? 'dd/MM' : 'dd/MM/yyyy', { locale: es })}
+                        {format(parseLocalDate(appointment.fecha), isMobile ? 'dd/MM' : 'dd/MM/yyyy', { locale: es })}
                       </TableCell>
                       {!isMobile && (
                         <TableCell>
@@ -455,7 +456,7 @@ const AllAppointmentsPage = () => {
                 </Typography>
                 <Divider sx={{ mb: 2 }} />
                 <Typography variant="body1" gutterBottom>
-                  <strong>Fecha:</strong> {format(parseISO(detailDialog.appointment.fecha), 'EEEE, d MMMM yyyy', { locale: es })}
+                  <strong>Fecha:</strong> {format(parseLocalDate(detailDialog.appointment.fecha), 'EEEE, d MMMM yyyy', { locale: es })}
                 </Typography>
                 <Typography variant="body1" gutterBottom>
                   <strong>Hora:</strong> {getAppointmentTimeLabel(detailDialog.appointment)}

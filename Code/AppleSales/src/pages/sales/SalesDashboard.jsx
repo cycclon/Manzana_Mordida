@@ -60,6 +60,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { gradientTextSilver } from '../../theme';
+import { parseLocalDate } from '../../utils/helpers';
 
 const ESTADO_COLORS = {
   Solicitada: 'warning',
@@ -304,7 +305,7 @@ export const SalesDashboard = () => {
 
   const getDateLabel = (fecha) => {
     if (!fecha) return '-';
-    const date = typeof fecha === 'string' ? parseISO(fecha) : new Date(fecha);
+    const date = typeof fecha === 'string' ? parseLocalDate(fecha) : fecha;
 
     if (isToday(date)) return 'Hoy';
     if (isTomorrow(date)) return 'Mañana';
@@ -673,13 +674,13 @@ export const SalesDashboard = () => {
                         }}
                       >
                         <TableCell>
-                          <Typography variant="body2" fontWeight={isToday(parseISO(apt.fecha)) ? 'bold' : 'normal'}>
-                            {format(parseISO(apt.fecha), 'EEE d MMM', { locale: es })}
-                            {isToday(parseISO(apt.fecha)) && ' (Hoy)'}
+                          <Typography variant="body2" fontWeight={isToday(parseLocalDate(apt.fecha)) ? 'bold' : 'normal'}>
+                            {format(parseLocalDate(apt.fecha), 'EEE d MMM', { locale: es })}
+                            {isToday(parseLocalDate(apt.fecha)) && ' (Hoy)'}
                           </Typography>
                         </TableCell>
                         <TableCell>
-                          <Typography variant="body2" fontWeight={isToday(parseISO(apt.fecha)) ? 'bold' : 'normal'}>
+                          <Typography variant="body2" fontWeight={isToday(parseLocalDate(apt.fecha)) ? 'bold' : 'normal'}>
                             {getAppointmentTimeLabel(apt)}
                           </Typography>
                         </TableCell>
@@ -1217,7 +1218,7 @@ export const SalesDashboard = () => {
                   <Grid size={{ xs: 12, sm: 6 }}>
                     <Typography variant="body2" color="text.secondary">Fecha</Typography>
                     <Typography variant="body1" fontWeight="medium">
-                      {format(parseISO(selectedAppointment.fecha), 'EEEE, d MMMM yyyy', { locale: es })}
+                      {format(parseLocalDate(selectedAppointment.fecha), 'EEEE, d MMMM yyyy', { locale: es })}
                     </Typography>
                   </Grid>
                   <Grid size={{ xs: 12, sm: 6 }}>

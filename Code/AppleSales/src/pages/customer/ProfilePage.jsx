@@ -48,6 +48,7 @@ import { appointmentsAPI } from '../../api/appointments';
 import { branchesAPI } from '../../api/branches';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { parseLocalDate } from '../../utils/helpers';
 
 const ESTADO_COLORS = {
   Solicitada: 'warning',
@@ -665,7 +666,7 @@ const ProfilePage = () => {
                     return (
                       <TableRow key={reserva._id}>
                         <TableCell>
-                          {reserva.fecha ? format(new Date(reserva.fecha), 'dd/MM/yyyy') : '-'}
+                          {reserva.fecha ? format(parseLocalDate(reserva.fecha), 'dd/MM/yyyy') : '-'}
                         </TableCell>
                         <TableCell>
                           {getDeviceLabel(reserva.equipo)}
@@ -779,7 +780,7 @@ const ProfilePage = () => {
                       <CardContent>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                           <Typography variant="subtitle1" fontWeight="bold">
-                            {cita.fecha ? format(new Date(cita.fecha), 'dd/MM/yyyy') : 'Fecha N/A'}
+                            {cita.fecha ? format(parseLocalDate(cita.fecha), 'dd/MM/yyyy') : 'Fecha N/A'}
                           </Typography>
                           <Chip
                             label={cita.estado}
@@ -890,7 +891,7 @@ const ProfilePage = () => {
                 </Typography>
                 <Divider sx={{ mb: 2 }} />
                 <Typography variant="body1" gutterBottom>
-                  <strong>Fecha:</strong> {format(new Date(appointmentDetailDialog.appointment.fecha), 'EEEE, d MMMM yyyy', { locale: es })}
+                  <strong>Fecha:</strong> {format(parseLocalDate(appointmentDetailDialog.appointment.fecha), 'EEEE, d MMMM yyyy', { locale: es })}
                 </Typography>
                 <Typography variant="body1" gutterBottom>
                   <strong>Hora:</strong> {appointmentDetailDialog.appointment.horaInicio}:00
