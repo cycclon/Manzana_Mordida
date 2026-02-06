@@ -865,6 +865,15 @@ const CRMPage = () => {
         <DialogActions>
           <Button onClick={() => setOpenViewDialog(false)}>Cerrar</Button>
           <Button
+            variant="outlined"
+            onClick={() => {
+              setOpenViewDialog(false);
+              handleStatusClick(selectedCRM);
+            }}
+          >
+            Cambiar Estado
+          </Button>
+          <Button
             variant="contained"
             onClick={() => {
               setOpenViewDialog(false);

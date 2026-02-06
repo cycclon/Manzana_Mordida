@@ -316,6 +316,31 @@ async function getCRMEstado(req, res, next) {
 }
 
 /**
+ * Get CRM by idRedSocial
+ */
+async function getCRMByIdRedSocial(req, res, next) {
+    try {
+        const { idRedSocial } = req.params;
+
+        const crm = await CRM.findOne({ idRedSocial });
+
+        if (!crm) {
+            return res.status(404).json({
+                success: false,
+                message: 'CRM no encontrado para ese idRedSocial'
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            data: crm
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
+/**
  * Get CRM by ID
  */
 async function getCRMId(req, res, next) {
@@ -545,6 +570,7 @@ module.exports = {
     toggleRequiereHumano,
     getCRMCliente,
     getCRMEstado,
+    getCRMByIdRedSocial,
     getCRMId,
     getAllCRMs,
     getEstadisticas,

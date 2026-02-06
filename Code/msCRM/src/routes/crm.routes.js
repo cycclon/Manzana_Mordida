@@ -8,6 +8,7 @@ const {
     toggleRequiereHumano,
     getCRMCliente,
     getCRMEstado,
+    getCRMByIdRedSocial,
     getCRMId,
     getAllCRMs,
     getEstadisticas,
@@ -475,6 +476,51 @@ router.get('/cliente/:usuario', getCRMCliente);
  *         $ref: '#/components/responses/500'
  */
 router.get('/estado/:estado', getCRMEstado);
+
+// ============================================
+// BUSCAR POR ID DE RED SOCIAL
+// ============================================
+
+/**
+ * @swagger
+ * /api/v1/crm/red-social/{idRedSocial}:
+ *   get:
+ *     summary: Buscar lead por ID de red social
+ *     description: Retorna el lead que coincida con el ID interno de la red social especificada
+ *     tags: [CRM]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: idRedSocial
+ *         in: path
+ *         required: true
+ *         description: ID interno de la red social del lead
+ *         schema:
+ *           type: string
+ *           example: '123456789'
+ *     responses:
+ *       200:
+ *         description: Lead obtenido exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   $ref: '#/components/schemas/CRM'
+ *       401:
+ *         $ref: '#/components/responses/401'
+ *       403:
+ *         $ref: '#/components/responses/403'
+ *       404:
+ *         $ref: '#/components/responses/404'
+ *       500:
+ *         $ref: '#/components/responses/500'
+ */
+router.get('/red-social/:idRedSocial', getCRMByIdRedSocial);
 
 // ============================================
 // OBTENER CRM POR ID

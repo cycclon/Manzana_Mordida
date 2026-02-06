@@ -1,3 +1,10 @@
 nginx.conf
 api.conf
 docker-compose.prod2.yml
+START_SERVICES.sh
+SERVICES_SUMMARY.md
+.env.example
+CRM_FRONTEND.md
+docker-compose.applesales.yml
+docker-compose.yml
+ENV_VARIABLES_MAPPING.md
