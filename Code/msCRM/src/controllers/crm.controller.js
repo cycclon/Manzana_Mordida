@@ -398,6 +398,14 @@ async function getAllCRMs(req, res, next) {
         if (usuario) {
             filter.usuario = { $regex: usuario, $options: 'i' };
         }
+        if (req.query.nombre) {
+            const nombreRegex = { $regex: req.query.nombre, $options: 'i' };
+            filter.$or = [
+                { nombres: nombreRegex },
+                { apellidos: nombreRegex },
+                { intereses: nombreRegex }
+            ];
+        }
         if (fechaDesde || fechaHasta) {
             filter.fechaUltimoContacto = {};
             if (fechaDesde) {

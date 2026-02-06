@@ -5,7 +5,7 @@ const CRM_PATH = '/api/v1/crm';
 export const crmAPI = {
   // Get all CRMs with filters and pagination
   getAll: async (params = {}) => {
-    const response = await baseAPI.get(CRM_PATH, { params });
+    const response = await baseAPI.get(`${CRM_PATH}/`, { params });
     return response.data;
   },
 
@@ -29,7 +29,7 @@ export const crmAPI = {
 
   // Create new CRM
   create: async (crmData) => {
-    const response = await baseAPI.post(CRM_PATH, crmData);
+    const response = await baseAPI.post(`${CRM_PATH}/`, crmData);
     return response.data;
   },
 

@@ -36,6 +36,7 @@ import {
   Card,
   CardContent,
   Divider,
+  Link,
   useTheme,
 } from '@mui/material';
 import {
@@ -58,6 +59,7 @@ import {
   CheckCircle as CheckCircleIcon,
   ExpandMore as ExpandMoreIcon,
   ExpandLess as ExpandLessIcon,
+  Chat as ChatIcon,
 } from '@mui/icons-material';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -130,7 +132,7 @@ const CRMPage = () => {
   // Filter state
   const [showFilters, setShowFilters] = useState(true);
   const [filters, setFilters] = useState({
-    usuario: '',
+    nombre: '',
     estado: '',
     redSocial: '',
     requiereHumano: '',
@@ -185,7 +187,7 @@ const CRMPage = () => {
         sortOrder: order,
       };
 
-      if (filters.usuario) params.usuario = filters.usuario;
+      if (filters.nombre) params.nombre = filters.nombre;
       if (filters.estado) params.estado = filters.estado;
       if (filters.redSocial) params.redSocial = filters.redSocial;
       if (filters.requiereHumano !== '') params.requiereHumano = filters.requiereHumano;
@@ -437,9 +439,9 @@ const CRMPage = () => {
               <TextField
                 fullWidth
                 size="small"
-                label="Buscá usuario"
-                value={filters.usuario}
-                onChange={(e) => handleFilterChange('usuario', e.target.value)}
+                label="Buscar por nombre o interés"
+                value={filters.nombre}
+                onChange={(e) => handleFilterChange('nombre', e.target.value)}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
@@ -559,11 +561,11 @@ const CRMPage = () => {
                 </TableCell>
                 <TableCell>
                   <TableSortLabel
-                    active={orderBy === 'usuario'}
-                    direction={orderBy === 'usuario' ? order : 'asc'}
-                    onClick={() => handleSort('usuario')}
+                    active={orderBy === 'nombres'}
+                    direction={orderBy === 'nombres' ? order : 'asc'}
+                    onClick={() => handleSort('nombres')}
                   >
-                    Usuario
+                    Nombre
                   </TableSortLabel>
                 </TableCell>
                 <TableCell>Red Social</TableCell>
@@ -619,24 +621,32 @@ const CRMPage = () => {
                       />
                     </TableCell>
                     <TableCell>
-                      <Box>
-                        <Typography variant="body2" fontWeight={500}>
-                          {crm.usuario}
-                        </Typography>
-                        {(crm.nombres || crm.apellidos) && (
-                          <Typography variant="caption" color="text.secondary">
-                            {[crm.nombres, crm.apellidos].filter(Boolean).join(' ')}
-                          </Typography>
-                        )}
-                      </Box>
+                      <Typography variant="body2" fontWeight={500}>
+                        {[crm.nombres, crm.apellidos].filter(Boolean).join(' ') || crm.usuario}
+                      </Typography>
                     </TableCell>
                     <TableCell>
-                      <Chip
-                        icon={getSocialIcon(crm.redSocial)}
-                        label={crm.redSocial}
-                        size="small"
-                        variant="outlined"
-                      />
+                      <Box display="flex" alignItems="center" gap={0.5}>
+                        <Chip
+                          icon={getSocialIcon(crm.redSocial)}
+                          label={crm.redSocial}
+                          size="small"
+                          variant="outlined"
+                        />
+                        {crm.redSocial === 'Instagram' && crm.usuario && (
+                          <Tooltip title="Abrir chat en Instagram">
+                            <IconButton
+                              size="small"
+                              component="a"
+                              href={`https://www.instagram.com/direct/t/${crm.usuario}/`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <ChatIcon fontSize="small" />
+                            </IconButton>
+                          </Tooltip>
+                        )}
+                      </Box>
                     </TableCell>
                     <TableCell>
                       <Chip
@@ -732,9 +742,20 @@ const CRMPage = () => {
                     </Typography>
                     <Box display="flex" alignItems="center" gap={1} mb={1}>
                       {getSocialIcon(selectedCRM.redSocial)}
-                      <Typography variant="body1" fontWeight={500}>
-                        @{selectedCRM.usuario}
-                      </Typography>
+                      {selectedCRM.redSocial === 'Instagram' ? (
+                        <Link
+                          href={`https://www.instagram.com/direct/t/${selectedCRM.usuario}/`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          fontWeight={500}
+                        >
+                          Abrir chat en Instagram
+                        </Link>
+                      ) : (
+                        <Typography variant="body1" fontWeight={500}>
+                          @{selectedCRM.usuario}
+                        </Typography>
+                      )}
                     </Box>
                     {selectedCRM.nombres && (
                       <Typography variant="body2">
