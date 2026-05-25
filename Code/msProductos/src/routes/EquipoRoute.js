@@ -107,6 +107,42 @@ router.get('/', EquipoController.getEquipos);
  */
 router.get('/detalles', EquipoController.getAllDetalles);
 
+// FLUJO DE CANJES (admin/sales) — trazabilidad de la cadena de canjes y su ganancia
+/**
+ * @swagger
+ * /api/equipos/flujos:
+ *   get:
+ *      summary: Listado de cadenas de canje con su resumen de ganancia
+ *      description: Cada cadena nace en un equipo de proveedor; incluye invertido, ganancia (realizada/proyectada), ROI y estado. Solo admin/sales.
+ *      tags: [Equipos]
+ *      security:
+ *        - bearerAuth: []
+ *      parameters:
+ *        - { name: sort, in: query, schema: { type: string, enum: [profit, roi], default: profit } }
+ *        - { name: page, in: query, schema: { type: integer, default: 1 } }
+ *        - { name: limit, in: query, schema: { type: integer, default: 100 } }
+ *      responses:
+ *        "200": { description: Listado de cadenas }
+ */
+router.get('/flujos', authMiddleware, roleMiddleware(['admin', 'sales']), EquipoController.getFlujos);
+
+/**
+ * @swagger
+ * /api/equipos/flujo/{id}:
+ *   get:
+ *      summary: Flujo de ganancia de la cadena que contiene un equipo
+ *      description: Sube a la raíz (equipo de proveedor) y devuelve nodos (equipos), aristas (canjes) y resumen. Solo admin/sales.
+ *      tags: [Equipos]
+ *      security:
+ *        - bearerAuth: []
+ *      parameters:
+ *        - $ref: '#/components/parameters/EquipoIdParam'
+ *      responses:
+ *        "200": { description: Flujo de la cadena }
+ *        "404": { $ref: '#/components/responses/404' }
+ */
+router.get('/flujo/:id', authMiddleware, roleMiddleware(['admin', 'sales']), idValidator, EquipoController.getFlujo);
+
 /**
  * @swagger
  * /api/equipos/{id}:

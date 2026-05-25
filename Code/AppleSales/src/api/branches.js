@@ -5,7 +5,7 @@ const BRANCHES_PATH = '/api/v1/sucursales';
 export const branchesAPI = {
   // Get all branches
   getAllBranches: async (params) => {
-    const response = await baseAPI.get(BRANCHES_PATH, { params });
+    const response = await baseAPI.get(`${BRANCHES_PATH}/`, { params });
     return response.data;
   },
 

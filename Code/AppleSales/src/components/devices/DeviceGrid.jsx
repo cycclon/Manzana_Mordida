@@ -180,9 +180,14 @@ const DeviceTableRow = ({ device, isMobile, isTablet }) => {
       <TableCell align="right">
         <PriceDisplay usdAmount={displayPrice} usdVariant={isMobile ? 'body2' : 'body1'} arsVariant="caption" />
         {hasTradeIn && (
-          <Typography variant="caption" color="success.main" sx={{ display: 'block', mt: 0.5 }}>
-            Con canje
-          </Typography>
+          <>
+            <Typography variant="caption" color="success.main" sx={{ display: 'block', mt: 0.5 }}>
+              Con canje*
+            </Typography>
+            <Typography variant="caption" color="text.secondary" sx={{ display: 'block', fontStyle: 'italic', lineHeight: 1.3 }}>
+              *Precio estimado
+            </Typography>
+          </>
         )}
       </TableCell>
 

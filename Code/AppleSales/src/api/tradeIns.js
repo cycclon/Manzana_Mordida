@@ -5,7 +5,7 @@ const CANJES_PATH = '/api/v1/canjes';
 export const tradeInsAPI = {
   // Get all trade-ins
   getAllTradeIns: async (params) => {
-    const response = await baseAPI.get(CANJES_PATH, { params });
+    const response = await baseAPI.get(`${CANJES_PATH}/`, { params });
     return response.data;
   },
 

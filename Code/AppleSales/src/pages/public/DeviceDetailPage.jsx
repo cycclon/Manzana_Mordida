@@ -208,9 +208,14 @@ export const DeviceDetailPage = () => {
                 arsVariant="h6"
               />
               {hasTradeIn && (
-                <Typography variant="body2" color="success.main" sx={{ mt: 1 }}>
-                  ✓ Precio con canje aplicado
-                </Typography>
+                <>
+                  <Typography variant="body2" color="success.main" sx={{ mt: 1 }}>
+                    ✓ Precio con canje aplicado
+                  </Typography>
+                  <Typography variant="caption" color="text.secondary" sx={{ display: 'block', fontStyle: 'italic', mt: 0.5 }}>
+                    *El valor del canje es estimado y puede variar tras la revisi&oacute;n presencial del dispositivo en la sucursal
+                  </Typography>
+                </>
               )}
               {devicePrice !== displayPrice && (
                 <Typography

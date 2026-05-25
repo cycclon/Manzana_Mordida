@@ -91,6 +91,14 @@ const EquipoSchema = new mongoose.Schema({
     fechaVenta: { // EDITABLE - Auto set when estado changes to "Vendido"
         type: Date,
         required: false
+    },
+    // EDITABLE - Trazabilidad de canjes: el equipo cuya VENTA trajo a este equipo
+    // como parte de pago (trade-in). Ausente => comprado a proveedor (RAÍZ de la
+    // cadena). Presente => eslabón hijo recibido al vender ese equipo padre.
+    equipoCanjeOrigen: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'equipos',
+        required: false
     }
 });
 

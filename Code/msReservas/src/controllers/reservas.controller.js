@@ -212,17 +212,21 @@ async function completarReserva(req, res, next) {
         reserva.estado = 'Completada';
         await reserva.save();
 
-        // Update device status to "Vendido" in msProductos microservice
+        // Update device status to "Vendido" in msProductos microservice.
+        // La ruta real es PUT /api/equipos/equipo/:id y requiere auth admin/sales,
+        // por eso reenviamos el token del usuario que completa la venta.
         try {
             const productosUrl = process.env.PRODUCTOSMS_URL || 'http://msProductos:3001/';
-            const updateUrl = `${productosUrl}api/equipos/${reserva.equipo}`;
+            const updateUrl = `${productosUrl}api/equipos/equipo/${reserva.equipo}`;
 
             console.log(`Updating device ${reserva.equipo} to Vendido...`);
 
             const updateResponse = await fetch(updateUrl, {
                 method: 'PUT',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    // Reenviar el Bearer token (mismo JWT_SECRET entre servicios)
+                    ...(req.headers.authorization && { Authorization: req.headers.authorization })
                 },
                 body: JSON.stringify({
                     estado: 'Vendido',

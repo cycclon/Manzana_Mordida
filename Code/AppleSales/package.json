@@ -17,6 +17,7 @@
     "@mui/icons-material": "^7.3.5",
     "@mui/material": "^7.3.5",
     "@mui/x-date-pickers": "^8.19.0",
+    "@xyflow/react": "^12.10.2",
     "axios": "^1.13.2",
     "date-fns": "^4.1.0",
     "js-cookie": "^3.0.5",

@@ -5,7 +5,7 @@ const CLIENTES_PATH = '/api/v1/clientes';
 export const customersAPI = {
   // Get all customers (admin/sales)
   getAllCustomers: async (params) => {
-    const response = await baseAPI.get(CLIENTES_PATH, { params });
+    const response = await baseAPI.get(`${CLIENTES_PATH}/`, { params });
     return response.data;
   },
 

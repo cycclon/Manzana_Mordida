@@ -178,9 +178,14 @@ export const DeviceCard = ({ device, showActions = true, listView = false }) => 
         <Box sx={{ mt: listView ? 0 : 2, minWidth: listView ? 150 : undefined, textAlign: listView ? 'right' : 'left', display: 'flex', flexDirection: 'column', alignItems: listView ? 'flex-end' : 'flex-start', justifyContent: 'center' }}>
           <PriceDisplay usdAmount={displayPrice} usdVariant={listView ? "h6" : "h5"} arsVariant="body2" />
           {hasTradeIn && (
-            <Typography variant="caption" color="success.main" sx={{ display: 'block', mt: 0.5 }}>
-              Precio con canje aplicado
-            </Typography>
+            <>
+              <Typography variant="caption" color="success.main" sx={{ display: 'block', mt: 0.5 }}>
+                Precio con canje aplicado
+              </Typography>
+              <Typography variant="caption" color="text.secondary" sx={{ display: 'block', fontStyle: 'italic', lineHeight: 1.3 }}>
+                *Precio estimado, sujeto a revisi&oacute;n presencial del dispositivo
+              </Typography>
+            </>
           )}
         </Box>
       </CardContent>

@@ -8,3 +8,8 @@ CRM_FRONTEND.md
 docker-compose.applesales.yml
 docker-compose.yml
 ENV_VARIABLES_MAPPING.md
+
+# Multiagent (Ollama) dispatch arm — ignore secrets & venv, keep the template
+agents/.env
+agents/.venv/
+!agents/.env.example

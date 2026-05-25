@@ -104,7 +104,7 @@ exports.getEquipoID = async (req, res, next) => {
 // Registrar nuevo equipo
 exports.addEquipo = async (req, res, next) => {
     try {
-        const {producto, condicionBateria, condicion, grado, estado, costo, precio, detalles, accesorios, color, garantiaApple, garantiaPropia, ubicacion, canjeable, fechaVenta} = req.body;
+        const {producto, condicionBateria, condicion, grado, estado, costo, precio, detalles, accesorios, color, garantiaApple, garantiaPropia, ubicacion, canjeable, fechaVenta, equipoCanjeOrigen} = req.body;
 
         // Obtener producto por nombre
         const p = await getProductoByName(producto);
@@ -131,7 +131,9 @@ exports.addEquipo = async (req, res, next) => {
             garantiaApple,
             garantiaPropia,
             ubicacion,
-            canjeable
+            canjeable,
+            // Vínculo de canje opcional: la venta de qué equipo trajo a este como trade-in
+            ...(equipoCanjeOrigen ? { equipoCanjeOrigen } : {})
         });
 
         // Set fechaVenta if status is "Vendido"
@@ -155,7 +157,7 @@ exports.editEquipo = async (req, res, next) => {
     //console.log('edit equipo');
     try {
         const equipoEditado = await Equipo.findOne({_id: req.params.id});
-        const { condicionBateria, grado, estado, costo, precio, detalles, accesorios, garantiaApple, garantiaPropia, ubicacion, canjeable, fechaVenta} = req.body;
+        const { condicionBateria, grado, estado, costo, precio, detalles, accesorios, garantiaApple, garantiaPropia, ubicacion, canjeable, fechaVenta, equipoCanjeOrigen} = req.body;
 
         // Verificar si cada variable del cuerpo tiene algun valor, si lo tiene, establecerla
         equipoEditado.condicionBateria = condicionBateria || equipoEditado.condicionBateria;
@@ -190,6 +192,11 @@ exports.editEquipo = async (req, res, next) => {
         equipoEditado.garantiaPropia = garantiaPropia || equipoEditado.garantiaPropia;
         equipoEditado.ubicacion = ubicacion || equipoEditado.ubicacion;
         equipoEditado.canjeable = canjeable || equipoEditado.canjeable;
+
+        // Vínculo de canje: permitir asignar o limpiar (string vacío / null => limpiar)
+        if (equipoCanjeOrigen !== undefined) {
+            equipoEditado.equipoCanjeOrigen = equipoCanjeOrigen || undefined;
+        }
 
         await equipoEditado.save();
 
@@ -283,6 +290,180 @@ exports.getAllDetalles = async (req, res, next) => {
             .sort((a, b) => a.localeCompare(b));
 
         res.status(200).json(filteredDetalles);
+    } catch (error) {
+        next(error);
+    }
+};
+
+// ============================================================================
+// FLUJO DE CANJES (trade-in profit chain)
+// ============================================================================
+// Una "cadena" arranca en un equipo comprado a un proveedor (RAÍZ, sin
+// equipoCanjeOrigen) y se ramifica por los canjes: al vender un equipo se puede
+// recibir otro como parte de pago; ese equipo hijo apunta al padre vía
+// equipoCanjeOrigen. La cadena se "cierra" cuando todos sus equipos están
+// Vendidos. Ganancia por nodo = precio - costo; el "crédito de canje" de una
+// arista padre->hijo es el costo del hijo (lo que se acreditó al cliente).
+
+const MAX_CHAIN_DEPTH = 200; // guarda anti-ciclos / inventarios grandes
+
+// Carga todo el inventario una sola vez y arma índices en memoria
+// (mismo orden de magnitud que getEquipos; endpoint sólo admin/sales).
+async function loadEquipoGraph() {
+    const all = await Equipo.find({}).populate(prodPopulate);
+    const byId = new Map();
+    const childrenByParent = new Map();
+    for (const e of all) {
+        byId.set(String(e._id), e);
+    }
+    for (const e of all) {
+        const pid = e.equipoCanjeOrigen ? String(e.equipoCanjeOrigen) : null;
+        if (pid && byId.has(pid)) {
+            if (!childrenByParent.has(pid)) childrenByParent.set(pid, []);
+            childrenByParent.get(pid).push(e);
+        }
+    }
+    return { all, byId, childrenByParent };
+}
+
+// Sube por equipoCanjeOrigen hasta la raíz (equipo de proveedor)
+function findRootId(equipoId, byId) {
+    let current = byId.get(String(equipoId));
+    if (!current) return null;
+    const visited = new Set([String(current._id)]);
+    while (current.equipoCanjeOrigen) {
+        const pid = String(current.equipoCanjeOrigen);
+        const parent = byId.get(pid);
+        if (!parent || visited.has(pid)) break; // sin padre cargado o ciclo
+        visited.add(pid);
+        current = parent;
+    }
+    return String(current._id);
+}
+
+// BFS desde la raíz -> nodos + aristas + resumen
+function buildChain(rootId, byId, childrenByParent) {
+    const nodes = [];
+    const edges = [];
+    const visited = new Set();
+    const depthCount = {};
+    const queue = [{ id: String(rootId), depth: 0, acquisition: 'provider' }];
+
+    while (queue.length && nodes.length < MAX_CHAIN_DEPTH) {
+        const { id, depth, acquisition } = queue.shift();
+        if (visited.has(id)) continue;
+        visited.add(id);
+        const equipo = byId.get(id);
+        if (!equipo) continue;
+
+        const costo = equipo.costo ?? 0;
+        const precio = equipo.precio ?? 0;
+        const sold = equipo.estado === 'Vendido';
+        const xIndex = depthCount[depth] || 0;
+        depthCount[depth] = xIndex + 1;
+
+        nodes.push({
+            equipoId: id,
+            equipo,                 // device populado (producto, color, ...)
+            acquisition,            // 'provider' | 'trade-in'
+            sold,
+            estado: equipo.estado,
+            fechaVenta: equipo.fechaVenta || null,
+            costo,
+            precio,
+            profit: precio - costo,
+            depth,
+            xIndex,
+        });
+
+        const children = childrenByParent.get(id) || [];
+        for (const child of children) {
+            edges.push({ from: id, to: String(child._id), tradeInCredit: child.costo ?? 0 });
+            queue.push({ id: String(child._id), depth: depth + 1, acquisition: 'trade-in' });
+        }
+    }
+
+    const invested = nodes[0]?.costo ?? 0;
+    const realizedProfit = nodes.filter(n => n.sold).reduce((s, n) => s + n.profit, 0);
+    const projectedProfit = nodes.reduce((s, n) => s + n.profit, 0);
+    // Cerrada: todos los equipos de la cadena están vendidos (ciclo completo).
+    // Abierta: queda al menos uno en stock (la cadena sigue su curso).
+    const allSold = nodes.length > 0 && nodes.every(n => n.sold);
+
+    return {
+        rootEquipoId: String(rootId),
+        nodes,
+        edges,
+        summary: {
+            invested,
+            realizedProfit,
+            projectedProfit,
+            roi: invested > 0 ? realizedProfit / invested : null,
+            deviceCount: nodes.length,
+            status: allSold ? 'closed' : 'open',
+        },
+    };
+}
+
+// Flujo de la cadena que contiene un equipo dado
+// GET /api/equipos/flujo/:id
+exports.getFlujo = async (req, res, next) => {
+    try {
+        const { byId, childrenByParent } = await loadEquipoGraph();
+        if (!byId.has(String(req.params.id))) {
+            return res.status(404).json({ message: 'Equipo no encontrado' });
+        }
+        const rootId = findRootId(req.params.id, byId);
+        const flujo = buildChain(rootId, byId, childrenByParent);
+        res.status(200).json({ success: true, data: flujo });
+    } catch (error) {
+        next(error);
+    }
+};
+
+// Listado de cadenas (raíces de proveedor con canjes o ya vendidas) + resumen
+// GET /api/equipos/flujos?sort=profit|roi&page=1&limit=100
+exports.getFlujos = async (req, res, next) => {
+    try {
+        const { sort = 'profit', page = 1, limit = 100 } = req.query;
+        const { all, byId, childrenByParent } = await loadEquipoGraph();
+
+        // Raíces = equipos de proveedor (sin equipoCanjeOrigen)
+        const rootDocs = all.filter(e => !e.equipoCanjeOrigen);
+        let chains = rootDocs.map(r => buildChain(String(r._id), byId, childrenByParent));
+
+        // Sólo cadenas con sentido: con al menos un canje, o cuya raíz ya se vendió.
+        chains = chains.filter(ch => ch.nodes.length > 1 || ch.nodes[0]?.sold);
+
+        chains.sort((a, b) => {
+            if (sort === 'roi') {
+                return (b.summary.roi ?? -Infinity) - (a.summary.roi ?? -Infinity);
+            }
+            return b.summary.realizedProfit - a.summary.realizedProfit;
+        });
+
+        const pageNum = parseInt(page);
+        const limitNum = parseInt(limit);
+        const total = chains.length;
+        const start = (pageNum - 1) * limitNum;
+        const paged = chains.slice(start, start + limitNum);
+
+        const data = paged.map(ch => ({
+            rootEquipoId: ch.rootEquipoId,
+            rootEquipo: ch.nodes[0]?.equipo || null,
+            summary: ch.summary,
+        }));
+
+        res.status(200).json({
+            success: true,
+            data,
+            pagination: {
+                total,
+                page: pageNum,
+                limit: limitNum,
+                pages: Math.ceil(total / limitNum),
+            },
+        });
     } catch (error) {
         next(error);
     }

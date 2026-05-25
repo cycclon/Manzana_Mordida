@@ -30,6 +30,7 @@ import BranchesPage from '../pages/admin/BranchesPage';
 import BankAccountsPage from '../pages/admin/BankAccountsPage';
 import UsersManagementPage from '../pages/admin/UsersManagementPage';
 import StatisticsPage from '../pages/admin/StatisticsPage';
+import TradeFlowPage from '../pages/admin/TradeFlowPage';
 
 // Sales Pages
 import SalesDashboard from '../pages/sales/SalesDashboard';
@@ -205,6 +206,26 @@ export const router = createBrowserRouter([
           <ProtectedRoute>
             <RoleBasedRoute allowedRoles={[USER_ROLES.ADMIN]}>
               <StatisticsPage />
+            </RoleBasedRoute>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'admin/flujo',
+        element: (
+          <ProtectedRoute>
+            <RoleBasedRoute allowedRoles={[USER_ROLES.ADMIN]}>
+              <TradeFlowPage />
+            </RoleBasedRoute>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'admin/flujo/:equipoId',
+        element: (
+          <ProtectedRoute>
+            <RoleBasedRoute allowedRoles={[USER_ROLES.ADMIN]}>
+              <TradeFlowPage />
             </RoleBasedRoute>
           </ProtectedRoute>
         ),

@@ -97,6 +97,7 @@ export const DevicesTab = () => {
     ubicacion: '',
     canjeable: false,
     fechaVenta: '', // Date when device was sold (YYYY-MM-DD)
+    equipoCanjeOrigen: '', // Equipo vendido que trajo a este como canje (trade-in)
   });
   const [snackbar, setSnackbar] = useState({
     open: false,
@@ -108,6 +109,7 @@ export const DevicesTab = () => {
   const [selectedImages, setSelectedImages] = useState([]);
   const [existingImages, setExistingImages] = useState([]);
   const [uploadingImages, setUploadingImages] = useState(false);
+  const [originOptions, setOriginOptions] = useState([]); // equipos para el selector de venta de origen (canje)
 
   // Fetch devices
   const fetchDevices = useCallback(async () => {
@@ -195,11 +197,22 @@ export const DevicesTab = () => {
     setPage(0);
   };
 
+  // Carga todos los equipos para el selector de "venta de origen" del canje.
+  const loadOriginOptions = async () => {
+    try {
+      const all = await productsAPI.getAllDevices();
+      setOriginOptions(Array.isArray(all) ? all : (all?.data || []));
+    } catch (error) {
+      console.error('Error loading origin options:', error);
+    }
+  };
+
   // Dialog handlers
   const handleOpenCreateDialog = () => {
     setDialogMode('create');
     setSelectedDevice(null);
     setSelectedProductType('');
+    loadOriginOptions();
     setFormData({
       producto: '',
       color: '',
@@ -216,6 +229,7 @@ export const DevicesTab = () => {
       ubicacion: '',
       canjeable: false,
       fechaVenta: '',
+      equipoCanjeOrigen: '',
     });
     setOpenDialog(true);
   };
@@ -223,6 +237,7 @@ export const DevicesTab = () => {
   const handleOpenEditDialog = (device) => {
     setDialogMode('edit');
     setSelectedDevice(device);
+    loadOriginOptions();
 
     // Find the product's linea to set the product type
     const deviceProduct = products.find(p => p.modelo === (device.producto?.modelo || device.producto));
@@ -246,6 +261,7 @@ export const DevicesTab = () => {
       ubicacion: device.ubicacion || '',
       canjeable: device.canjeable || false,
       fechaVenta: device.fechaVenta ? device.fechaVenta.split('T')[0] : '',
+      equipoCanjeOrigen: device.equipoCanjeOrigen?._id || device.equipoCanjeOrigen || '',
     });
     // Load existing images
     setExistingImages(device.imagenes || []);
@@ -352,6 +368,7 @@ export const DevicesTab = () => {
         garantiaApple: formData.garantiaApple || undefined,
         garantiaPropia: formData.garantiaPropia || undefined,
         fechaVenta: formData.fechaVenta || undefined, // Only send if provided
+        equipoCanjeOrigen: formData.equipoCanjeOrigen || undefined, // Vínculo de canje (trade-in)
       };
 
       if (dialogMode === 'create') {
@@ -1129,6 +1146,29 @@ export const DevicesTab = () => {
                 Otros Datos
               </Typography>
               <Divider sx={{ mb: 2 }} />
+            </Grid>
+
+            {/* Trazabilidad de canje: la venta que trajo este equipo como trade-in */}
+            <Grid size={{ xs: 12 }}>
+              <Autocomplete
+                options={originOptions.filter((d) => d._id !== selectedDevice?._id)}
+                value={originOptions.find((d) => d._id === formData.equipoCanjeOrigen) || null}
+                onChange={(_e, v) => handleFormChange('equipoCanjeOrigen', v?._id || '')}
+                isOptionEqualToValue={(o, v) => o._id === v._id}
+                getOptionLabel={(d) => {
+                  if (!d) return '';
+                  const p = d.producto || {};
+                  const name = [p.marca, p.linea, p.modelo].filter(Boolean).join(' ') || 'Equipo';
+                  return `${name} · ${d.condicion || ''} · ${d.estado || ''} · costo $${d.costo ?? 0}`;
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="¿Recibido en canje? Venta de origen (opcional)"
+                    helperText="Si este equipo entró como parte de pago, elegí el equipo vendido que lo trajo. Esto conecta la cadena de canjes para el Flujo de Canjes."
+                  />
+                )}
+              />
             </Grid>
 
             <Grid size={{ xs: 8 }}>

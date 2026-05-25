@@ -20,6 +20,7 @@ import {
   People as UsersIcon,
   Assessment as ReportsIcon,
   TrendingUp as EarningsIcon,
+  AccountTree as FlowIcon,
 } from '@mui/icons-material';
 import { productsAPI } from '../../api/products';
 import { reservationsAPI } from '../../api/reservations';
@@ -140,6 +141,13 @@ export const AdminDashboard = () => {
       icon: <ReportsIcon sx={{ fontSize: { xs: 36, md: 48 } }} />,
       path: '/admin/reportes',
       color: 'error.main',
+    },
+    {
+      title: 'Flujo de Canjes',
+      description: 'Trazar la cadena de canjes y su ganancia desde cada compra',
+      icon: <FlowIcon sx={{ fontSize: { xs: 36, md: 48 } }} />,
+      path: '/admin/flujo',
+      color: 'primary.main',
     },
   ];
 

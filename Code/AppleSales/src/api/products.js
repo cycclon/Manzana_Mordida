@@ -8,7 +8,7 @@ const DEVICES_PATH = '/api/equipos';
 export const productsAPI = {
   // Colors
   getAllColors: async () => {
-    const response = await baseAPI.get(COLORS_PATH);
+    const response = await baseAPI.get(`${COLORS_PATH}/`);
     return response.data;
   },
 
@@ -18,7 +18,7 @@ export const productsAPI = {
   },
 
   createColor: async (colorData) => {
-    const response = await baseAPI.post(COLORS_PATH, colorData);
+    const response = await baseAPI.post(`${COLORS_PATH}/`, colorData);
     return response.data;
   },
 
@@ -34,7 +34,7 @@ export const productsAPI = {
 
   // Products (Classes)
   getAllProducts: async (params) => {
-    const response = await baseAPI.get(PRODUCTS_PATH, { params });
+    const response = await baseAPI.get(`${PRODUCTS_PATH}/`, { params });
     return response.data;
   },
 
@@ -60,7 +60,7 @@ export const productsAPI = {
 
   // Devices (Instances)
   getAllDevices: async (params) => {
-    const response = await baseAPI.get(DEVICES_PATH, { params });
+    const response = await baseAPI.get(`${DEVICES_PATH}/`, { params });
     return response.data;
   },
 
