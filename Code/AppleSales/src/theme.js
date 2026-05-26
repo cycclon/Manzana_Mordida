@@ -7,6 +7,8 @@ const brandRedLight = '#ff4d6a';
 const brandRedDark = '#a11228';
 const neonGlow = '0 0 10px rgba(227, 24, 55, 0.5), 0 0 20px rgba(227, 24, 55, 0.3), 0 0 30px rgba(227, 24, 55, 0.2)';
 const neonGlowStrong = '0 0 10px rgba(227, 24, 55, 0.7), 0 0 20px rgba(227, 24, 55, 0.5), 0 0 40px rgba(227, 24, 55, 0.3)';
+const neonGlowSubtle = '0 0 12px rgba(227, 24, 55, 0.25)';
+const radius = { sm: 6, md: 12, lg: 14 };
 
 // Gradient text styles (exported for use in components)
 export const gradientText = {
@@ -104,27 +106,39 @@ export const theme = createTheme(
       ].join(','),
       h1: {
         fontSize: '2.5rem',
-        fontWeight: 600,
+        fontWeight: 700,
+        fontFamily: '"Exo 2", sans-serif',
       },
       h2: {
         fontSize: '2rem',
-        fontWeight: 600,
+        fontWeight: 700,
+        fontFamily: '"Exo 2", sans-serif',
       },
       h3: {
         fontSize: '1.75rem',
-        fontWeight: 600,
+        fontWeight: 700,
+        fontFamily: '"Exo 2", sans-serif',
       },
       h4: {
         fontSize: '1.5rem',
         fontWeight: 600,
+        fontFamily: '"Exo 2", sans-serif',
       },
       h5: {
         fontSize: '1.25rem',
         fontWeight: 600,
+        fontFamily: '"Exo 2", sans-serif',
       },
       h6: {
         fontSize: '1rem',
         fontWeight: 600,
+        fontFamily: '"Exo 2", sans-serif',
+      },
+      subtitle1: {
+        fontWeight: 500,
+      },
+      subtitle2: {
+        fontWeight: 500,
       },
     },
     shape: {
@@ -135,6 +149,8 @@ export const theme = createTheme(
         styleOverrides: {
           body: {
             backgroundColor: '#0a0a0a',
+            backgroundImage: 'radial-gradient(1000px circle at 50% -200px, rgba(227, 24, 55, 0.10), transparent 60%)',
+            backgroundRepeat: 'no-repeat',
             scrollbarColor: `${brandRed} #1a1a1a`,
             '&::-webkit-scrollbar': {
               width: '8px',
@@ -169,17 +185,16 @@ export const theme = createTheme(
             },
           },
           outlined: {
+            borderWidth: '1.5px',
             borderColor: brandRed,
             '&:hover': {
               borderColor: brandRedLight,
-              boxShadow: neonGlow,
-              backgroundColor: 'rgba(227, 24, 55, 0.08)',
+              borderWidth: '1.5px',
+              backgroundColor: 'rgba(227, 24, 55, 0.04)',
             },
           },
           outlinedPrimary: {
-            '&:hover': {
-              boxShadow: neonGlow,
-            },
+            '&:hover': {},
           },
           text: {
             '&:hover': {
@@ -193,8 +208,7 @@ export const theme = createTheme(
           root: {
             transition: 'all 0.3s ease',
             '&:hover': {
-              backgroundColor: 'rgba(227, 24, 55, 0.15)',
-              boxShadow: neonGlow,
+              backgroundColor: 'rgba(227, 24, 55, 0.12)',
             },
           },
         },
@@ -205,11 +219,12 @@ export const theme = createTheme(
             backgroundColor: '#1a1a1a',
             backgroundImage: 'none',
             border: '1px solid rgba(255, 255, 255, 0.08)',
+            borderRadius: radius.md,
             boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.5)',
             transition: 'all 0.3s ease',
             '&:hover': {
-              borderColor: 'rgba(227, 24, 55, 0.5)',
-              boxShadow: `0px 8px 30px rgba(0, 0, 0, 0.7), ${neonGlow}`,
+              borderColor: 'rgba(227, 24, 55, 0.6)',
+              boxShadow: `0px 8px 30px rgba(0, 0, 0, 0.7), ${neonGlowSubtle}`,
             },
           },
         },
@@ -242,18 +257,16 @@ export const theme = createTheme(
       MuiChip: {
         styleOverrides: {
           root: {
+            borderRadius: radius.sm,
             transition: 'all 0.3s ease',
           },
           colorPrimary: {
-            '&:hover': {
-              boxShadow: neonGlow,
-            },
+            '&:hover': {},
           },
           outlined: {
             borderColor: 'rgba(255, 255, 255, 0.23)',
             '&:hover': {
               borderColor: brandRed,
-              boxShadow: `0 0 8px rgba(227, 24, 55, 0.4)`,
             },
           },
         },
@@ -263,7 +276,7 @@ export const theme = createTheme(
           root: {
             '& .MuiOutlinedInput-root': {
               '& fieldset': {
-                borderColor: 'rgba(255, 255, 255, 0.23)',
+                borderColor: 'rgba(255, 255, 255, 0.3)',
                 transition: 'all 0.3s ease',
               },
               '&:hover fieldset': {
@@ -271,7 +284,8 @@ export const theme = createTheme(
               },
               '&.Mui-focused fieldset': {
                 borderColor: brandRed,
-                boxShadow: `0 0 8px rgba(227, 24, 55, 0.3)`,
+                borderWidth: '2px',
+                boxShadow: `0 0 12px rgba(227, 24, 55, 0.4)`,
               },
             },
           },
@@ -282,7 +296,7 @@ export const theme = createTheme(
           root: {
             transition: 'all 0.3s ease',
             '&:hover': {
-              backgroundColor: 'rgba(227, 24, 55, 0.08) !important',
+              backgroundColor: 'rgba(255, 255, 255, 0.04) !important',
             },
           },
           head: {
@@ -304,6 +318,7 @@ export const theme = createTheme(
       MuiDialog: {
         styleOverrides: {
           paper: {
+            borderRadius: radius.lg,
             backgroundColor: '#1a1a1a',
             backgroundImage: 'none',
             border: '1px solid rgba(227, 24, 55, 0.3)',
@@ -323,6 +338,7 @@ export const theme = createTheme(
       MuiMenu: {
         styleOverrides: {
           paper: {
+            borderRadius: radius.md,
             backgroundColor: '#1a1a1a',
             backgroundImage: 'none',
             border: '1px solid rgba(255, 255, 255, 0.1)',
@@ -448,8 +464,7 @@ export const theme = createTheme(
             '& .MuiPaginationItem-root': {
               transition: 'all 0.3s ease',
               '&:hover': {
-                backgroundColor: 'rgba(227, 24, 55, 0.15)',
-                boxShadow: `0 0 8px rgba(227, 24, 55, 0.3)`,
+                backgroundColor: 'rgba(227, 24, 55, 0.12)',
               },
               '&.Mui-selected': {
                 backgroundColor: brandRed,

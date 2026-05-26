@@ -145,6 +145,20 @@ exports.addEquipo = async (req, res, next) => {
             }
         }
 
+        // Si es sellado, reutilizar imágenes de otro equipo sellado idéntico (mismo
+        // producto y color) que ya tenga fotos: comparten la misma URL → un solo archivo en el CDN.
+        if (condicion === 'Sellado') {
+            const hermanoConFotos = await Equipo.findOne({
+                producto: p._id,
+                color: idColor,
+                condicion: 'Sellado',
+                'imagenes.0': { $exists: true }
+            }).select('imagenes');
+            if (hermanoConFotos) {
+                nuevoEquipo.imagenes = hermanoConFotos.imagenes;
+            }
+        }
+
         // console.log(nuevoEquipo);
         await nuevoEquipo.save();
         res.status(201).json({message: 'Equipo registrado'});

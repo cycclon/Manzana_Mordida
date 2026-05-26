@@ -34,6 +34,7 @@ export const DevicesPage = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [viewMode, setViewMode] = useState('grid');
   const [reservedDeviceIds, setReservedDeviceIds] = useState(new Set());
+  const [availability, setAvailability] = useState('todos');
 
   // Initialize filters from URL params
   const initialSearch = searchParams.get('search') || '';
@@ -140,6 +141,11 @@ export const DevicesPage = () => {
     }
   }, [debouncedSearch, filters.condition, filters.storage, filters.minPrice, filters.maxPrice, filters.minBattery]);
 
+  // Derive visible devices based on availability filter (client-side)
+  const visibleDevices = devices.filter(d =>
+    availability === 'todos' ? true : d.estado === availability
+  );
+
   const handleFiltersChange = (newFilters) => {
     setFilters(newFilters);
   };
@@ -157,6 +163,12 @@ export const DevicesPage = () => {
   const handleViewModeChange = (event, newMode) => {
     if (newMode !== null) {
       setViewMode(newMode);
+    }
+  };
+
+  const handleAvailabilityChange = (event, newVal) => {
+    if (newVal !== null) {
+      setAvailability(newVal);
     }
   };
 
@@ -204,9 +216,23 @@ export const DevicesPage = () => {
         onClear={handleClearFilters}
       />
 
+      {/* Availability Filter */}
+      <Box sx={{ mb: 2 }}>
+        <ToggleButtonGroup
+          value={availability}
+          exclusive
+          onChange={handleAvailabilityChange}
+          size="small"
+        >
+          <ToggleButton value="En Stock">En Stock</ToggleButton>
+          <ToggleButton value="A pedido">A pedido</ToggleButton>
+          <ToggleButton value="todos">Todos</ToggleButton>
+        </ToggleButtonGroup>
+      </Box>
+
       {/* Device Grid */}
       <DeviceGrid
-        devices={devices}
+        devices={visibleDevices}
         loading={loading}
         page={page}
         totalPages={totalPages}
