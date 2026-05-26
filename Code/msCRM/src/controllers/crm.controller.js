@@ -387,7 +387,14 @@ async function getAllCRMs(req, res, next) {
         const filter = {};
 
         if (estado) {
-            filter.estado = estado;
+            const estadosArray = Array.isArray(estado)
+                ? estado.map(e => e.trim()).filter(e => e)
+                : estado.split(',').map(e => e.trim()).filter(e => e);
+            if (estadosArray.length === 1) {
+                filter.estado = estadosArray[0];
+            } else if (estadosArray.length > 1) {
+                filter.estado = { $in: estadosArray };
+            }
         }
         if (redSocial) {
             filter.redSocial = redSocial;

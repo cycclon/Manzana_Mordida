@@ -31,6 +31,7 @@ import {
   Checkbox,
   FormControlLabel,
   Switch,
+  ListItemText,
   InputAdornment,
   Collapse,
   Card,
@@ -133,7 +134,7 @@ const CRMPage = () => {
   const [showFilters, setShowFilters] = useState(true);
   const [filters, setFilters] = useState({
     nombre: '',
-    estado: '',
+    estado: [],
     redSocial: '',
     requiereHumano: '',
   });
@@ -188,7 +189,7 @@ const CRMPage = () => {
       };
 
       if (filters.nombre) params.nombre = filters.nombre;
-      if (filters.estado) params.estado = filters.estado;
+      if (filters.estado.length > 0) params.estado = filters.estado.join(',');
       if (filters.redSocial) params.redSocial = filters.redSocial;
       if (filters.requiereHumano !== '') params.requiereHumano = filters.requiereHumano;
 
@@ -455,24 +456,45 @@ const CRMPage = () => {
               <FormControl fullWidth size="small">
                 <InputLabel>Estado</InputLabel>
                 <Select
+                  multiple
+                  displayEmpty
                   value={filters.estado}
                   onChange={(e) => handleFilterChange('estado', e.target.value)}
                   label="Estado"
+                  renderValue={(selected) =>
+                    selected.length === 0
+                      ? <Typography variant="body2" color="text.secondary">Todos</Typography>
+                      : <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                          {selected.map((value) => (
+                            <Chip
+                              key={value}
+                              size="small"
+                              label={CRM_STATUS_LABELS[value]}
+                              sx={{ bgcolor: getStatusColor(value), color: 'white' }}
+                            />
+                          ))}
+                        </Box>
+                  }
+                  MenuProps={{ PaperProps: { style: { maxHeight: 360 } } }}
                 >
-                  <MenuItem value="">Todos</MenuItem>
-                  {CRM_ESTADOS.map(estado => (
+                  {CRM_ESTADOS.map((estado) => (
                     <MenuItem key={estado} value={estado}>
-                      <Box display="flex" alignItems="center" gap={1}>
-                        <Box
-                          sx={{
-                            width: 12,
-                            height: 12,
-                            borderRadius: '50%',
-                            bgcolor: getStatusColor(estado),
-                          }}
-                        />
-                        {CRM_STATUS_LABELS[estado]}
-                      </Box>
+                      <Checkbox checked={filters.estado.indexOf(estado) > -1} size="small" />
+                      <ListItemText
+                        primary={
+                          <Box display="flex" alignItems="center" gap={1}>
+                            <Box
+                              sx={{
+                                width: 12,
+                                height: 12,
+                                borderRadius: '50%',
+                                bgcolor: getStatusColor(estado),
+                              }}
+                            />
+                            {CRM_STATUS_LABELS[estado]}
+                          </Box>
+                        }
+                      />
                     </MenuItem>
                   ))}
                 </Select>
