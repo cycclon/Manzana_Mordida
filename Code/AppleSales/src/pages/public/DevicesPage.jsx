@@ -20,6 +20,9 @@ import { useDebounce } from '../../hooks/useDebounce';
 import { DEFAULT_PAGE_SIZE } from '../../constants';
 import { toast } from 'react-hot-toast';
 
+// Estados que un cliente puede ver en el catálogo público (lista blanca).
+const ESTADOS_PUBLICOS = ['En Stock', 'A pedido'];
+
 /**
  * DevicesPage - Main marketplace for browsing devices
  */
@@ -101,9 +104,9 @@ export const DevicesPage = () => {
         setTotalPages(1);
       }
 
-      // Filter out devices with estado "Vendido"
+      // Sólo mostrar equipos disponibles para el público (En Stock / A pedido)
       const availableDevices = deviceList.filter(
-        device => device.estado !== 'Vendido' && device.status !== 'Vendido'
+        device => ESTADOS_PUBLICOS.includes(device.estado)
       );
 
       // Mark devices that have active reservations

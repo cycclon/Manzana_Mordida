@@ -223,7 +223,11 @@ const NodeDetailDrawer = ({ node, onClose }) => {
             {node.fechaVenta && (
               <>
                 <Divider />
-                <Detail label="Fecha de venta" value={new Date(node.fechaVenta).toLocaleDateString('es-AR')} />
+                {/* local-noon parse: evita el corrimiento de 1 día por timezone */}
+                <Detail
+                  label="Fecha de venta"
+                  value={new Date(node.fechaVenta.split('T')[0] + 'T12:00:00').toLocaleDateString('es-AR')}
+                />
               </>
             )}
           </Stack>

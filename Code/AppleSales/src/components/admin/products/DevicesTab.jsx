@@ -346,8 +346,12 @@ export const DevicesTab = () => {
 
     try {
       setUploadingImages(true);
-      await productsAPI.uploadDeviceImages(selectedDevice._id, selectedImages);
-      showSnackbar('Imágenes subidas exitosamente', 'success');
+      const result = await productsAPI.uploadDeviceImages(selectedDevice._id, selectedImages);
+      const p = result?.propagadas || 0;
+      const msg = p > 0
+        ? `Imágenes subidas exitosamente · aplicada también a ${p} equipo${p === 1 ? '' : 's'} sellado${p === 1 ? '' : 's'} idéntico${p === 1 ? '' : 's'}`
+        : 'Imágenes subidas exitosamente';
+      showSnackbar(msg, 'success');
 
       // Refresh device to get updated images
       const updatedDevice = await productsAPI.getDeviceById(selectedDevice._id);
@@ -1166,8 +1170,10 @@ export const DevicesTab = () => {
                   if (!d) return '';
                   const p = d.producto || {};
                   const name = [p.marca, p.linea, p.modelo].filter(Boolean).join(' ') || 'Equipo';
+                  // Parse as local noon (igual que la tabla) para evitar el corrimiento
+                  // de un día por timezone al mostrar una fecha guardada como UTC-medianoche.
                   const venta = d.fechaVenta
-                    ? ` · vendido ${new Date(d.fechaVenta).toLocaleDateString('es-AR')}`
+                    ? ` · vendido ${format(new Date(d.fechaVenta.split('T')[0] + 'T12:00:00'), 'dd/MM/yyyy', { locale: es })}`
                     : '';
                   return `${name} · ${d.condicion || ''} · ${d.estado || ''}${venta} · costo $${d.costo ?? 0}`;
                 }}

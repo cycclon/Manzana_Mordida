@@ -241,8 +241,30 @@ exports.uploadImagenes = async (req, res, next) => {
         equipo.imagenes = [...(equipo.imagenes || []), ...imageUrls];
         await equipo.save();
 
+        // Propagar imágenes a hermanos sellados idénticos (mismo producto y color)
+        // que aún no tienen fotos: comparten la MISMA URL → un solo archivo en el CDN.
+        let propagadas = 0;
+        if (equipo.condicion === 'Sellado' && equipo.imagenes.length > 0) {
+            const result = await Equipo.updateMany(
+                {
+                    _id: { $ne: equipo._id },
+                    producto: equipo.producto,
+                    color: equipo.color,
+                    condicion: 'Sellado',
+                    $or: [
+                        { imagenes: { $exists: false } },
+                        { imagenes: { $size: 0 } },
+                        { imagenes: null }
+                    ]
+                },
+                { $set: { imagenes: equipo.imagenes } }
+            );
+            propagadas = result.modifiedCount;
+        }
+
         res.json({
-            message: 'Imágenes subidas exitosamente'
+            message: 'Imágenes subidas exitosamente',
+            propagadas
         });        
     } catch (error) {
         next(error);
@@ -263,8 +285,12 @@ exports.deleteImagen = async (req, res, next) => {
             return res.status(404).json({message: 'Equipo no encontrado'});
         }
 
-        // remove from R2
-        await deleteImage(imageUrl);
+        // remove from R2 sólo si ningún OTRO equipo todavía referencia este archivo
+        // (equipos sellados idénticos comparten la misma URL; no orfanar a los hermanos)
+        const refCount = await Equipo.countDocuments({ _id: { $ne: equipo._id }, imagenes: imageUrl });
+        if (refCount === 0) {
+            await deleteImage(imageUrl);
+        }
 
         // Remove from database
         equipo.imagenes = equipo.imagenes.filter(img => img !== imageUrl);

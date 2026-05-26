@@ -25,6 +25,9 @@ import DeviceCard from '../../components/devices/DeviceCard';
 import { LoadingScreen } from '../../components/common';
 import { gradientTextSilver } from '../../theme';
 
+// Estados que un cliente puede ver en el catálogo público (lista blanca).
+const ESTADOS_PUBLICOS = ['En Stock', 'A pedido'];
+
 /**
  * HomePage - Landing page with hero section and featured devices
  */
@@ -49,9 +52,9 @@ export const HomePage = () => {
 
         const devices = response.data || response || [];
 
-        // Filter out sold devices
+        // Sólo mostrar equipos disponibles para el público (En Stock / A pedido)
         const availableDevices = devices.filter(
-          device => device.estado !== 'Vendido' && device.status !== 'Vendido'
+          device => ESTADOS_PUBLICOS.includes(device.estado)
         );
 
         // Mark devices with reservation status
