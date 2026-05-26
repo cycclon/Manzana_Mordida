@@ -197,11 +197,18 @@ export const DevicesTab = () => {
     setPage(0);
   };
 
-  // Carga todos los equipos para el selector de "venta de origen" del canje.
+  // Carga todos los equipos para el selector de "venta de origen" del canje,
+  // ordenados por fecha de venta descendente (lo vendido más recientemente primero).
   const loadOriginOptions = async () => {
     try {
       const all = await productsAPI.getAllDevices();
-      setOriginOptions(Array.isArray(all) ? all : (all?.data || []));
+      const list = Array.isArray(all) ? all : (all?.data || []);
+      list.sort((a, b) => {
+        const da = a.fechaVenta ? new Date(a.fechaVenta).getTime() : 0;
+        const db = b.fechaVenta ? new Date(b.fechaVenta).getTime() : 0;
+        return db - da;
+      });
+      setOriginOptions(list);
     } catch (error) {
       console.error('Error loading origin options:', error);
     }
@@ -1159,7 +1166,10 @@ export const DevicesTab = () => {
                   if (!d) return '';
                   const p = d.producto || {};
                   const name = [p.marca, p.linea, p.modelo].filter(Boolean).join(' ') || 'Equipo';
-                  return `${name} · ${d.condicion || ''} · ${d.estado || ''} · costo $${d.costo ?? 0}`;
+                  const venta = d.fechaVenta
+                    ? ` · vendido ${new Date(d.fechaVenta).toLocaleDateString('es-AR')}`
+                    : '';
+                  return `${name} · ${d.condicion || ''} · ${d.estado || ''}${venta} · costo $${d.costo ?? 0}`;
                 }}
                 renderInput={(params) => (
                   <TextField

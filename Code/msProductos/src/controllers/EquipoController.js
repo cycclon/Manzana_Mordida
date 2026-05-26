@@ -432,8 +432,10 @@ exports.getFlujos = async (req, res, next) => {
         const rootDocs = all.filter(e => !e.equipoCanjeOrigen);
         let chains = rootDocs.map(r => buildChain(String(r._id), byId, childrenByParent));
 
-        // Sólo cadenas con sentido: con al menos un canje, o cuya raíz ya se vendió.
-        chains = chains.filter(ch => ch.nodes.length > 1 || ch.nodes[0]?.sold);
+        // Sólo cadenas con al menos un canje (más de un equipo). Una venta de un
+        // solo nivel (equipo comprado y vendido sin canje) no es una "cadena" y
+        // satura el listado, así que se omite.
+        chains = chains.filter(ch => ch.nodes.length > 1);
 
         chains.sort((a, b) => {
             if (sort === 'roi') {
