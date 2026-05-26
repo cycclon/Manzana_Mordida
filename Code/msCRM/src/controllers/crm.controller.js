@@ -125,8 +125,17 @@ async function editCRM(req, res, next) {
  */
 async function cambiarEstado(req, res, next) {
     try {
-        const { idcrm, nuevoestado } = req.params;
+        const { idcrm } = req.params;
+        // El estado puede venir en el path (legacy) o en el body { nuevoEstado }
+        const nuevoestado = req.params.nuevoestado || req.body.nuevoEstado;
         const { notas } = req.body;
+
+        if (!nuevoestado) {
+            return res.status(400).json({
+                success: false,
+                message: 'Se requiere el nuevo estado (param "nuevoestado" o body "nuevoEstado")'
+            });
+        }
 
         const crm = await CRM.findById(idcrm);
         if (!crm) {

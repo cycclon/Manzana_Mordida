@@ -42,8 +42,8 @@ export const crmAPI = {
   // Change CRM status
   changeStatus: async (id, nuevoEstado, notas = '') => {
     const response = await baseAPI.put(
-      `${CRM_PATH}/${id}/estado/${nuevoEstado}`,
-      { notas }
+      `${CRM_PATH}/${id}/estado`,
+      { nuevoEstado, notas }
     );
     return response.data;
   },

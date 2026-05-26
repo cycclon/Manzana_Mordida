@@ -249,6 +249,9 @@ router.put('/estado-multiple', cambiarEstadoMultiple);
  *       500:
  *         $ref: '#/components/responses/500'
  */
+// Estado en el body (recomendado: soporta estados con "/" como "Negociación/Cierre")
+router.put('/:idcrm/estado', cambiarEstado);
+// Legacy: estado en el path (compat hacia atrás; se rompe con estados que contienen "/")
 router.put('/:idcrm/estado/:nuevoestado', cambiarEstado);
 
 // ============================================
